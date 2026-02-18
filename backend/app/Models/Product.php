@@ -16,7 +16,11 @@ class Product extends Model
         'quantity',
         'category',
         'user_id',
-        'image',
+        'images',
+    ];
+
+    protected $casts = [
+        'images' => 'array',
     ];
 
     public function user()

@@ -10,9 +10,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return Product::with('user')->get();
+        return Product::with('user')->latest()->simplePaginate(12);
+    }
+
+    /**
+     * Get products for the authenticated seller.
+     */
+    public function myProducts()
+    {
+        return Product::where('user_id', auth()->id())->latest()->simplePaginate(10);
     }
 
     /**
@@ -33,7 +44,9 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'quantity' => 'required|integer',
-            'category' => 'required'
+            'category' => 'required',
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'url'
         ]);
 
         return auth()->user()->products()->create($request->all());
@@ -42,9 +55,15 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        return $product->load('user');
+        $product = Product::with('user')->find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        return response()->json($product);
     }
 
     /**
@@ -60,9 +79,20 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // Check owner
-        if ($product->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        \Illuminate\Support\Facades\Log::info('Update check', [
+            'product_user_id' => $product->user_id,
+            'auth_id' => auth()->id(),
+            'user' => auth()->user()
+        ]);
+
+        if ($product->user_id != auth()->id()) {
+            return response()->json([
+                'message' => 'Product user_id mismatch',
+                'debug' => [
+                    'product_owner' => $product->user_id,
+                    'current_user' => auth()->id()
+                ]
+            ], 403);
         }
 
         $product->update($request->all());
@@ -85,13 +115,12 @@ class ProductController extends Controller
      * Search for a name
      *
      * @param  str  $name
-     * @return \Illuminate\Http\Response
      */
     public function search($name)
     {
         return Product::where('name', 'like', '%' . $name . '%')
             ->orWhere('category', 'like', '%' . $name . '%')
             ->with('user')
-            ->get();
+            ->simplePaginate(12);
     }
 }

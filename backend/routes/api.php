@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', fn(Request $request) => $request->user());
+    Route::get('/my-products', [ProductController::class, 'myProducts']);
 
     // Products (create / update / delete — authenticated farmers/admins)
     Route::post('/products', [ProductController::class, 'store']);
@@ -29,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
     // Orders
+    Route::get('/seller-orders', [OrderController::class, 'sellerOrders']);
     Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);

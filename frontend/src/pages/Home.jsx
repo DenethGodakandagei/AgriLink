@@ -6,82 +6,38 @@ import ProductCard from '../components/ProductCard';
 import { Search, SlidersHorizontal, ArrowDownWideNarrow } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const PRODUCTS = [
-    {
-        id: 1,
-        title: "Organic Yellow Maize",
-        category: "Grains",
-        farmer: "Samuel Kipkorir",
-        location: "Nakuru, Kenya",
-        price: 450.00,
-        unit: "Ton",
-        image: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80",
-        verified: true,
-        rating: 5
-    },
-    {
-        id: 2,
-        title: "Premium White Potatoes",
-        category: "Vegetables",
-        farmer: "Maria G. Mendoza",
-        location: "Ica, Peru",
-        price: 32.50,
-        unit: "50kg Bag",
-        image: "https://images.unsplash.com/photo-1518977676651-71f646571817?auto=format&fit=crop&w=800&q=80",
-        verified: true,
-        rating: 4.8
-    },
-    {
-        id: 3,
-        title: "Bulk Brown Lentils",
-        category: "Legumes",
-        farmer: "David Miller",
-        location: "Saskatchewan, Canada",
-        price: 890.00,
-        unit: "Ton",
-        image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e?auto=format&fit=crop&w=800&q=80",
-        verified: true,
-        rating: 4.9
-    },
-    {
-        id: 4,
-        title: "Cavendish Bananas",
-        category: "Fruits",
-        farmer: "Anita Ocampo",
-        location: "Davao, Philippines",
-        price: 14.20,
-        unit: "Box (13kg)",
-        image: "https://images.unsplash.com/photo-1571771896612-e8c4c9ee3a55?auto=format&fit=crop&w=800&q=80",
-        verified: false,
-        rating: 4.5
-    },
-    {
-        id: 5,
-        title: "Fresh Green Okra",
-        category: "Vegetables",
-        farmer: "Ebrahim S.",
-        location: "Giza, Egypt",
-        price: 1.80,
-        unit: "Kg",
-        image: "https://images.unsplash.com/photo-1466196230303-34a17b018b33?auto=format&fit=crop&w=800&q=80", // Generic green veg
-        verified: true,
-        rating: 4.7
-    },
-    {
-        id: 6,
-        title: "Red Vine Tomatoes",
-        category: "Vegetables",
-        farmer: "Luca Romano",
-        location: "Sicily, Italy",
-        price: 22.00,
-        unit: "Crate",
-        image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80",
-        verified: false,
-        rating: 4.2
-    }
-];
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [nextPageUrl, setNextPageUrl] = useState(null);
+
+    const fetchProducts = async (url = 'http://localhost:8000/api/products') => {
+        try {
+            setLoading(true);
+            const response = await axios.get(url);
+
+            if (url === 'http://localhost:8000/api/products') {
+                // Initial load or refresh
+                setProducts(response.data.data || response.data);
+            } else {
+                // Load more
+                setProducts(prev => [...prev, ...(response.data.data || response.data)]);
+            }
+
+            setNextPageUrl(response.data.next_page_url);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
     return (
         <div className="min-h-screen bg-slate-50">
             <Navbar />
@@ -135,10 +91,30 @@ const Home = () => {
                             layout
                             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
                         >
-                            {PRODUCTS.map((product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
+                            {loading && products.length === 0 ? (
+                                <p className="col-span-full text-center text-gray-500 py-10">Loading products...</p>
+                            ) : products.length === 0 ? (
+                                <p className="col-span-full text-center text-gray-500 py-10">No products found.</p>
+                            ) : (
+                                <>
+                                    {products.map((product) => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </>
+                            )}
                         </motion.div>
+
+                        {nextPageUrl && (
+                            <div className="mt-8 text-center">
+                                <button
+                                    onClick={() => fetchProducts(nextPageUrl)}
+                                    disabled={loading}
+                                    className="px-6 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50"
+                                >
+                                    {loading ? 'Loading...' : 'Load More Products'}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>

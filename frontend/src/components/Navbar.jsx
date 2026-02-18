@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Tractor, LogOut, User, Menu, X, ChevronDown } from 'lucide-react';
+import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
     const location = useLocation();
@@ -12,6 +13,7 @@ const Navbar = () => {
     const [user, setUser] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { toggleCart, cartItems } = useCart();
 
     // Read auth state from localStorage
     const readAuth = () => {
@@ -50,8 +52,18 @@ const Navbar = () => {
         navigate('/');
     };
 
+    const getDashboardLink = () => {
+        if (!user) return null;
+        if (user.role === 'farmer') return { to: '/seller-dashboard', label: 'Dashboard' };
+        if (user.role === 'buyer') return { to: '/buyer-dashboard', label: 'Dashboard' };
+        return null;
+    };
+
+    const dashboardLink = getDashboardLink();
+
     const navLinks = [
         { to: '/', label: 'Home' },
+        ...(dashboardLink ? [dashboardLink] : []),
         ...(user ? [
             { to: '/orders', label: 'Orders' },
             { to: '/saved', label: 'Saved' },
@@ -78,8 +90,8 @@ const Navbar = () => {
                                 key={to}
                                 to={to}
                                 className={`text-sm font-medium transition-colors border-b-2 py-1 ${isActive(to)
-                                        ? 'text-emerald-600 border-emerald-600'
-                                        : 'text-gray-500 border-transparent hover:text-emerald-600'
+                                    ? 'text-emerald-600 border-emerald-600'
+                                    : 'text-gray-500 border-transparent hover:text-emerald-600'
                                     }`}
                             >
                                 {label}
@@ -88,7 +100,20 @@ const Navbar = () => {
                     </div>
 
                     {/* Right Section */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
+                        {/* Cart Button */}
+                        <button
+                            onClick={toggleCart}
+                            className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                            <ShoppingCart size={22} />
+                            {cartItems.length > 0 && (
+                                <span className="absolute top-0 right-0 h-5 w-5 bg-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white">
+                                    {cartItems.length}
+                                </span>
+                            )}
+                        </button>
+
                         {user ? (
                             /* ── Logged-in: avatar + dropdown ── */
                             <div className="relative">
@@ -147,8 +172,8 @@ const Navbar = () => {
                                 <Link
                                     to="/login"
                                     className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${isActive('/login')
-                                            ? 'text-emerald-600 bg-emerald-50'
-                                            : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50'
+                                        ? 'text-emerald-600 bg-emerald-50'
+                                        : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     Sign In
@@ -191,8 +216,8 @@ const Navbar = () => {
                                     to={to}
                                     onClick={() => setMobileOpen(false)}
                                     className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(to)
-                                            ? 'bg-emerald-50 text-emerald-600'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                        ? 'bg-emerald-50 text-emerald-600'
+                                        : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     {label}
