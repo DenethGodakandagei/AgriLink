@@ -45,32 +45,27 @@ const Home = () => {
                 <img
                     src="https://images.pexels.com/photos/21393/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1600"
                     alt="Bright green crop fields under sky"
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover blur-sm"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/75 via-emerald-900/45 to-emerald-800/15" />
+                <div className="absolute inset-0 bg-black/25" />
 
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <Navbar />
 
                     <div className="flex-1 flex">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center w-full">
+                        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-12 flex flex-col justify-end w-full pb-12">
                             <div className="max-w-xl space-y-6">
-                                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-emerald-50 backdrop-blur-sm">
-                                    <span className="h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-                                        <Leaf size={14} />
-                                    </span>
-                                    <span>AgriLink platform</span>
-                                </div>
+                               
 
-                                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-outfit font-semibold leading-tight text-white">
+                                <h1 className="text-3xl sm:text-5xl lg:text-5xl font-semibold leading-tight text-white">
                                     Smart Farming for Future
-                                    <span className="block font-serif italic text-lime-100">
+                                    <span className="block italic text-lime-100">
                                         Generations
                                     </span>
                                 </h1>
 
                                 <p className="text-sm sm:text-base text-slate-100/90 max-w-md">
-                                    Send, receive, and track your harvest in one secure place built for speed, clarity, and everyday control for your farm.
+                                    Send, receive, and track your finances in one secure platform built for speed, clarity, and everyday financial control.
                                 </p>
 
                                 <div className="flex flex-wrap gap-4 pt-1">
@@ -84,27 +79,25 @@ const Home = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-10 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-100/85">
+                            <div className="mt-10 border-t border-white/20 pt-4 flex items-center gap-4 text-xs sm:text-sm text-slate-100/85">
                                 <div className="flex items-center gap-2">
-                                    <div className="flex -space-x-1">
-                                        <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
-                                        <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
-                                        <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
+                                    <span className="text-[11px] sm:text-xs tracking-[0.25em] uppercase">
+                                        Scroll
+                                    </span>
+                                </div>
+                                <div className="ml-auto flex items-center gap-6">
+                                    <div className="flex items-center gap-1.5">
+                                        <Star size={14} className="text-amber-300" />
+                                        <span>4.9</span>
                                     </div>
-                                    <span>Trusted by farmers across the region</span>
-                                </div>
-                                <span className="h-1 w-1 rounded-full bg-white/50" />
-                                <div className="flex items-center gap-1.5">
-                                    <Star size={14} className="text-amber-300" />
-                                    <span>4.9 rating</span>
-                                </div>
-                                <span className="h-1 w-1 rounded-full bg-white/50" />
-                                <div className="flex items-center gap-1.5">
-                                    <Users size={14} />
-                                    <span>10k+ farmers connected</span>
-                                </div>
-                                <div className="ml-auto text-[11px] sm:text-xs tracking-[0.2em] uppercase">
-                                    <span className="opacity-80">Scroll</span>
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex -space-x-1">
+                                            <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
+                                            <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
+                                            <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
+                                        </div>
+                                        <span>10k+ Farmers</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +106,88 @@ const Home = () => {
             </section>
 
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+            <main className="max-w-8xl mx-auto px-4 sm:px-6 ">
+                <section className="rounded-3xl bg-emerald-50  px-6 sm:px-10 py-10 sm:py-12">
+                    <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-emerald-700 mb-5">
+                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                        Our platform
+                    </p>
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug text-emerald-950 max-w-4xl">
+                        Our platform is built to support farmers and buyers by delivering
+                        practical tools that connect both sides and improve productivity.
+                    </h2>
+                    <p className="mt-4 text-sm sm:text-base text-gray-600 max-w-3xl">
+                        AgriLink brings producers, markets, and logistics together in one place so fresh
+                        products move faster, waste is reduced, and everyone has clearer visibility into each season.
+                    </p>
+                </section>
+
+                <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-10 items-start">
+                    <div className="space-y-6">
+                        <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-emerald-700">
+                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                            About AgriLink
+                        </p>
+                        <h3 className="text-2xl sm:text-3xl font-semibold text-emerald-950">
+                            Smart Farming Solutions
+                            <span className="block italic font-normal text-emerald-700">
+                                Real Results for Farms and Markets
+                            </span>
+                        </h3>
+                        <p className="text-sm sm:text-base text-gray-600 max-w-xl">
+                            Our marketplace links farmers and buyers in one trusted space for fair prices and steady demand.
+                        </p>
+
+                        <div className="space-y-3">
+                            <div className="flex items-start justify-between rounded-2xl bg-gray-50 px-4 py-3 border border-gray-100">
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                        Proven farm productivity
+                                    </p>
+                                    <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
+                                        Reach more buyers, cut middlemen, and keep harvests moving.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start justify-between rounded-2xl bg-white px-4 py-3 border border-emerald-100 shadow-sm">
+                                <div className="flex items-start gap-3">
+                                    <span className="mt-1 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">
+                                        AI
+                                    </span>
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-900">
+                                            Intelligent crop optimization
+                                        </p>
+                                        <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
+                                            Use market and weather data to choose crops and timing for better prices.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-start justify-between rounded-2xl bg-gray-50 px-4 py-3 border border-gray-100">
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                        Seamless buyer integration
+                                    </p>
+                                    <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
+                                        Buyers source directly from farms, track orders, and build strong partnerships.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full">
+                        <div className="overflow-hidden rounded-3xl border border-emerald-100 shadow-md bg-emerald-900/5">
+                            <img
+                                src="https://images.pexels.com/photos/1268101/pexels-photo-1268101.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                                alt="Farmers discussing crops in a field"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <p className="text-xs sm:text-sm text-gray-500 mb-4">
                         Trusted by thousands of growers and agribusinesses

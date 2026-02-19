@@ -74,33 +74,25 @@ const Navbar = () => {
     ];
 
     return (
-        <nav
-            className={`sticky top-0 z-50 transition-colors ${
-                isHome ? 'bg-transparent border-b border-transparent' : 'bg-white border-b border-gray-100 shadow-sm'
-            }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="sticky top-0 z-50 bg-transparent">
+            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
-                    className={`flex justify-between h-20 items-center ${
-                        isHome ? 'mt-4 rounded-full px-4 sm:px-6 bg-black/10 backdrop-blur-md border border-white/20 text-white' : ''
+                    className={`mt-4 mb-4 flex justify-between h-16 sm:h-20 items-center rounded-xl px-4 sm:px-6 ${
+                        isHome
+                            ? ' backdrop-blur-md  text-white'
+                            : 'bg-white border border-gray-200'
                     }`}
                 >
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-                        <div
-                            className={`p-2 rounded-lg text-white transition-colors ${
-                                isHome ? 'bg-emerald-500/90 group-hover:bg-emerald-400' : 'bg-emerald-500 group-hover:bg-emerald-600'
-                            }`}
-                        >
-                            <Tractor size={22} />
-                        </div>
+                        
                         <span
                             className={`text-xl font-bold font-outfit tracking-tight ${
                                 isHome ? 'text-white' : 'text-gray-900'
                             }`}
                         >
-                            AgriLink
+                            AGRILINK.
                         </span>
                     </Link>
 
