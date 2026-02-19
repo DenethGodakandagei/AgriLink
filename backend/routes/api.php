@@ -43,4 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/transactions/{id}', [TransactionController::class, 'show']);
     Route::put('/transactions/{id}', [TransactionController::class, 'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
+
+    // ─── Stripe ────────────────────────────────────────────────────────────────
+    Route::get('/stripe/key', [\App\Http\Controllers\StripeController::class, 'publicKey']);
+    Route::post('/stripe/payment-intent', [\App\Http\Controllers\StripeController::class, 'createPaymentIntent']);
 });
+
+// Stripe Webhook — must be outside auth middleware (Stripe calls this directly)
+Route::post('/stripe/webhook', [\App\Http\Controllers\StripeController::class, 'webhook']);

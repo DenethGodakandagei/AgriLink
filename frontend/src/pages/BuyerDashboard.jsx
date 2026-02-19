@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import { Package, Truck, CheckCircle, Clock, Calendar, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, Calendar, ChevronDown, ChevronUp, MapPin, CreditCard, Banknote, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BuyerDashboard = () => {
@@ -20,7 +20,8 @@ const BuyerDashboard = () => {
         if (!token || !storedUser) {
             navigate('/login');
             return;
-        } else if (storedUser.role !== 'buyer') {
+        } else if (storedUser.role !== 'buyer' && storedUser.role !== 'farmer') {
+            // Allow both buyers and farmers to access this dashboard
             navigate('/');
             return;
         }
@@ -63,6 +64,14 @@ const BuyerDashboard = () => {
             case 'shipped': return <Truck size={16} />;
             case 'delivered': return <CheckCircle size={16} />;
             default: return <Package size={16} />;
+        }
+    };
+
+    const getPaymentStatusColor = (ps) => {
+        switch (ps) {
+            case 'paid': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+            case 'failed': return 'bg-red-100 text-red-700 border-red-200';
+            default: return 'bg-amber-100 text-amber-700 border-amber-200';
         }
     };
 
@@ -118,6 +127,11 @@ const BuyerDashboard = () => {
                                                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
                                                         {getStatusIcon(order.status)}
                                                         <span className="capitalize">{order.status}</span>
+                                                    </span>
+                                                    {/* Payment status badge */}
+                                                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getPaymentStatusColor(order.payment_status)}`}>
+                                                        {order.payment_method === 'card' ? <CreditCard size={12} className="inline mr-1" /> : <Banknote size={12} className="inline mr-1" />}
+                                                        {order.payment_status === 'paid' ? 'Paid' : order.payment_status === 'failed' ? 'Payment Failed' : order.payment_method === 'cod' ? 'Cash on Delivery' : 'Payment Pending'}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center text-sm text-gray-500 gap-4">

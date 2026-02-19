@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -22,9 +23,12 @@ class OrderController extends Controller
         if ($user->role === 'admin') {
             // Admin sees all orders
         } elseif ($user->role === 'farmer') {
-            // Farmers see orders that contain their products
-            $query->whereHas('items.product', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+            // Farmers see orders that contain their products OR orders they placed as a buyer
+            $query->where(function ($q) use ($user) {
+                $q->whereHas('items.product', function ($subQ) use ($user) {
+                    $subQ->where('user_id', $user->id);
+                })
+                    ->orWhere('user_id', $user->id);
             });
         } else {
             // Buyers see only their own orders
@@ -62,6 +66,7 @@ class OrderController extends Controller
                     'total' => $sellerItems->sum(fn($i) => $i->price * $i->quantity),
                     'status' => $order->status,
                     'payment' => $order->payment_method,
+                    'payment_status' => $order->payment_status ?? 'pending',
                     'city' => $order->city,
                 ];
             });
@@ -167,16 +172,25 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('items.product')->findOrFail($id);
+        $user = auth()->user();
 
-        // TODO: Check if user is admin or the seller of products involved.
-        // For simplicity, assuming admin for status changes for now.
-        if (auth()->user()->role !== 'admin') {
-            // return response()->json(['message' => 'Unauthorized'], 403);
+        // Check authorization
+        if ($user->role === 'farmer') {
+            // Check if this order has any product belonging to this farmer
+            $hasProduct = $order->items->contains(function ($item) use ($user) {
+                return $item->product && $item->product->user_id === $user->id;
+            });
+
+            if (!$hasProduct) {
+                return response()->json(['message' => 'Unauthorized: You do not have products in this order'], 403);
+            }
+        } elseif ($user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $fields = $request->validate([
-            'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled',
+            'status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled',
         ]);
 
         $order->status = $fields['status'];
