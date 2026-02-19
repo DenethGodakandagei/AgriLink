@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import api from '../api/axios';
 
 const Register = () => {
     const [role, setRole] = useState('farmer'); // 'farmer' or 'buyer'
@@ -60,8 +61,6 @@ const Register = () => {
         };
 
         try {
-            const { default: api } = await import('../api/axios');
-
             const response = await api.post('/register', payload);
             console.log('Registration success:', response.data);
 

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import api from '../api/axios';
 
 const Login = () => {
     const [role, setRole] = useState('farmer');
@@ -40,9 +41,6 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const { default: api } = await import('../api/axios');
-
-            // The backend expects 'email' but our form has 'identifier'
             const response = await api.post('/login', {
                 email: formData.identifier,
                 password: formData.password

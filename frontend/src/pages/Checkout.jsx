@@ -145,7 +145,19 @@ const CheckoutForm = () => {
             }
         } catch (err) {
             console.error(err);
-            setError(err.response?.data?.message || err.message || 'Failed to place order. Please try again.');
+            const apiMessage = err.response?.data?.message;
+            const apiErrors = err.response?.data?.errors;
+
+            let friendly = apiMessage || err.message;
+
+            if (apiErrors && typeof apiErrors === 'object') {
+                const allErrors = Object.values(apiErrors).flat().filter(Boolean);
+                if (allErrors.length > 0) {
+                    friendly = allErrors[0];
+                }
+            }
+
+            setError(friendly || 'Failed to place order. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -353,7 +365,7 @@ const CheckoutForm = () => {
 
                                         {/* ── Stripe Card Element ── */}
                                         {formData.paymentMethod === 'card' && (
-                                            <motion.div
+                                            <Motion.div
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
@@ -369,7 +381,7 @@ const CheckoutForm = () => {
                                                 <p className="text-xs text-gray-400">
                                                     Test card: <code className="bg-gray-100 px-1 rounded">4242 4242 4242 4242</code> · any future date · any CVC
                                                 </p>
-                                            </motion.div>
+                                            </Motion.div>
                                         )}
 
                                         {/* ── COD Option ── */}
