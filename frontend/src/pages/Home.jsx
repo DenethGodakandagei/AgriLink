@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import FilterSidebar from '../components/FilterSidebar';
 import ProductCard from '../components/ProductCard';
 import { Search, SlidersHorizontal, ArrowDownWideNarrow } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -87,7 +87,7 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <motion.div
+                        <Motion.div
                             layout
                             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
                         >
@@ -102,7 +102,7 @@ const Home = () => {
                                     ))}
                                 </>
                             )}
-                        </motion.div>
+                        </Motion.div>
 
                         {nextPageUrl && (
                             <div className="mt-8 text-center">

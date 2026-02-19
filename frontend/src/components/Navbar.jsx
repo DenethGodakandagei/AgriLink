@@ -2,46 +2,48 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useCart } from '../context/CartContext';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../context/useCart';
 
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isActive = (path) => location.pathname === path;
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        try {
+            const stored = localStorage.getItem('user');
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    });
     const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { toggleCart, cartItems } = useCart();
 
-    // Read auth state from localStorage
-    const readAuth = () => {
-        try {
-            const stored = localStorage.getItem('user');
-            setUser(stored ? JSON.parse(stored) : null);
-        } catch {
-            setUser(null);
-        }
-    };
-
     useEffect(() => {
-        readAuth();
-        // Listen for login/logout events from other tabs or same page
-        window.addEventListener('storage', readAuth);
-        window.addEventListener('auth-change', readAuth);
+        const handleAuthChange = () => {
+            const storedUser = localStorage.getItem('user');
+            const next = storedUser ? JSON.parse(storedUser) : null;
+            setUser(next && (next.name || next.email || next.role) ? next : null);
+        };
+
+        const handleRouteChange = () => {
+            setMobileOpen(false);
+            setDropdownOpen(false);
+        };
+
+        window.addEventListener('storage', handleAuthChange);
+        window.addEventListener('auth-change', handleAuthChange);
+        window.addEventListener('popstate', handleRouteChange);
+
         return () => {
-            window.removeEventListener('storage', readAuth);
-            window.removeEventListener('auth-change', readAuth);
+            window.removeEventListener('storage', handleAuthChange);
+            window.removeEventListener('auth-change', handleAuthChange);
+            window.removeEventListener('popstate', handleRouteChange);
         };
     }, []);
-
-    // Re-read on route change (handles same-tab login redirect)
-    useEffect(() => {
-        readAuth();
-        setMobileOpen(false);
-        setDropdownOpen(false);
-    }, [location.pathname]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -136,7 +138,7 @@ const Navbar = () => {
 
                                 <AnimatePresence>
                                     {dropdownOpen && (
-                                        <motion.div
+                                        <Motion.div
                                             initial={{ opacity: 0, y: -8, scale: 0.96 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, y: -8, scale: 0.96 }}
@@ -162,7 +164,7 @@ const Navbar = () => {
                                                 <LogOut size={15} />
                                                 Sign Out
                                             </button>
-                                        </motion.div>
+                                            </Motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>
@@ -202,7 +204,7 @@ const Navbar = () => {
             {/* Mobile Menu */}
             <AnimatePresence>
                 {mobileOpen && (
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
@@ -264,7 +266,7 @@ const Navbar = () => {
                                 </div>
                             )}
                         </div>
-                    </motion.div>
+                    </Motion.div>
                 )}
             </AnimatePresence>
         </nav>

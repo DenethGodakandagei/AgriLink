@@ -4,13 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { Package, Truck, CheckCircle, Clock, Calendar, ChevronDown, ChevronUp, MapPin, CreditCard, Banknote, ShieldCheck } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const BuyerDashboard = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
     const [expandedOrder, setExpandedOrder] = useState(null);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ const BuyerDashboard = () => {
             return;
         }
 
-        setUser(storedUser);
         fetchOrders(token);
     }, [navigate]);
 
@@ -160,7 +158,7 @@ const BuyerDashboard = () => {
                                 {/* Order Details (Expandable) */}
                                 <AnimatePresence>
                                     {expandedOrder === order.id && (
-                                        <motion.div
+                                        <Motion.div
                                             initial={{ height: 0, opacity: 0 }}
                                             animate={{ height: 'auto', opacity: 1 }}
                                             exit={{ height: 0, opacity: 0 }}
@@ -214,7 +212,7 @@ const BuyerDashboard = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                        </motion.div>
+                                        </Motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>

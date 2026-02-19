@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, DollarSign, ShoppingBag, Package, Users } from 'lucide-react';
 
-const StatCard = ({ title, value, change, trend, icon: Icon, color }) => (
-    <motion.div
+const StatCard = ({ title, value, change, trend, color }) => (
+    <Motion.div
         whileHover={{ y: -5 }}
         className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start justify-between"
     >
@@ -16,10 +16,8 @@ const StatCard = ({ title, value, change, trend, icon: Icon, color }) => (
                 <span className="text-gray-400 ml-1">vs last month</span>
             </div>
         </div>
-        <div className={`p-3 rounded-xl ${color}`}>
-            <Icon size={24} className="text-white" />
-        </div>
-    </motion.div>
+        <div className={`p-3 rounded-xl ${color}`} />
+    </Motion.div>
 );
 
 const Overview = () => {
@@ -32,7 +30,6 @@ const Overview = () => {
                     value="$84,254.00"
                     change="+12.5%"
                     trend="up"
-                    icon={DollarSign}
                     color="bg-emerald-500"
                 />
                 <StatCard
@@ -40,7 +37,6 @@ const Overview = () => {
                     value="1,254"
                     change="+8.2%"
                     trend="up"
-                    icon={ShoppingBag}
                     color="bg-blue-500"
                 />
                 <StatCard
@@ -48,7 +44,6 @@ const Overview = () => {
                     value="48"
                     change="-2.4%"
                     trend="down"
-                    icon={Package}
                     color="bg-purple-500"
                 />
                 <StatCard
@@ -56,7 +51,6 @@ const Overview = () => {
                     value="842"
                     change="+18.7%"
                     trend="up"
-                    icon={Users}
                     color="bg-orange-500"
                 />
             </div>
@@ -74,7 +68,7 @@ const Overview = () => {
                     </div>
                     <div className="h-64 flex items-end justify-between gap-2">
                         {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 95].map((h, i) => (
-                            <motion.div
+                            <Motion.div
                                 key={i}
                                 initial={{ height: 0 }}
                                 animate={{ height: `${h}%` }}
@@ -84,7 +78,7 @@ const Overview = () => {
                                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                                     ${h * 120}
                                 </div>
-                            </motion.div>
+                            </Motion.div>
                         ))}
                     </div>
                     <div className="flex justify-between mt-4 text-xs text-gray-400 font-medium uppercase">

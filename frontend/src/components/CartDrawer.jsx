@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/useCart';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const CartDrawer = () => {
@@ -38,7 +38,7 @@ const CartDrawer = () => {
             {isCartOpen && (
                 <>
                     {/* Backdrop */}
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -47,7 +47,7 @@ const CartDrawer = () => {
                     />
 
                     {/* Drawer */}
-                    <motion.div
+                    <Motion.div
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
@@ -186,7 +186,7 @@ const CartDrawer = () => {
                                 </button>
                             </div>
                         )}
-                    </motion.div>
+                    </Motion.div>
                 </>
             )}
         </AnimatePresence>

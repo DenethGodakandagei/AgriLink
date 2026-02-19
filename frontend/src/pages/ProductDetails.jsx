@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { ArrowLeft, ShoppingCart, Share2, Heart, Star, MapPin, User, Tag, ShieldCheck, Loader2, Plus, Minus } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useCart } from '../context/CartContext';
+import { motion as Motion } from 'framer-motion';
+import { useCart } from '../context/useCart';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -15,15 +15,22 @@ const ProductDetails = () => {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState(0);
+    const [reviews, setReviews] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
+    const [totalReviews, setTotalReviews] = useState(0);
+    const [reviewsLoading, setReviewsLoading] = useState(true);
+    const [reviewsError, setReviewsError] = useState('');
+    const [ratingInput, setRatingInput] = useState(5);
+    const [commentInput, setCommentInput] = useState('');
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/api/products/${id}`);
-                console.log("Fetched Product Data:", response.data);
                 setProduct(response.data);
-            } catch (err) {
-                console.error("Failed to fetch product:", err);
+            } catch {
                 setError('Failed to load product details.');
             } finally {
                 setLoading(false);
@@ -32,6 +39,82 @@ const ProductDetails = () => {
 
         fetchProduct();
     }, [id]);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        setCurrentUser(storedUser ? JSON.parse(storedUser) : null);
+
+        const fetchReviews = async () => {
+            setReviewsLoading(true);
+            setReviewsError('');
+            try {
+                const response = await axios.get(`http://localhost:8000/api/products/${id}/feedback`);
+                setReviews(response.data.feedback || []);
+                setAverageRating(response.data.average_rating || 0);
+                setTotalReviews(response.data.total_reviews || 0);
+            } catch {
+                setReviewsError('Failed to load reviews.');
+            } finally {
+                setReviewsLoading(false);
+            }
+        };
+
+        fetchReviews();
+    }, [id]);
+
+    const handleSubmitReview = async (e) => {
+        e.preventDefault();
+
+        if (!currentUser) {
+            navigate('/login');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        setSubmittingReview(true);
+        setReviewsError('');
+
+        try {
+            const response = await axios.post(
+                `http://localhost:8000/api/products/${id}/feedback`,
+                {
+                    rating: ratingInput,
+                    comment: commentInput,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const saved = response.data.feedback;
+
+            setAverageRating(response.data.average_rating || 0);
+            setTotalReviews(response.data.total_reviews || 0);
+
+            setReviews((prev) => {
+                const index = prev.findIndex((item) => item.id === saved.id);
+                if (index !== -1) {
+                    const updated = [...prev];
+                    updated[index] = saved;
+                    return updated;
+                }
+                return [saved, ...prev];
+            });
+
+            setCommentInput('');
+        } catch (err) {
+            setReviewsError(err.response?.data?.message || 'Failed to submit review.');
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -59,21 +142,19 @@ const ProductDetails = () => {
         );
     }
 
-    // Process images safely
     let images = [];
     if (typeof product.images === 'string') {
         try {
             images = JSON.parse(product.images);
-        } catch (e) {
-            images = [product.images]; // Fallback if regular string
+        } catch {
+            images = [product.images];
         }
     } else if (Array.isArray(product.images)) {
         images = product.images;
     }
 
-    // Ensure we have at least one image or placeholder
     if (!images || images.length === 0) {
-        images = ["https://placehold.co/600x400?text=No+Image"];
+        images = ['https://placehold.co/600x400?text=No+Image'];
     }
 
     return (
@@ -94,7 +175,7 @@ const ProductDetails = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8">
                         {/* Image Gallery */}
                         <div className="p-6 lg:p-8 bg-gray-50/50">
-                            <motion.div
+                            <Motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className="relative aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden mb-4 shadow-sm border border-gray-100 bg-white"
@@ -109,7 +190,7 @@ const ProductDetails = () => {
                                         <Heart size={20} />
                                     </button>
                                 </div>
-                            </motion.div>
+                            </Motion.div>
 
                             {images.length > 1 && (
                                 <div className="flex gap-4 overflow-x-auto pb-2">
@@ -141,19 +222,23 @@ const ProductDetails = () => {
                                     )}
                                 </div>
 
-                                <motion.h1
+                                <Motion.h1
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-display"
                                 >
                                     {product.name}
-                                </motion.h1>
+                                </Motion.h1>
 
                                 <div className="flex items-center gap-4 mb-6 text-sm text-gray-500 border-b border-gray-100 pb-6">
                                     <div className="flex items-center gap-1">
                                         <Star size={16} className="text-yellow-400 fill-yellow-400" />
-                                        <span className="font-bold text-gray-900">4.8</span>
-                                        <span className="text-gray-400">(124 reviews)</span>
+                                        <span className="font-bold text-gray-900">
+                                            {averageRating ? averageRating.toFixed(1) : 'New'}
+                                        </span>
+                                        <span className="text-gray-400">
+                                            {totalReviews > 0 ? `(${totalReviews} reviews)` : '(No reviews yet)'}
+                                        </span>
                                     </div>
                                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                                     <div className="flex items-center gap-1">
@@ -225,6 +310,179 @@ const ProductDetails = () => {
                         </div>
                     </div>
                 </div>
+
+                <section className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2">
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 className="text-xl font-bold text-gray-900">Customer Reviews</h2>
+                                <p className="text-sm text-gray-500">
+                                    Real feedback from buyers to build trust.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl px-4 py-2">
+                                <Star size={20} className="text-yellow-400 fill-yellow-400" />
+                                <div className="flex flex-col">
+                                    <span className="text-lg font-bold text-gray-900">
+                                        {averageRating ? averageRating.toFixed(1) : 'New'}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {totalReviews > 0 ? `${totalReviews} review${totalReviews === 1 ? '' : 's'}` : 'No reviews yet'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {reviewsLoading && (
+                            <div className="flex items-center gap-2 text-sm text-gray-500 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+                                <Loader2 size={16} className="animate-spin text-emerald-500" />
+                                <span>Loading reviews...</span>
+                            </div>
+                        )}
+
+                        {!reviewsLoading && reviewsError && (
+                            <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                                {reviewsError}
+                            </div>
+                        )}
+
+                        {!reviewsLoading && !reviewsError && reviews.length === 0 && (
+                            <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-6 text-center">
+                                <p className="text-gray-700 font-medium mb-1">No reviews yet</p>
+                                <p className="text-sm text-gray-500">
+                                    Be the first to share your experience with this product.
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4">
+                            {reviews.map((review) => (
+                                <div key={review.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-semibold">
+                                            {review.user?.name ? review.user.name.charAt(0).toUpperCase() : '?'}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="font-semibold text-gray-900">
+                                                        {review.user?.name || 'Buyer'}
+                                                    </p>
+                                                    <p className="text-xs text-gray-400">
+                                                        {review.created_at
+                                                            ? new Date(review.created_at).toLocaleDateString()
+                                                            : ''}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    {Array.from({ length: 5 }).map((_, index) => (
+                                                        <Star
+                                                            key={index}
+                                                            size={14}
+                                                            className={
+                                                                index < review.rating
+                                                                    ? 'text-yellow-400 fill-yellow-400'
+                                                                    : 'text-gray-200'
+                                                            }
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <p className="mt-3 text-sm text-gray-700 leading-relaxed">
+                                                {review.comment}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-1">
+                        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm sticky top-24">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-1">Leave a Review</h3>
+                            <p className="text-xs text-gray-500 mb-4">
+                                Share your experience to help the community make confident decisions.
+                            </p>
+
+                            {!currentUser && (
+                                <div className="space-y-4">
+                                    <p className="text-sm text-gray-600">
+                                        Please sign in to leave a review.
+                                    </p>
+                                    <button
+                                        onClick={() => navigate('/login')}
+                                        className="w-full mt-2 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
+                                    >
+                                        Sign in to review
+                                    </button>
+                                </div>
+                            )}
+
+                            {currentUser && (
+                                <form onSubmit={handleSubmitReview} className="space-y-4">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-700 mb-2">Your rating</p>
+                                        <div className="flex items-center gap-1">
+                                            {Array.from({ length: 5 }).map((_, index) => {
+                                                const value = index + 1;
+                                                const active = value <= ratingInput;
+                                                return (
+                                                    <button
+                                                        key={value}
+                                                        type="button"
+                                                        onClick={() => setRatingInput(value)}
+                                                        className="p-1"
+                                                    >
+                                                        <Star
+                                                            size={20}
+                                                            className={
+                                                                active
+                                                                    ? 'text-yellow-400 fill-yellow-400'
+                                                                    : 'text-gray-200'
+                                                            }
+                                                        />
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Your review
+                                        </label>
+                                        <textarea
+                                            value={commentInput}
+                                            onChange={(e) => setCommentInput(e.target.value)}
+                                            rows={4}
+                                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-gray-50/50"
+                                            placeholder="How was the quality, freshness, and delivery experience?"
+                                            required
+                                        />
+                                    </div>
+
+                                    {reviewsError && (
+                                        <div className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                                            {reviewsError}
+                                        </div>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        disabled={submittingReview}
+                                        className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {submittingReview && (
+                                            <Loader2 size={16} className="animate-spin" />
+                                        )}
+                                        {submittingReview ? 'Submitting review...' : 'Submit review'}
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     );

@@ -10,7 +10,7 @@ import {
     ArrowRight,
     Mail
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 
 const Login = () => {
@@ -75,7 +75,7 @@ const Login = () => {
                 </div>
 
                 {/* Main Card */}
-                <motion.div
+                <Motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -194,7 +194,7 @@ const Login = () => {
                             </div>
                         </form>
                     </div>
-                </motion.div>
+                </Motion.div>
             </div>
         </div>
     );

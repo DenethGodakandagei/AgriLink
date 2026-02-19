@@ -7,10 +7,10 @@ import {
     User,
     ArrowRight
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/useCart';
 import { ShoppingCart } from 'lucide-react';
 
 const ProductCard = ({ product }) => {
@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
     };
 
     return (
-        <motion.div
+        <Motion.div
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:border-emerald-100 transition-all duration-300 cursor-pointer"
@@ -100,7 +100,7 @@ const ProductCard = ({ product }) => {
                     </button>
                 </div>
             </div>
-        </motion.div>
+        </Motion.div>
     );
 };
 

@@ -11,8 +11,8 @@ import Orders from './pages/SellerDashboard/components/Orders';
 
 import ProductDetails from './pages/ProductDetails';
 import Checkout from './pages/Checkout';
-import { CartProvider } from './context/CartContext';
 import CartDrawer from './components/CartDrawer';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (

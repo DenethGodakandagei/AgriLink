@@ -5,22 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Feedback extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'description',
-        'price',
-        'quantity',
-        'category',
-        'user_id',
-        'images',
-    ];
+    protected $table = 'feedback';
 
-    protected $casts = [
-        'images' => 'array',
+    protected $fillable = [
+        'user_id',
+        'product_id',
+        'rating',
+        'comment',
     ];
 
     public function user()
@@ -28,8 +23,8 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function feedback()
+    public function product()
     {
-        return $this->hasMany(Feedback::class);
+        return $this->belongsTo(Product::class);
     }
 }

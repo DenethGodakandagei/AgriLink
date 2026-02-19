@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
-import { useCart } from '../context/CartContext';
+import React, { useState } from 'react';
+import { useCart } from '../context/useCart';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, CreditCard, Truck, CheckCircle, ArrowLeft, ShieldCheck, Banknote, XCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -193,7 +193,7 @@ const CheckoutForm = () => {
 
                 {step === 3 ? (
                     /* ── Confirmation Screen ── */
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center"
@@ -241,8 +241,8 @@ const CheckoutForm = () => {
                             >
                                 View Orders
                             </button>
-                        </div>
-                    </motion.div>
+                                </div>
+                            </Motion.div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         {/* Left Column - Forms */}

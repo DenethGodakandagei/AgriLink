@@ -15,7 +15,7 @@ import {
     Headset,
     ArrowRight
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 
 const Register = () => {
@@ -91,7 +91,7 @@ const Register = () => {
                 </div>
 
                 {/* Main Card */}
-                <motion.div
+                <Motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -285,7 +285,7 @@ const Register = () => {
                             </div>
                         </form>
                     </div>
-                </motion.div>
+                </Motion.div>
 
                 {/* Footer Features */}
                 <div className="mt-12 grid grid-cols-3 gap-8 md:gap-16 text-center">

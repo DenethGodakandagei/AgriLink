@@ -9,16 +9,13 @@ import {
     Filter
 } from 'lucide-react';
 
-const FilterSidebar = ({ isOpen, onClose }) => {
+const FilterSidebar = () => {
     const [categories, setCategories] = useState({
         'Grains & Cereals': true,
         'Vegetables': false,
         'Fruits': false,
         'Legumes': false,
     });
-
-    const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
-    const [rating, setRating] = useState(4);
 
     return (
         <div className={`bg-white w-64 lg:w-72 border-r border-gray-100 p-6 h-[calc(100vh-80px)] overflow-y-auto sticky top-20 hidden lg:block`}>

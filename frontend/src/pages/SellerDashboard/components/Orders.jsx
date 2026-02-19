@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, RefreshCw, Package, ChevronDown, CheckCircle, AlertCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import api from '../../../api/axios';
 
 const STATUS_COLORS = {
@@ -114,7 +114,7 @@ const Orders = () => {
             {/* Notification Toast */}
             <AnimatePresence>
                 {notification && (
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, y: -20, x: '-50%' }}
                         animate={{ opacity: 1, y: 0, x: '-50%' }}
                         exit={{ opacity: 0, y: -20, x: '-50%' }}
@@ -123,7 +123,7 @@ const Orders = () => {
                     >
                         {notification.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
                         {notification.message}
-                    </motion.div>
+                    </Motion.div>
                 )}
             </AnimatePresence>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Loader2, Check } from 'lucide-react';
 import CloudinaryUpload from '../../../components/CloudinaryUpload';
 
@@ -105,14 +105,14 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                     >
-                        <motion.div
+                        <Motion.div
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -246,8 +246,8 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     </div>
                                 </form>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </Motion.div>
+                    </Motion.div>
                 </>
             )}
         </AnimatePresence>

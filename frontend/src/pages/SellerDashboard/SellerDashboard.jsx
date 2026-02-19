@@ -15,7 +15,20 @@ const SellerDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user] = useState(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (!token || !storedUser) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(storedUser);
+        } catch {
+            return null;
+        }
+    });
 
     // Determine active tab based on URL
     const getActiveTab = () => {
@@ -27,17 +40,15 @@ const SellerDashboard = () => {
     const activeTab = getActiveTab();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const userData = JSON.parse(localStorage.getItem('user'));
-
-        if (!token || !userData) {
+        if (!user) {
             navigate('/login');
-        } else if (userData.role !== 'farmer') {
-            navigate('/');
-        } else {
-            setUser(userData);
+            return;
         }
-    }, [navigate]);
+
+        if (user.role !== 'farmer') {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
