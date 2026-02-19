@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import api from '../api/axios';
 
 const Register = () => {
@@ -80,9 +81,9 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 flex flex-col">
             <Navbar />
-            <div className="flex flex-col items-center justify-center p-4 py-12">
+            <div className="flex-1 flex flex-col items-center justify-center p-4 py-12">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2 font-outfit">Join the Agri Market</h1>
@@ -286,8 +287,7 @@ const Register = () => {
                     </div>
                 </Motion.div>
 
-                {/* Footer Features */}
-                <div className="mt-12 grid grid-cols-3 gap-8 md:gap-16 text-center">
+                <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 text-center">
                     <div className="flex flex-col items-center gap-2">
                         <div className="bg-emerald-100 p-2 rounded-full text-emerald-600">
                             <ShieldCheck size={20} />
@@ -308,6 +308,7 @@ const Register = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

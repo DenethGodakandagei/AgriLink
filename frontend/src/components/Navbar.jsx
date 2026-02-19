@@ -9,6 +9,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isActive = (path) => location.pathname === path;
+    const isHome = location.pathname === '/';
 
     const [user, setUser] = useState(() => {
         try {
@@ -73,28 +74,51 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <nav
+            className={`sticky top-0 z-50 transition-colors ${
+                isHome ? 'bg-transparent border-b border-transparent' : 'bg-white border-b border-gray-100 shadow-sm'
+            }`}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-20 items-center">
+                <div
+                    className={`flex justify-between h-20 items-center ${
+                        isHome ? 'mt-4 rounded-full px-4 sm:px-6 bg-black/10 backdrop-blur-md border border-white/20 text-white' : ''
+                    }`}
+                >
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-                        <div className="bg-emerald-500 p-2 rounded-lg text-white group-hover:bg-emerald-600 transition-colors">
+                        <div
+                            className={`p-2 rounded-lg text-white transition-colors ${
+                                isHome ? 'bg-emerald-500/90 group-hover:bg-emerald-400' : 'bg-emerald-500 group-hover:bg-emerald-600'
+                            }`}
+                        >
                             <Tractor size={22} />
                         </div>
-                        <span className="text-xl font-bold text-gray-900 font-outfit tracking-tight">AgriLink</span>
+                        <span
+                            className={`text-xl font-bold font-outfit tracking-tight ${
+                                isHome ? 'text-white' : 'text-gray-900'
+                            }`}
+                        >
+                            AgriLink
+                        </span>
                     </Link>
 
                     {/* Desktop Nav Links */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex items-center gap-2">
                         {navLinks.map(({ to, label }) => (
                             <Link
                                 key={to}
                                 to={to}
-                                className={`text-sm font-medium transition-colors border-b-2 py-1 ${isActive(to)
-                                    ? 'text-emerald-600 border-emerald-600'
-                                    : 'text-gray-500 border-transparent hover:text-emerald-600'
-                                    }`}
+                                className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+                                    isHome
+                                        ? isActive(to)
+                                            ? 'bg-white text-emerald-700 shadow-sm'
+                                            : 'text-white/80 hover:text-white hover:bg-white/10'
+                                        : isActive(to)
+                                            ? 'text-emerald-700 bg-emerald-50'
+                                            : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                                }`}
                             >
                                 {label}
                             </Link>
@@ -106,7 +130,9 @@ const Navbar = () => {
                         {/* Cart Button */}
                         <button
                             onClick={toggleCart}
-                            className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
+                            className={`relative p-2 rounded-full transition-colors ${
+                                isHome ? 'text-white hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
+                            }`}
                         >
                             <ShoppingCart size={22} />
                             {cartItems.length > 0 && (
@@ -121,18 +147,40 @@ const Navbar = () => {
                             <div className="relative">
                                 <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="flex items-center gap-2 pl-4 border-l border-gray-100 focus:outline-none"
+                                    className={`flex items-center gap-2 pl-4 border-l focus:outline-none ${
+                                        isHome ? 'border-white/30' : 'border-gray-100'
+                                    }`}
                                 >
-                                    <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm border-2 border-emerald-200 flex-shrink-0">
+                                    <div
+                                        className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${
+                                            isHome
+                                                ? 'bg-white/10 text-white border-white/40'
+                                                : 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                                        }`}
+                                    >
                                         {user.name?.charAt(0).toUpperCase() || <User size={16} />}
                                     </div>
                                     <div className="hidden sm:flex flex-col items-start leading-tight">
-                                        <span className="text-sm font-semibold text-gray-900">{user.name}</span>
-                                        <span className="text-xs text-gray-400 capitalize">{user.role || 'User'}</span>
+                                        <span
+                                            className={`text-sm font-semibold ${
+                                                isHome ? 'text-white' : 'text-gray-900'
+                                            }`}
+                                        >
+                                            {user.name}
+                                        </span>
+                                        <span
+                                            className={`text-xs capitalize ${
+                                                isHome ? 'text-white/70' : 'text-gray-400'
+                                            }`}
+                                        >
+                                            {user.role || 'User'}
+                                        </span>
                                     </div>
                                     <ChevronDown
                                         size={16}
-                                        className={`text-gray-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                        className={`transition-transform duration-200 ${
+                                            isHome ? 'text-white/80' : 'text-gray-400'
+                                        } ${dropdownOpen ? 'rotate-180' : ''}`}
                                     />
                                 </button>
 
@@ -173,16 +221,23 @@ const Navbar = () => {
                             <div className="hidden md:flex items-center gap-3">
                                 <Link
                                     to="/login"
-                                    className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${isActive('/login')
-                                        ? 'text-emerald-600 bg-emerald-50'
-                                        : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+                                        isHome
+                                            ? 'text-white/90 hover:text-white hover:bg-white/10'
+                                            : isActive('/login')
+                                                ? 'text-emerald-700 bg-emerald-50'
+                                                : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                                    }`}
                                 >
                                     Sign In
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="text-sm font-medium px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm shadow-emerald-200"
+                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
+                                        isHome
+                                            ? 'bg-white text-emerald-700 hover:bg-emerald-50'
+                                            : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-200'
+                                    }`}
                                 >
                                     Get Started
                                 </Link>
@@ -192,7 +247,9 @@ const Navbar = () => {
                         {/* Mobile menu toggle */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden text-gray-500 hover:text-emerald-600 p-1 transition-colors"
+                            className={`md:hidden p-1 transition-colors ${
+                                isHome ? 'text-white hover:text-emerald-200' : 'text-gray-500 hover:text-emerald-600'
+                            }`}
                             aria-label="Toggle menu"
                         >
                             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -217,10 +274,15 @@ const Navbar = () => {
                                     key={to}
                                     to={to}
                                     onClick={() => setMobileOpen(false)}
-                                    className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(to)
-                                        ? 'bg-emerald-50 text-emerald-600'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
+                                    className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                                        isHome
+                                            ? isActive(to)
+                                                ? 'bg-white text-emerald-700'
+                                                : 'text-white/85 hover:bg-white/10'
+                                            : isActive(to)
+                                                ? 'bg-emerald-50 text-emerald-600'
+                                                : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                                 >
                                     {label}
                                 </Link>
@@ -228,19 +290,37 @@ const Navbar = () => {
 
                             {user ? (
                                 <>
-                                    <div className="border-t border-gray-100 pt-3 mt-3">
+                                    <div className={`border-t pt-3 mt-3 ${isHome ? 'border-white/15' : 'border-gray-100'}`}>
                                         <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                                            <div className="h-9 w-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm">
+                                            <div
+                                                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm ${
+                                                    isHome ? 'bg-white/10 text-white' : 'bg-emerald-100 text-emerald-700'
+                                                }`}
+                                            >
                                                 {user.name?.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-semibold text-gray-900">{user.name}</p>
-                                                <p className="text-xs text-gray-400">{user.email}</p>
+                                                <p
+                                                    className={`text-sm font-semibold ${
+                                                        isHome ? 'text-white' : 'text-gray-900'
+                                                    }`}
+                                                >
+                                                    {user.name}
+                                                </p>
+                                                <p
+                                                    className={`text-xs ${
+                                                        isHome ? 'text-white/70' : 'text-gray-400'
+                                                    }`}
+                                                >
+                                                    {user.email}
+                                                </p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                                            className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                                                isHome ? 'text-red-200 hover:bg-white/10' : 'text-red-600 hover:bg-red-50'
+                                            }`}
                                         >
                                             <LogOut size={16} />
                                             Sign Out
@@ -248,18 +328,26 @@ const Navbar = () => {
                                     </div>
                                 </>
                             ) : (
-                                <div className="border-t border-gray-100 pt-3 mt-3 space-y-2">
+                                <div className={`border-t pt-3 mt-3 space-y-2 ${isHome ? 'border-white/15' : 'border-gray-100'}`}>
                                     <Link
                                         to="/login"
                                         onClick={() => setMobileOpen(false)}
-                                        className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
+                                        className={`block text-center px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
+                                            isHome
+                                                ? 'text-white border-white/40 hover:bg-white/10'
+                                                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
+                                        }`}
                                     >
                                         Sign In
                                     </Link>
                                     <Link
                                         to="/register"
                                         onClick={() => setMobileOpen(false)}
-                                        className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
+                                        className={`block text-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                                            isHome
+                                                ? 'text-emerald-700 bg-white hover:bg-emerald-50'
+                                                : 'text-white bg-emerald-600 hover:bg-emerald-700'
+                                        }`}
                                     >
                                         Get Started
                                     </Link>

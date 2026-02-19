@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { ArrowLeft, ShoppingCart, Share2, Heart, Star, MapPin, User, Tag, ShieldCheck, Loader2, Plus, Minus } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import { useCart } from '../context/useCart';
@@ -158,10 +159,10 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-outfit">
+        <div className="min-h-screen bg-gray-50 font-outfit flex flex-col">
             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Back Button */}
                 <button
                     onClick={() => navigate(-1)}
@@ -484,6 +485,7 @@ const ProductDetails = () => {
                     </div>
                 </section>
             </main>
+            <Footer />
         </div>
     );
 };

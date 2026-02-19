@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import api from '../api/axios';
 
 const Login = () => {
@@ -63,9 +64,9 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 flex flex-col">
             <Navbar />
-            <div className="flex flex-col items-center justify-center p-4 py-12">
+            <div className="flex-1 flex flex-col items-center justify-center p-4 py-12">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2 font-outfit">Welcome Back</h1>
@@ -194,6 +195,7 @@ const Login = () => {
                     </div>
                 </Motion.div>
             </div>
+            <Footer />
         </div>
     );
 };
