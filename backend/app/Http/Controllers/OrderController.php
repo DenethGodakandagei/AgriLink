@@ -204,27 +204,40 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        $order = Order::with('items')->findOrFail($id);
+        $order = Order::with('items.product')->findOrFail($id);
+        $user = auth()->user();
 
-        if (auth()->id() !== $order->user_id && auth()->user()->role !== 'admin') {
+        // Check authorization
+        $isOwner = $user->id === $order->user_id;
+        $isAdmin = $user->role === 'admin';
+        $isSeller = $user->role === 'farmer' && $order->items->contains(function ($item) use ($user) {
+            return $item->product && $item->product->user_id === $user->id;
+        });
+
+        if (!$isOwner && !$isAdmin && !$isSeller) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        if ($order->status !== 'pending') {
-            return response()->json(['message' => 'Only pending orders can be cancelled'], 422);
-        }
+        // If authorized, allow deletion. 
+        // Note: For sellers, this 'deletes' the order. 
+        // Existing logic only allowed pending orders to be cancelled.
+        // If we want to allow deleting ANY order (e.g. cleanup), we should relax this or handle stock only if pending.
 
-        // Restore product stock
-        foreach ($order->items as $item) {
-            $product = Product::find($item->product_id);
-            if ($product) {
-                $product->quantity += $item->quantity;
-                $product->save();
+        if ($order->status === 'pending') {
+            // Restore product stock
+            foreach ($order->items as $item) {
+                // If seller is deleting, maybe only restore THEIR stock? 
+                // Using SoftDeletes, we can just restore all for simplicity if the whole order is cancelled.
+                // Assuming deleting a pending order cancels it entirely.
+                if ($item->product) {
+                    $item->product->quantity += $item->quantity;
+                    $item->product->save();
+                }
             }
         }
 
-        $order->delete();
+        $order->delete(); // Soft delete
 
-        return response()->json(['message' => 'Order cancelled successfully'], 200);
+        return response()->json(['message' => 'Order deleted successfully'], 200);
     }
 }

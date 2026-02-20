@@ -127,19 +127,19 @@ const Home = () => {
                     </div>
                 </section>
 
-                <section className="grid ml-4 grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-start max-w-8xl mx-auto px-4 sm:px-6 mb-24">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-start max-w-8xl mx-auto px-4 sm:px-6 mb-24">
                     <div className="space-y-8">
                         <div>
 
-                            <h3 className="text-4xl sm:text-4xl  text-emerald-950 mb-2">
+                            <h3 className="text-3xl sm:text-4xl text-emerald-950 mb-2">
                                 Smart Farming Solutions
                             </h3>
-                            <p className="text-3xl sm:text-3xl font-light  text-emerald-800">
+                            <p className="text-2xl sm:text-3xl font-light text-emerald-800">
                                 That Deliver Real Results
                             </p>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4">
                             {[
                                 {
                                     id: 0,
@@ -166,20 +166,20 @@ const Home = () => {
                                     className={`cursor-pointer rounded-2xl transition-all duration-300 overflow-hidden ${activeFeature === feature.id
                                         ? 'bg-white shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100'
                                         : 'bg-gray-50 hover:bg-gray-100'
-                                        }`}
+                                        } md:col-span-1 lg:col-span-1`}
                                 >
                                     <div className="p-5 flex items-center justify-between">
                                         <div className="flex items-center gap-4">
                                             {activeFeature === feature.id && (
-                                                <div className="bg-emerald-100 p-2 rounded-full">
+                                                <div className="bg-emerald-100 p-2 rounded-full hidden sm:block">
                                                     {feature.icon}
                                                 </div>
                                             )}
-                                            <span className={`font-semibold ${activeFeature === feature.id ? 'text-emerald-950' : 'text-gray-600'}`}>
+                                            <span className={`font-semibold text-sm sm:text-base ${activeFeature === feature.id ? 'text-emerald-950' : 'text-gray-600'}`}>
                                                 {feature.title}
                                             </span>
                                         </div>
-                                        <button className="text-emerald-600">
+                                        <button className="text-emerald-600 shrink-0">
                                             {activeFeature === feature.id ? <Minus size={20} /> : <Plus size={20} />}
                                         </button>
                                     </div>
@@ -189,7 +189,7 @@ const Home = () => {
                                         animate={{ height: activeFeature === feature.id ? 'auto' : 0, opacity: activeFeature === feature.id ? 1 : 0 }}
                                         className="overflow-hidden"
                                     >
-                                        <div className="px-5 pb-5 pl-[4.5rem]">
+                                        <div className="px-5 pb-5 sm:pl-[4.5rem]">
                                             <p className="text-gray-500 text-sm leading-relaxed">
                                                 {feature.desc}
                                             </p>
@@ -200,7 +200,7 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className="relative h-full min-h-[500px] w-full rounded-[2.5rem] overflow-hidden group">
+                    <div className="relative h-64 sm:h-[500px] w-full rounded-[2.5rem] overflow-hidden group mt-8 lg:mt-0">
                         <img
                             src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
                             alt="Smart Farming"
@@ -208,8 +208,8 @@ const Home = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
-                        <div className="absolute bottom-8 left-8 right-8 text-white">
-                            <p className="text-lg font-medium max-w-sm backdrop-blur-md bg-white/10 p-4 rounded-2xl border border-white/20">
+                        <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 text-white">
+                            <p className="text-sm sm:text-lg font-medium max-w-sm backdrop-blur-md bg-white/10 p-4 rounded-2xl border border-white/20">
                                 "Our intelligent agriculture solutions help farmers grow more with less by optimizing resources."
                             </p>
                         </div>
@@ -237,7 +237,7 @@ const Home = () => {
 
                     <Motion.div
                         layout
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8"
                     >
                         {loading && products.length === 0 ? (
                             <div className="col-span-full flex justify-center py-20">

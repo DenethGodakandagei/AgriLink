@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, RefreshCw, Package, ChevronDown, CheckCircle, AlertCircle, Filter, X } from 'lucide-react';
+import { Search, RefreshCw, Package, ChevronDown, CheckCircle, AlertCircle, Filter, X, Trash2 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import api from '../../../api/axios';
 
@@ -95,6 +95,20 @@ const Orders = () => {
         }
     };
 
+    const handleDeleteOrder = async (orderId) => {
+        if (!window.confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
+
+        try {
+            await api.delete(`/orders/${orderId}`);
+            setOrders(orders.filter(o => o.id !== orderId));
+            setFiltered(filtered.filter(o => o.id !== orderId));
+            showNotification('success', 'Order deleted successfully');
+        } catch (err) {
+            console.error(err);
+            showNotification('error', 'Failed to delete order');
+        }
+    };
+
     const showNotification = (type, message) => {
         setNotification({ type, message });
         setTimeout(() => setNotification(null), 3000);
@@ -113,8 +127,8 @@ const Orders = () => {
                         animate={{ opacity: 1, y: 0, x: '-50%' }}
                         exit={{ opacity: 0, y: -20, x: '-50%' }}
                         className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-full shadow-xl flex items-center gap-3 font-medium text-sm backdrop-blur-md ${notification.type === 'success'
-                                ? 'bg-emerald-600/90 text-white'
-                                : 'bg-red-500/90 text-white'
+                            ? 'bg-emerald-600/90 text-white'
+                            : 'bg-red-500/90 text-white'
                             }`}
                     >
                         {notification.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
@@ -206,6 +220,7 @@ const Orders = () => {
                                     <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
                                     <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                                     <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Payment</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -270,6 +285,15 @@ const Orders = () => {
                                                 </span>
                                                 <span className="text-xs text-gray-500">{order.payment}</span>
                                             </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button
+                                                onClick={() => handleDeleteOrder(order.id)}
+                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete Order"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
