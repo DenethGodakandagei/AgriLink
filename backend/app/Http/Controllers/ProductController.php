@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::with('user')->latest()->simplePaginate(12);
+        return Product::with('user')->latest()->paginate(12);
     }
 
     /**
