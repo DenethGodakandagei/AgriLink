@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, RefreshCw, Package, ChevronDown, CheckCircle, AlertCircle, Filter, X, Trash2 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import api from '../../../api/axios';
+import { useLanguage } from '../../../context/LanguageContext';
+import { translations } from '../../../config/translations';
 
 const STATUS_COLORS = {
     pending: 'bg-amber-100 text-amber-800 border-amber-200',
@@ -19,13 +21,13 @@ const PAY_STATUS_COLORS = {
     failed: 'bg-red-100 text-red-800',
 };
 
-const STATUS_OPTIONS = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'confirmed', label: 'Confirmed' },
-    { value: 'processing', label: 'Processing' },
-    { value: 'shipped', label: 'Shipped' },
-    { value: 'delivered', label: 'Delivered' },
-    { value: 'cancelled', label: 'Cancelled' },
+const getStatusOptions = (t) => [
+    { value: 'pending', label: t.sellerDashboard.ordersPage.statuses.pending },
+    { value: 'confirmed', label: t.sellerDashboard.ordersPage.statuses.confirmed },
+    { value: 'processing', label: t.sellerDashboard.ordersPage.statuses.processing },
+    { value: 'shipped', label: t.sellerDashboard.ordersPage.statuses.shipped },
+    { value: 'delivered', label: t.sellerDashboard.ordersPage.statuses.delivered },
+    { value: 'cancelled', label: t.sellerDashboard.ordersPage.statuses.cancelled },
 ];
 
 const Orders = () => {
@@ -36,6 +38,9 @@ const Orders = () => {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatus] = useState('all');
     const [updatingId, setUpdatingId] = useState(null);
+    const { language } = useLanguage();
+    const t = translations[language];
+    const statusOptions = getStatusOptions(t);
     const [notification, setNotification] = useState(null);
 
     const fetchOrders = async () => {
@@ -86,23 +91,27 @@ const Orders = () => {
                 o.id === orderId ? { ...o, status: newStatus } : o
             );
             setOrders(updatedOrders);
-            showNotification('success', `Order #${orderId} status updated to ${newStatus}`);
+            setOrders(updatedOrders);
+            const successMsg = t.sellerDashboard.ordersPage.notifications.updateSuccess
+                .replace('$1', orderId)
+                .replace('$2', newStatus);
+            showNotification('success', successMsg);
         } catch (err) {
             console.error(err);
-            showNotification('error', 'Failed to update order status');
+            showNotification('error', t.sellerDashboard.ordersPage.notifications.updateError);
         } finally {
             setUpdatingId(null);
         }
     };
 
     const handleDeleteOrder = async (orderId) => {
-        if (!window.confirm("Are you sure you want to delete this order? This action cannot be undone.")) return;
+        if (!window.confirm(t.sellerDashboard.ordersPage.deleteConfirm)) return;
 
         try {
             await api.delete(`/orders/${orderId}`);
             setOrders(orders.filter(o => o.id !== orderId));
             setFiltered(filtered.filter(o => o.id !== orderId));
-            showNotification('success', 'Order deleted successfully');
+            showNotification('success', t.sellerDashboard.ordersPage.notifications.deleteSuccess);
         } catch (err) {
             console.error(err);
             showNotification('error', 'Failed to delete order');
@@ -139,15 +148,15 @@ const Orders = () => {
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Orders</h2>
-                    <p className="text-gray-500 mt-1">Manage and track your customer orders</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{t.sellerDashboard.ordersPage.title}</h2>
+                    <p className="text-gray-500 mt-1">{t.sellerDashboard.ordersPage.subtitle}</p>
                 </div>
                 <button
                     onClick={fetchOrders}
                     className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium shadow-sm"
                 >
                     <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-                    Refresh
+                    {t.sellerDashboard.ordersPage.refresh}
                 </button>
             </div>
 
@@ -159,7 +168,7 @@ const Orders = () => {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search orders..."
+                        placeholder={t.sellerDashboard.ordersPage.searchPlaceholder}
                         className="w-full pl-10 pr-4 py-2 bg-gray-50 border-transparent focus:bg-white border focus:border-emerald-500 rounded-lg outline-none transition-all placeholder:text-gray-400"
                     />
                 </div>
@@ -171,8 +180,8 @@ const Orders = () => {
                             onChange={(e) => setStatus(e.target.value)}
                             className="w-full appearance-none pl-10 pr-8 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-emerald-500 focus:border-emerald-500 outline-none cursor-pointer transition-colors"
                         >
-                            <option value="all">All Statuses</option>
-                            {STATUS_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                            <option value="all">{t.sellerDashboard.ordersPage.allStatuses}</option>
+                            {statusOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                         </select>
                         <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-emerald-500 transition-colors" />
                         <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -185,7 +194,8 @@ const Orders = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-64 gap-3 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-500 border-t-transparent"></div>
-                        <p className="text-sm font-medium">Loading orders...</p>
+                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-500 border-t-transparent"></div>
+                        <p className="text-sm font-medium">{t.sellerDashboard.ordersPage.loading}</p>
                     </div>
                 ) : filtered.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-96 gap-4 text-gray-400">
@@ -193,11 +203,11 @@ const Orders = () => {
                             <Package size={40} className="text-gray-300" />
                         </div>
                         <div className="text-center">
-                            <p className="font-semibold text-gray-900 mb-1">No orders found</p>
+                            <p className="font-semibold text-gray-900 mb-1">{t.sellerDashboard.ordersPage.noOrders}</p>
                             <p className="text-sm max-w-xs mx-auto text-gray-500">
                                 {orders.length === 0
-                                    ? 'You have no orders yet. Share your products to get started!'
-                                    : 'No orders match your current filters. Try changing them.'}
+                                    ? t.sellerDashboard.ordersPage.noOrdersDesc
+                                    : t.sellerDashboard.ordersPage.noFilterMatch}
                             </p>
                         </div>
                         {search || statusFilter !== 'all' ? (
@@ -205,7 +215,7 @@ const Orders = () => {
                                 onClick={() => { setSearch(''); setStatus('all'); }}
                                 className="text-sm text-emerald-600 font-medium hover:underline flex items-center gap-1"
                             >
-                                <X size={14} /> Clear Filters
+                                <X size={14} /> {t.sellerDashboard.ordersPage.clearFilters}
                             </button>
                         ) : null}
                     </div>
@@ -214,13 +224,13 @@ const Orders = () => {
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="bg-gray-50/50 border-b border-gray-100">
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Order Details</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Payment</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.ordersPage.tableHeaders.orderDetails}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.ordersPage.tableHeaders.date}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.ordersPage.tableHeaders.customer}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.ordersPage.tableHeaders.total}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.ordersPage.tableHeaders.status}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">{t.sellerDashboard.ordersPage.tableHeaders.payment}</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">{t.sellerDashboard.ordersPage.tableHeaders.actions}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -232,8 +242,8 @@ const Orders = () => {
                                                     #{order.id}
                                                 </div>
                                                 <div>
-                                                    <p className="font-medium text-gray-900 text-sm">{order.items} Items</p>
-                                                    <p className="text-xs text-gray-500">View Details</p>
+                                                    <p className="font-medium text-gray-900 text-sm">{order.items} {t.sellerDashboard.ordersPage.items}</p>
+                                                    <p className="text-xs text-gray-500">{t.sellerDashboard.ordersPage.viewDetails}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -250,7 +260,7 @@ const Orders = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-medium text-gray-900">{order.customer}</p>
-                                                    <p className="text-xs text-gray-500">{order.city || 'Local'}</p>
+                                                    <p className="text-xs text-gray-500">{order.city || t.sellerDashboard.ordersPage.local}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -265,7 +275,7 @@ const Orders = () => {
                                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                                     className={`appearance-none w-full pl-3 pr-8 py-1.5 rounded-full text-xs font-semibold border cursor-pointer outline-none focus:ring-2 focus:ring-offset-1 focus:ring-emerald-500/30 transition-all ${getStatusStyle(order.status)} border-transparent`}
                                                 >
-                                                    {STATUS_OPTIONS.map((opt) => (
+                                                    {statusOptions.map((opt) => (
                                                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                                                     ))}
                                                 </select>

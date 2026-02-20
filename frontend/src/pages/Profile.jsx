@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { User, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { User, Mail, MapPin, Phone, ShieldCheck, Calendar, Edit3, Camera } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Profile = () => {
     const navigate = useNavigate();
+    const { language } = useLanguage();
+    const t = translations[language].profile;
+
     const [user] = useState(() => {
         const stored = localStorage.getItem('user');
         if (!stored) {
@@ -30,119 +35,144 @@ const Profile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-outfit flex flex-col">
-            <Navbar />
+        <div className={`min-h-screen bg-slate-50 ${language === 'si' ? 'font-sinhala' : ''}`}>
+            {/* Hero Section - Matching Home UI */}
+            <section className="relative h-[40vh] sm:h-[50vh] w-full overflow-hidden">
+                <img
+                    src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                    alt="Background"
+                    className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-[2px]" />
 
-            <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                            <span className="inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-emerald-100 text-emerald-700">
-                                <User size={22} />
-                            </span>
-                            Account profile
-                        </h1>
-                        <p className="text-gray-500 mt-2">
-                            Review your account details and keep your contact information up to date.
-                        </p>
+                <div className="relative z-10 flex flex-col h-full">
+                    <Navbar />
+
+                    <div className="flex-1 flex items-center justify-center">
+                        <div className="text-center px-4">
+                            <Motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-3xl sm:text-5xl font-semibold text-white tracking-tight"
+                            >
+                                {t.title}
+                            </Motion.h1>
+                            <Motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="mt-4 text-slate-100 text-lg sm:text-xl font-light max-w-2xl mx-auto"
+                            >
+                                {t.subtitle}
+                            </Motion.p>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Sidebar / User Card */}
                     <Motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-8"
+                        transition={{ delay: 0.2 }}
+                        className="lg:col-span-4"
                     >
-                        <div className="flex items-start gap-4">
-                            <div className="h-14 w-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 text-xl font-bold">
-                                {user.name?.charAt(0).toUpperCase() || '?'}
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-lg font-semibold text-gray-900">{user.name || 'Unnamed user'}</p>
-                                <p className="text-sm text-gray-500">{user.email}</p>
-                                <p className="inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 mt-2 capitalize">
-                                    {user.role || 'user'}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                                    Email
-                                </p>
-                                <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50">
-                                    <Mail size={18} className="text-gray-400" />
-                                    <span className="text-sm text-gray-800 break-all">{user.email}</span>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                                    Phone
-                                </p>
-                                <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50">
-                                    <Phone size={18} className="text-gray-400" />
-                                    <span className="text-sm text-gray-800">
-                                        {user.phone || 'Not added yet'}
+                        <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100">
+                            <div className="relative h-32 bg-gradient-to-br from-lime-400 to-emerald-600">
+                                <div className="absolute top-4 right-4">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-md border border-white/20 capitalize">
+                                        {user.role || t.role}
                                     </span>
                                 </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                                    Location
-                                </p>
-                                <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50">
-                                    <MapPin size={18} className="text-gray-400" />
-                                    <span className="text-sm text-gray-800">
-                                        {user.address || user.location || 'Not added yet'}
-                                    </span>
+                            <div className="px-8 pb-8">
+                                <div className="relative -mt-16 mb-6">
+                                    <div className="h-32 w-32 rounded-[2rem] bg-white p-2 shadow-lg mx-auto">
+                                        <div className="h-full w-full rounded-[1.5rem] bg-slate-100 flex items-center justify-center text-4xl font-bold text-emerald-600 relative overflow-hidden group cursor-pointer">
+                                            {user.name?.charAt(0).toUpperCase() || <User size={40} />}
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Camera className="text-white" size={24} />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                                    Member since
-                                </p>
-                                <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50">
-                                    <ShieldCheck size={18} className="text-gray-400" />
-                                    <span className="text-sm text-gray-800">
-                                        {user.created_at
-                                            ? new Date(user.created_at).toLocaleDateString()
-                                            : 'Recently joined'}
-                                    </span>
+                                <div className="text-center space-y-2">
+                                    <h2 className="text-2xl font-bold text-emerald-950">{user.name || t.unnamedUser}</h2>
+                                    <p className="text-slate-500 font-medium">{user.email}</p>
+                                    <div className="pt-4 flex justify-center gap-3">
+                                        <button className="flex items-center justify-center gap-2 px-6 py-2.5 bg-lime-400 text-emerald-950 rounded-full text-sm font-semibold hover:bg-lime-300 transition-colors shadow-lg shadow-lime-400/40">
+                                            <Edit3 size={16} />
+                                            {t.editProfile}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50/60 px-4 py-3 text-sm text-emerald-800">
-                            These details are used to help farmers and buyers contact each other and to improve delivery accuracy.
+                        {/* Status Card */}
+                        <div className="mt-6 bg-white rounded-[2rem] shadow-lg shadow-slate-200/50 p-6 border border-slate-100">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600">
+                                    <ShieldCheck size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-emerald-950">{t.accountStatus}</h3>
+                                    <p className="text-sm text-emerald-600 font-medium">{t.verifiedActive}</p>
+                                </div>
+                            </div>
                         </div>
                     </Motion.div>
 
+                    {/* Main Content Details */}
                     <Motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 }}
-                        className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4 text-sm"
+                        transition={{ delay: 0.3 }}
+                        className="lg:col-span-8 space-y-6"
                     >
-                        <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                            Account status
-                        </p>
-                        <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 text-emerald-800">
-                            <ShieldCheck size={18} />
-                            <div>
-                                <p className="text-sm font-semibold">Secure and active</p>
-                                <p className="text-xs text-emerald-900/80">
-                                    Your AgriLink account is protected. Keep your login details private.
+                        <div className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 p-8 sm:p-10 border border-slate-100">
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 className="text-2xl font-bold text-emerald-950">{t.personalInfo}</h3>
+                                    <p className="text-slate-500 mt-1">{t.personalInfoDesc}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+                                <InfoItem
+                                    icon={<Mail className="text-emerald-500" size={20} />}
+                                    label={t.email}
+                                    value={user.email}
+                                />
+                                <InfoItem
+                                    icon={<Phone className="text-emerald-500" size={20} />}
+                                    label={t.phone}
+                                    value={user.phone || t.notProvided}
+                                    isEmpty={!user.phone}
+                                />
+                                <InfoItem
+                                    icon={<MapPin className="text-emerald-500" size={20} />}
+                                    label={t.location}
+                                    value={user.address || user.location || t.notProvided}
+                                    isEmpty={!user.address && !user.location}
+                                />
+                                <InfoItem
+                                    icon={<Calendar className="text-emerald-500" size={20} />}
+                                    label={t.memberSince}
+                                    value={user.created_at ? new Date(user.created_at).toLocaleDateString() : t.recentMember}
+                                />
+                            </div>
+
+                            {/* Additional Info / Bio Placeholder */}
+                            <div className="mt-10 pt-10 border-t border-slate-100">
+                                <h4 className="font-semibold text-emerald-950 mb-4">{t.bio}</h4>
+                                <p className="text-slate-500 leading-relaxed">
+                                    {t.bioDesc}
                                 </p>
                             </div>
                         </div>
-                        <p className="text-xs text-gray-500 leading-relaxed">
-                            For any changes to your core account details, such as email or role, contact platform support or your local AgriLink administrator.
-                        </p>
                     </Motion.div>
                 </div>
             </main>
@@ -150,5 +180,20 @@ const Profile = () => {
         </div>
     );
 };
+
+// Helper component for display consistent info items
+const InfoItem = ({ icon, label, value, isEmpty }) => (
+    <div className="group">
+        <div className="flex items-center gap-3 mb-2">
+            <div className={`p-2 rounded-lg ${isEmpty ? 'bg-slate-50 text-slate-400' : 'bg-emerald-50 text-emerald-600'} transition-colors group-hover:bg-emerald-100`}>
+                {icon}
+            </div>
+            <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">{label}</span>
+        </div>
+        <div className={`pl-11 text-base font-medium ${isEmpty ? 'text-slate-400 italic' : 'text-slate-700'}`}>
+            {value}
+        </div>
+    </div>
+);
 
 export default Profile;

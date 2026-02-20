@@ -4,6 +4,8 @@ import axios from 'axios';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Loader2, Check, Tag, DollarSign, Package, FileText, ArrowRight, LayoutGrid } from 'lucide-react';
 import CloudinaryUpload from '../../../components/CloudinaryUpload';
+import { useLanguage } from '../../../context/LanguageContext';
+import { translations } from '../../../config/translations';
 
 const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     });
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
+    const { language } = useLanguage();
+    const t = translations[language];
 
     // Populate form if editing
     useEffect(() => {
@@ -62,7 +66,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         setMessage({ type: '', text: '' });
 
         if (formData.images.length === 0) {
-            setMessage({ type: 'error', text: 'Please upload at least one image.' });
+            setMessage({ type: 'error', text: t.sellerDashboard.productModal.errorImage });
             setSubmitting(false);
             return;
         }
@@ -79,11 +83,11 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
             if (product) {
                 // Edit existing product
                 await axios.put(`http://localhost:8000/api/products/${product.id}`, formData, config);
-                setMessage({ type: 'success', text: 'Product updated successfully!' });
+                setMessage({ type: 'success', text: t.sellerDashboard.productModal.successUpdate });
             } else {
                 // Create new product
                 await axios.post('http://localhost:8000/api/products', formData, config);
-                setMessage({ type: 'success', text: 'Product added successfully!' });
+                setMessage({ type: 'success', text: t.sellerDashboard.productModal.successAdd });
             }
 
             // Close modal after delay
@@ -94,7 +98,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
 
         } catch (error) {
             console.error(error);
-            setMessage({ type: 'error', text: error.response?.data?.message || 'Operation failed.' });
+            setMessage({ type: 'error', text: error.response?.data?.message || t.sellerDashboard.productModal.errorOperation });
         } finally {
             setSubmitting(false);
         }
@@ -126,10 +130,10 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 <div>
                                     <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                                         {product ? <Tag className="text-emerald-200" /> : <Package className="text-emerald-200" />}
-                                        {product ? 'Edit Product' : 'Add New Product'}
+                                        {product ? t.sellerDashboard.productModal.editProduct : t.sellerDashboard.productModal.addNewProduct}
                                     </h2>
                                     <p className="text-emerald-100 mt-1 text-sm opacity-90">
-                                        {product ? 'Update your product details and inventory.' : 'Share your harvest with the world.'}
+                                        {product ? t.sellerDashboard.productModal.updateDetails : t.sellerDashboard.productModal.shareHarvest}
                                     </p>
                                 </div>
                                 <button
@@ -147,8 +151,8 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         className={`p-4 mb-6 rounded-2xl flex items-center gap-3 shadow-sm ${message.type === 'success'
-                                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-100'
-                                                : 'bg-red-50 text-red-800 border border-red-100'
+                                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-100'
+                                            : 'bg-red-50 text-red-800 border border-red-100'
                                             }`}
                                     >
                                         <div className={`p-2 rounded-full ${message.type === 'success' ? 'bg-emerald-100' : 'bg-red-100'}`}>
@@ -162,7 +166,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     <div className="space-y-5">
                                         {/* Product Name */}
                                         <div className="group">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Product Name</label>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.productName}</label>
                                             <div className="relative">
                                                 <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                 <input
@@ -172,7 +176,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                     onChange={handleInputChange}
                                                     required
                                                     className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
-                                                    placeholder="e.g., Organic Red Apples"
+                                                    placeholder={t.sellerDashboard.productModal.placeholderName}
                                                 />
                                             </div>
                                         </div>
@@ -180,7 +184,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                         {/* Category & Price Row */}
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                             <div className="group">
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Category</label>
+                                                <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.category}</label>
                                                 <div className="relative">
                                                     <LayoutGrid className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                     <select
@@ -190,17 +194,17 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                         required
                                                         className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 appearance-none cursor-pointer"
                                                     >
-                                                        <option value="">Select Category</option>
-                                                        <option value="Vegetables">Vegetables</option>
-                                                        <option value="Fruits">Fruits</option>
-                                                        <option value="Grains">Grains</option>
-                                                        <option value="Machinery">Machinery</option>
-                                                        <option value="Seeds">Seeds</option>
+                                                        <option value="">{t.sellerDashboard.productModal.selectCategory}</option>
+                                                        <option value="Vegetables">{t.marketplace.sidebar.categories['Vegetables']}</option>
+                                                        <option value="Fruits">{t.marketplace.sidebar.categories['Fruits']}</option>
+                                                        <option value="Grains">{t.marketplace.sidebar.categories['Grains & Cereals']}</option>
+                                                        <option value="Machinery">{t.marketplace.sidebar.categories['Equipment']}</option>
+                                                        <option value="Seeds">{t.marketplace.sidebar.categories['Seeds']}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div className="group">
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Price</label>
+                                                <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.price}</label>
                                                 <div className="relative">
                                                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                     <input
@@ -219,7 +223,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
 
                                         {/* Quantity */}
                                         <div className="group">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Stock Quantity</label>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.stockQuantity}</label>
                                             <div className="relative">
                                                 <Package className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                 <input
@@ -231,13 +235,13 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                     className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                                                     placeholder="e.g., 100"
                                                 />
-                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">units</span>
+                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">{t.sellerDashboard.productsPage.units}</span>
                                             </div>
                                         </div>
 
                                         {/* Description */}
                                         <div className="group">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">Description</label>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.description}</label>
                                             <div className="relative">
                                                 <FileText className="absolute left-4 top-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                 <textarea
@@ -247,7 +251,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                     required
                                                     rows="4"
                                                     className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
-                                                    placeholder="Tell customers about your product..."
+                                                    placeholder={t.sellerDashboard.productModal.placeholderDesc}
                                                 ></textarea>
                                             </div>
                                         </div>
@@ -257,7 +261,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     <div className="border-t border-gray-100 pt-8">
                                         <div className="flex items-center gap-2 mb-4">
                                             <Upload className="text-emerald-500" size={20} />
-                                            <h3 className="text-lg font-bold text-gray-900">Product Gallery</h3>
+                                            <h3 className="text-lg font-bold text-gray-900">{t.sellerDashboard.productModal.productGallery}</h3>
                                         </div>
                                         <div className="bg-gray-50 rounded-2xl p-4 border border-dashed border-gray-200 hover:border-emerald-300 transition-colors">
                                             <CloudinaryUpload
@@ -277,7 +281,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     onClick={onClose}
                                     className="px-6 py-3 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-colors"
                                 >
-                                    Cancel
+                                    {t.sellerDashboard.productModal.cancel}
                                 </button>
                                 <button
                                     onClick={handleSubmit}
@@ -287,11 +291,11 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     {submitting ? (
                                         <>
                                             <Loader2 size={20} className="animate-spin" />
-                                            Processing...
+                                            {t.sellerDashboard.productModal.processing}
                                         </>
                                     ) : (
                                         <>
-                                            {product ? 'Save Changes' : 'Create Product'}
+                                            {product ? t.sellerDashboard.productModal.saveChanges : t.sellerDashboard.productModal.createProduct}
                                             {!product && <ArrowRight size={20} />}
                                         </>
                                     )}

@@ -13,11 +13,15 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/useCart';
 import { useSaved } from '../context/SavedContext';
 import { ShoppingCart } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { isSaved, toggleSave } = useSaved();
+    const { language } = useLanguage();
+    const t = translations[language];
 
     const handleCardClick = () => {
         navigate(`/product/${product.id}`);
@@ -54,7 +58,7 @@ const ProductCard = ({ product }) => {
                             addToCart(product);
                         }}
                         className="p-3 rounded-full bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-emerald-600 hover:text-white shadow-sm transition-all hover:scale-110"
-                        title="Add to Cart"
+                        title={t.productCard.addToCart}
                     >
                         <ShoppingCart size={20} strokeWidth={1.5} />
                     </button>
@@ -65,7 +69,7 @@ const ProductCard = ({ product }) => {
                         }}
                         className={`p-3 rounded-full bg-white/90 backdrop-blur-sm shadow-sm transition-all hover:scale-110 ${isSaved(product.id) ? 'text-red-500 hover:text-red-600' : 'text-gray-700 hover:text-red-500'
                             }`}
-                        title={isSaved(product.id) ? "Remove from saved" : "Save for later"}
+                        title={isSaved(product.id) ? t.productCard.removeFromSaved : t.productCard.saveForLater}
                     >
                         <Heart size={20} fill={isSaved(product.id) ? "currentColor" : "none"} strokeWidth={1.5} />
                     </button>
@@ -79,7 +83,7 @@ const ProductCard = ({ product }) => {
                         {product.name || product.title}
                     </h3>
                     <p className="text-xs text-gray-500 uppercase tracking-widest font-medium">
-                        {product.category || 'General'}
+                        {product.category || t.productCard.generalCategory}
                     </p>
                 </div>
                 <span className="text-lg font-medium text-gray-400">

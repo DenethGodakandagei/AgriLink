@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Plus, Search, Filter, Edit, Trash2, Package, MoreHorizontal, ChevronRight, AlertCircle, Loader2 } from 'lucide-react';
 import ProductModal from './ProductModal';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../../context/LanguageContext';
+import { translations } from '../../../config/translations';
 
 const Products = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,6 +13,8 @@ const Products = () => {
     const [loading, setLoading] = useState(true);
     const [editingProduct, setEditingProduct] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const { language } = useLanguage();
+    const t = translations[language];
 
     const fetchProducts = async () => {
         try {
@@ -78,15 +82,15 @@ const Products = () => {
         <div className="font-outfit">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Products</h2>
-                    <p className="text-gray-500 mt-1">Manage your inventory and pricing</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{t.sellerDashboard.productsPage.title}</h2>
+                    <p className="text-gray-500 mt-1">{t.sellerDashboard.productsPage.subtitle}</p>
                 </div>
                 <button
                     onClick={handleAddProduct}
                     className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-emerald-200 transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                     <Plus size={20} />
-                    Add Product
+                    {t.sellerDashboard.productsPage.addProduct}
                 </button>
             </div>
 
@@ -98,7 +102,7 @@ const Products = () => {
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search products..."
+                        placeholder={t.sellerDashboard.productsPage.searchPlaceholder}
                         className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
                     />
                 </div>
@@ -111,12 +115,12 @@ const Products = () => {
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-gray-50/50 border-b border-gray-100">
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Product</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Stock</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.productsPage.tableHeaders.product}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.productsPage.tableHeaders.category}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.productsPage.tableHeaders.price}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.productsPage.tableHeaders.stock}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t.sellerDashboard.productsPage.tableHeaders.status}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">{t.sellerDashboard.productsPage.tableHeaders.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -125,7 +129,7 @@ const Products = () => {
                                     <td colSpan="6" className="text-center py-12">
                                         <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
                                             <Loader2 size={32} className="animate-spin text-emerald-500" />
-                                            <p className="text-sm">Loading inventory...</p>
+                                            <p className="text-sm">{t.sellerDashboard.productsPage.loading}</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -136,16 +140,18 @@ const Products = () => {
                                             <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-2">
                                                 <Package size={32} />
                                             </div>
-                                            <p className="font-medium text-gray-600">No products found</p>
+                                            <p className="font-medium text-gray-600">{t.sellerDashboard.productsPage.noProducts}</p>
                                             <p className="text-sm max-w-xs mx-auto">
-                                                {searchTerm ? "Try adjusting your search terms." : "Start by adding your first product to the marketplace."}
+                                                {searchTerm
+                                                    ? t.sellerDashboard.productsPage.tryAdjusting
+                                                    : t.sellerDashboard.productsPage.noProductsSubtitle}
                                             </p>
                                             {!searchTerm && (
                                                 <button
                                                     onClick={handleAddProduct}
                                                     className="mt-4 px-4 py-2 text-sm font-medium text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
                                                 >
-                                                    Add New Product
+                                                    {t.sellerDashboard.productsPage.addNewProduct}
                                                 </button>
                                             )}
                                         </div>
@@ -180,15 +186,17 @@ const Products = () => {
                                             ${Number(product.price).toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600 font-medium">
-                                            {product.quantity} units
+                                            {product.quantity} {t.sellerDashboard.productsPage.units}
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${product.quantity > 0
-                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                                    : 'bg-red-50 text-red-700 border-red-100'
+                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                                : 'bg-red-50 text-red-700 border-red-100'
                                                 }`}>
                                                 <span className={`w-1.5 h-1.5 rounded-full ${product.quantity > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                                                {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                                                {product.quantity > 0
+                                                    ? t.sellerDashboard.productsPage.inStock
+                                                    : t.sellerDashboard.productsPage.outOfStock}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
@@ -219,7 +227,7 @@ const Products = () => {
                 {/* Footer / Pagination Placeholder */}
                 {filteredProducts.length > 0 && (
                     <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between text-xs text-gray-500">
-                        <span>Showing {filteredProducts.length} products</span>
+                        <span>{t.sellerDashboard.productsPage.showing} {filteredProducts.length} {t.sellerDashboard.productsPage.title.toLowerCase()}</span>
                         {/* Add real pagination controls here if api/my-products supports numbered pages later */}
                     </div>
                 )}

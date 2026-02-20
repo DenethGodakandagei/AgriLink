@@ -71,19 +71,19 @@ const Navbar = () => {
 
     const getDashboardLink = () => {
         if (!user) return null;
-        if (user.role === 'farmer') return { to: '/seller-dashboard', label: 'Dashboard' };
-        if (user.role === 'buyer') return { to: '/buyer-dashboard', label: 'Dashboard' };
+        if (user.role === 'farmer') return { to: '/seller-dashboard', label: t.navbar.dashboard };
+        if (user.role === 'buyer') return { to: '/buyer-dashboard', label: t.navbar.dashboard };
         return null;
     };
 
     const dashboardLink = getDashboardLink();
 
     const navLinks = [
-        { to: '/', label: 'Home' },
-        { to: '/marketplace', label: 'Marketplace' },
+        { to: '/', label: t.navbar.home },
+        { to: '/marketplace', label: t.navbar.marketplace },
         ...(user ? [
-            { to: '/orders', label: 'Orders' },
-            { to: '/saved', label: 'Saved' },
+            { to: '/orders', label: t.navbar.orders },
+            { to: '/saved', label: t.navbar.saved },
         ] : []),
     ];
 
@@ -221,14 +221,14 @@ const Navbar = () => {
                                                 className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                             >
                                                 <User size={15} />
-                                                My Profile
+                                                {t.navbar.profile}
                                             </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                             >
                                                 <LogOut size={15} />
-                                                Sign Out
+                                                {t.navbar.signOut}
                                             </button>
                                         </Motion.div>
                                     )}
@@ -246,7 +246,7 @@ const Navbar = () => {
                                             : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
                                         }`}
                                 >
-                                    Sign In
+                                    {t.navbar.signIn}
                                 </Link>
                                 <Link
                                     to="/register"
@@ -255,7 +255,7 @@ const Navbar = () => {
                                         : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-200'
                                         }`}
                                 >
-                                    Get Started
+                                    {t.navbar.getStarted}
                                 </Link>
                             </div>
                         )}
@@ -286,7 +286,7 @@ const Navbar = () => {
                         <div className="px-4 py-4 space-y-1">
                             {/* Mobile Language Toggle */}
                             <div className="flex items-center justify-between px-3 py-2 mb-2">
-                                <span className="text-sm font-medium text-gray-500">Language</span>
+                                <span className="text-sm font-medium text-gray-500">{t.navbar.language}</span>
                                 <button
                                     onClick={() => switchLanguage(language === 'en' ? 'si' : 'en')}
                                     className="flex items-center justify-center px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-semibold text-emerald-700 bg-emerald-50"
@@ -361,7 +361,7 @@ const Navbar = () => {
                                         className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-red-600 hover:bg-red-50"
                                     >
                                         <LogOut size={16} />
-                                        Sign Out
+                                        {t.navbar.signOut}
                                     </button>
                                 </div>
                             ) : (
@@ -371,14 +371,14 @@ const Navbar = () => {
                                         onClick={() => setMobileOpen(false)}
                                         className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors text-gray-700 border-gray-200 hover:bg-gray-50"
                                     >
-                                        Sign In
+                                        {t.navbar.signIn}
                                     </Link>
                                     <Link
                                         to="/register"
                                         onClick={() => setMobileOpen(false)}
                                         className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white bg-emerald-600 hover:bg-emerald-700"
                                     >
-                                        Get Started
+                                        {t.navbar.getStarted}
                                     </Link>
                                 </div>
                             )}

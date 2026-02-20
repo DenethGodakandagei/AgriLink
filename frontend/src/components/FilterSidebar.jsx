@@ -6,8 +6,12 @@ import {
     RotateCcw
 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const FilterSidebar = ({ filters, setFilters }) => {
+    const { language } = useLanguage();
+    const t = translations[language];
     // Categories list - could be passed as prop or fetched
     const categoryOptions = ['Grains & Cereals', 'Vegetables', 'Fruits', 'Legumes', 'Equipment', 'Seeds', 'Dairy'];
 
@@ -38,7 +42,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
         <div className="bg-white w-full lg:w-72 p-6 rounded-none lg:rounded-[1.5rem] lg:border border-gray-100 lg:shadow-sm lg:sticky lg:top-24 h-auto lg:max-h-[85vh] overflow-y-auto no-scrollbar font-outfit">
 
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Filters</h2>
+                <h2 className="text-xl font-bold text-gray-900">{t.marketplace.sidebar.title}</h2>
                 <AnimatePresence>
                     {hasActiveFilters && (
                         <Motion.button
@@ -47,7 +51,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
                             exit={{ opacity: 0, scale: 0.9 }}
                             onClick={resetFilters}
                             className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50"
-                            title="Reset All"
+                            title={t.marketplace.sidebar.reset}
                         >
                             <RotateCcw size={18} />
                         </Motion.button>
@@ -58,7 +62,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
             {/* Category */}
             <div className="mb-8">
                 <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                    Category
+                    {t.marketplace.sidebar.category}
                 </h3>
                 <div className="space-y-1">
                     {categoryOptions.map((category) => {
@@ -68,11 +72,11 @@ const FilterSidebar = ({ filters, setFilters }) => {
                                 key={category}
                                 onClick={() => handleCategoryChange(category)}
                                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${isSelected
-                                        ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm ring-1 ring-emerald-100'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                    ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm ring-1 ring-emerald-100'
+                                    : 'text-gray-600 hover:bg-gray-50'
                                     }`}
                             >
-                                <span>{category}</span>
+                                <span>{t.marketplace.sidebar.categories[category] || category}</span>
                                 {isSelected && (
                                     <Motion.span
                                         initial={{ scale: 0 }}
@@ -93,7 +97,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
             {/* Price */}
             <div className="mb-8">
                 <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                    Price Range
+                    {t.marketplace.sidebar.priceRange}
                 </h3>
                 <div className="bg-gray-50 p-1 rounded-xl flex items-center gap-2 border border-gray-100 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all">
                     <div className="relative flex-1">
@@ -103,7 +107,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
                             name="minPrice"
                             value={filters.minPrice}
                             onChange={handlePriceChange}
-                            placeholder="Min"
+                            placeholder={t.marketplace.sidebar.min}
                             className="w-full bg-transparent border-none py-2.5 pl-7 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
                         />
                     </div>
@@ -115,7 +119,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
                             name="maxPrice"
                             value={filters.maxPrice}
                             onChange={handlePriceChange}
-                            placeholder="Max"
+                            placeholder={t.marketplace.sidebar.max}
                             className="w-full bg-transparent border-none py-2.5 pl-7 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
                         />
                     </div>
@@ -124,8 +128,8 @@ const FilterSidebar = ({ filters, setFilters }) => {
                 {/* Price Presets */}
                 <div className="flex flex-wrap gap-2 mt-3">
                     {[
-                        { label: 'Under $20', min: '', max: '20' },
-                        { label: '$20 - $100', min: '20', max: '100' },
+                        { label: t.marketplace.sidebar.pricePresets.under20, min: '', max: '20' },
+                        { label: t.marketplace.sidebar.pricePresets.range20to100, min: '20', max: '100' },
                     ].map((preset, i) => (
                         <button
                             key={i}
@@ -143,7 +147,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
             {/* Rating */}
             <div>
                 <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                    Rating
+                    {t.marketplace.sidebar.rating}
                 </h3>
                 <div className="space-y-1">
                     {[5, 4, 3, 2, 1].map((stars) => {
@@ -153,8 +157,8 @@ const FilterSidebar = ({ filters, setFilters }) => {
                                 key={stars}
                                 onClick={() => handleRatingToggle(stars)}
                                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 ${isSelected
-                                        ? 'bg-amber-50 ring-1 ring-amber-100' // Selected styling
-                                        : 'hover:bg-gray-50'
+                                    ? 'bg-amber-50 ring-1 ring-amber-100' // Selected styling
+                                    : 'hover:bg-gray-50'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">
@@ -170,7 +174,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
                                         ))}
                                     </div>
                                     <span className={`text-sm ${isSelected ? 'text-amber-700 font-medium' : 'text-gray-500'}`}>
-                                        & Up
+                                        {t.marketplace.sidebar.ratingAndUp}
                                     </span>
                                 </div>
                                 {isSelected && <Check size={16} className="text-amber-600" />}

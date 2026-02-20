@@ -7,6 +7,8 @@ import FilterSidebar from '../components/FilterSidebar';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { Filter, X, Search } from 'lucide-react';
 import axios from 'axios';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Marketplace = () => {
     const [products, setProducts] = useState([]);
@@ -14,6 +16,8 @@ const Marketplace = () => {
     const [loading, setLoading] = useState(true);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const { language } = useLanguage();
+    const t = translations[language];
 
     // Filter state
     const [filters, setFilters] = useState({
@@ -81,7 +85,7 @@ const Marketplace = () => {
     }, [products, filters, searchQuery]);
 
     return (
-        <div className="min-h-screen bg-slate-50 font-outfit">
+        <div className={`min-h-screen bg-slate-50 font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}>
             {/* Hero Section */}
             <section className="relative h-[40vh] min-h-[300px] w-full overflow-hidden">
                 <img
@@ -99,7 +103,7 @@ const Marketplace = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight"
                         >
-                            AgriLink Marketplace
+                            {t.marketplace.pageTitle}
                         </Motion.h1>
                         <Motion.p
                             initial={{ opacity: 0, y: 20 }}
@@ -107,7 +111,7 @@ const Marketplace = () => {
                             transition={{ delay: 0.1 }}
                             className="text-lg text-slate-100 max-w-2xl font-light"
                         >
-                            Connect directly with farmers. Fresh produce, fair prices.
+                            {t.marketplace.pageSubtitle}
                         </Motion.p>
                     </div>
                 </div>
@@ -122,13 +126,13 @@ const Marketplace = () => {
                         onClick={() => setMobileFiltersOpen(true)}
                     >
                         <Filter size={18} />
-                        Filters
+                        {t.marketplace.filters}
                     </button>
 
                     <div className="relative w-full sm:w-96">
                         <input
                             type="text"
-                            placeholder="Search for products..."
+                            placeholder={t.marketplace.searchPlaceholder}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-full focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-shadow shadow-sm"
@@ -137,7 +141,7 @@ const Marketplace = () => {
                     </div>
 
                     <p className="text-gray-500 text-sm font-medium hidden sm:block">
-                        Showing {filteredProducts.length} results
+                        {t.marketplace.showingResults} ({filteredProducts.length})
                     </p>
                 </div>
 
@@ -163,8 +167,8 @@ const Marketplace = () => {
                             </div>
                         ) : filteredProducts.length === 0 ? (
                             <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-                                <p className="text-gray-500">Try adjusting your filters or search query.</p>
+                                <h3 className="text-xl font-semibold text-gray-900 mb-2">{t.marketplace.noProductsTitle}</h3>
+                                <p className="text-gray-500">{t.marketplace.noProductsDesc}</p>
                                 <button
                                     onClick={() => {
                                         setFilters({ categories: [], minPrice: '', maxPrice: '', rating: 0 });
@@ -172,7 +176,7 @@ const Marketplace = () => {
                                     }}
                                     className="mt-6 px-6 py-2 bg-emerald-50 text-emerald-700 font-medium rounded-full hover:bg-emerald-100 transition-colors"
                                 >
-                                    Clear all filters
+                                    {t.marketplace.clearFilters}
                                 </button>
                             </div>
                         ) : (
@@ -207,7 +211,7 @@ const Marketplace = () => {
                             className="fixed inset-y-0 right-0 w-full sm:w-80 bg-white z-50 lg:hidden shadow-2xl overflow-y-auto"
                         >
                             <div className="p-4 flex items-center justify-between border-b border-gray-100 sticky top-0 bg-white z-10">
-                                <h2 className="text-lg font-bold text-gray-900">Filters</h2>
+                                <h2 className="text-lg font-bold text-gray-900">{t.marketplace.filters}</h2>
                                 <button
                                     onClick={() => setMobileFiltersOpen(false)}
                                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
@@ -223,7 +227,7 @@ const Marketplace = () => {
                                     onClick={() => setMobileFiltersOpen(false)}
                                     className="w-full bg-emerald-600 text-white font-medium py-3 rounded-xl hover:bg-emerald-700 transition-colors"
                                 >
-                                    Show {filteredProducts.length} Results
+                                    {t.marketplace.showResults} ({filteredProducts.length})
                                 </button>
                             </div>
                         </Motion.div>

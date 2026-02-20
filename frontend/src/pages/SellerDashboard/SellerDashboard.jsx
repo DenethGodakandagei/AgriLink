@@ -10,6 +10,8 @@ import {
     X,
     Bell
 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
+import { translations } from '../../config/translations';
 
 const SellerDashboard = () => {
     const navigate = useNavigate();
@@ -29,6 +31,8 @@ const SellerDashboard = () => {
             return null;
         }
     });
+    const { language } = useLanguage();
+    const t = translations[language];
 
     // Determine active tab based on URL
     const getActiveTab = () => {
@@ -58,16 +62,16 @@ const SellerDashboard = () => {
     };
 
     const menuItems = [
-        { id: 'overview', label: 'Overview', icon: LayoutDashboard, path: '/seller-dashboard' },
-        { id: 'products', label: 'Products', icon: Package, path: '/seller-dashboard/products' },
-        { id: 'orders', label: 'Orders', icon: ShoppingCart, path: '/seller-dashboard/orders' },
-        // { id: 'settings', label: 'Settings', icon: Settings, path: '/seller-dashboard/settings' }, // Uncomment when settings page is ready
+        { id: 'overview', label: t.sellerDashboard.overview, icon: LayoutDashboard, path: '/seller-dashboard' },
+        { id: 'products', label: t.sellerDashboard.products, icon: Package, path: '/seller-dashboard/products' },
+        { id: 'orders', label: t.sellerDashboard.orders, icon: ShoppingCart, path: '/seller-dashboard/orders' },
+        // { id: 'settings', label: t.sellerDashboard.settings, icon: Settings, path: '/seller-dashboard/settings' }, // Uncomment when settings page is ready
     ];
 
     if (!user) return null; // Or a loading spinner
 
     return (
-        <div className="min-h-screen bg-gray-50 flex font-outfit">
+        <div className={`min-h-screen bg-gray-50 flex font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}>
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
@@ -85,7 +89,7 @@ const SellerDashboard = () => {
                 <div className="h-full flex flex-col">
                     {/* Logo area */}
                     <div className="p-8 border-b border-gray-50">
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">AgriLink Seller</h1>
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">{t.sellerDashboard.title}</h1>
                     </div>
 
                     {/* Navigation */}
@@ -130,7 +134,7 @@ const SellerDashboard = () => {
                             className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors font-medium"
                         >
                             <LogOut size={18} />
-                            Sign Out
+                            {t.sellerDashboard.signOut}
                         </button>
                     </div>
                 </div>
@@ -148,7 +152,10 @@ const SellerDashboard = () => {
                             <Menu size={24} />
                         </button>
                         <h2 className="text-xl font-bold text-gray-800 capitalize hidden sm:block">
-                            {activeTab === 'overview' ? 'Dashboard Overview' : activeTab}
+                            {activeTab === 'overview' ? t.sellerDashboard.dashboardOverview :
+                                activeTab === 'products' ? t.sellerDashboard.products :
+                                    activeTab === 'orders' ? t.sellerDashboard.orders :
+                                        activeTab}
                         </h2>
                     </div>
 
@@ -158,7 +165,7 @@ const SellerDashboard = () => {
                             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                         </button>
                         <Link to="/" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
-                            Visit Store
+                            {t.sellerDashboard.visitStore}
                         </Link>
                     </div>
                 </header>

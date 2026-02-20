@@ -21,12 +21,16 @@ import {
     AlertCircle
 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Orders = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedOrder, setExpandedOrder] = useState(null);
+    const { language } = useLanguage();
+    const t = translations[language];
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -68,7 +72,7 @@ const Orders = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-outfit">
+        <div className={`min-h-screen bg-slate-50 font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}>
             {/* Hero Section */}
             <section className="relative h-[45vh] min-h-[400px] w-full overflow-hidden">
                 <img
@@ -88,8 +92,8 @@ const Orders = () => {
                                 transition={{ duration: 0.6 }}
                                 className="text-4xl sm:text-6xl font-semibold text-white mb-6 tracking-tight"
                             >
-                                <span className="block">Manage Your</span>
-                                <span className="text-emerald-300">Harvest History</span>
+                                <span className="block">{t.orders.manageYour}</span>
+                                <span className="text-emerald-300">{t.orders.harvestHistory}</span>
                             </Motion.h1>
                             <Motion.p
                                 initial={{ opacity: 0, y: 20 }}
@@ -97,7 +101,7 @@ const Orders = () => {
                                 transition={{ delay: 0.2, duration: 0.6 }}
                                 className="text-slate-200 text-lg sm:text-xl font-light"
                             >
-                                Track your farm-fresh deliveries and past purchases with ease.
+                                {t.orders.heroDesc}
                             </Motion.p>
                         </div>
                     </div>
@@ -114,7 +118,7 @@ const Orders = () => {
                         className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm hover:bg-white/20 transition-all"
                     >
                         <ShoppingBag size={18} strokeWidth={1.5} className="mr-2" />
-                        Back to Shop
+                        {t.orders.backToShop}
                     </Motion.button>
                 </div>
 
@@ -131,15 +135,15 @@ const Orders = () => {
                         <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-300 mx-auto mb-8">
                             <Package size={48} strokeWidth={1.5} />
                         </div>
-                        <h2 className="text-3xl font-bold text-slate-800 mb-4">No orders yet</h2>
+                        <h2 className="text-3xl font-bold text-slate-800 mb-4">{t.orders.noOrdersTitle}</h2>
                         <p className="text-slate-500 mb-8 max-w-md mx-auto text-lg leading-relaxed">
-                            Fresh produce is waiting for you. Start your journey with us today and support local farmers.
+                            {t.orders.noOrdersDesc}
                         </p>
                         <Link
                             to="/"
                             className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-all hover:scale-105"
                         >
-                            Start Shopping
+                            {t.orders.startShopping}
                             <ArrowRight size={20} strokeWidth={1.5} className="ml-2" />
                         </Link>
                     </Motion.div>
@@ -168,17 +172,17 @@ const Orders = () => {
                                                 </div>
                                                 <div>
                                                     <div className="flex flex-wrap items-center gap-3 mb-2">
-                                                        <h3 className="text-xl font-bold text-slate-900">Order #{order.id}</h3>
+                                                        <h3 className="text-xl font-bold text-slate-900">{t.orders.orderId}{order.id}</h3>
                                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1.5 ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
-                                                            <span className="capitalize">{order.status}</span>
+                                                            <span className="capitalize">{t.orders.status[order.status] || order.status}</span>
                                                         </span>
                                                         {order.payment_status === 'paid' ? (
                                                             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-                                                                <CheckCircle2 size={12} strokeWidth={2} /> Paid
+                                                                <CheckCircle2 size={12} strokeWidth={2} /> {t.orders.status.paid}
                                                             </span>
                                                         ) : (
                                                             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                                                                <AlertCircle size={12} strokeWidth={2} /> {order.payment_status === 'failed' ? 'Failed' : 'Pending'}
+                                                                <AlertCircle size={12} strokeWidth={2} /> {order.payment_status === 'failed' ? t.orders.status.failed : t.orders.status.pending}
                                                             </span>
                                                         )}
                                                     </div>
@@ -194,7 +198,7 @@ const Orders = () => {
                                                         <span className="hidden sm:inline w-1 h-1 bg-slate-300 rounded-full" />
                                                         <span className="flex items-center gap-2">
                                                             <Receipt size={16} strokeWidth={1.5} className="text-slate-400" />
-                                                            {order.items?.length || 0} items
+                                                            {order.items?.length || 0} {t.orders.items}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -202,7 +206,7 @@ const Orders = () => {
 
                                             <div className="flex items-center justify-between lg:justify-end gap-8 border-t lg:border-t-0 border-slate-100 pt-4 lg:pt-0">
                                                 <div className="text-left lg:text-right">
-                                                    <p className="text-sm font-medium text-slate-500 mb-1">Total Amount</p>
+                                                    <p className="text-sm font-medium text-slate-500 mb-1">{t.orders.totalAmount}</p>
                                                     <p className="text-2xl font-bold text-emerald-600">
                                                         ${Number(order.total_price).toFixed(2)}
                                                     </p>
@@ -228,7 +232,7 @@ const Orders = () => {
                                                     <div className="lg:col-span-2 space-y-6">
                                                         <h4 className="font-semibold text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
                                                             <ShoppingBag size={18} strokeWidth={1.5} className="text-emerald-600" />
-                                                            Items
+                                                            {t.orders.itemsHeader}
                                                         </h4>
                                                         <div className="space-y-4">
                                                             {order.items?.map((item) => (
@@ -260,7 +264,7 @@ const Orders = () => {
                                                                             {item.product?.name || 'Product Item'}
                                                                         </h5>
                                                                         <p className="text-sm text-slate-500">
-                                                                            Unit: ${Number(item.price).toFixed(2)} × {item.quantity}
+                                                                            {t.orders.unit}: ${Number(item.price).toFixed(2)} × {item.quantity}
                                                                         </p>
                                                                     </div>
                                                                     <div className="text-right font-bold text-emerald-600 text-lg">
@@ -276,7 +280,7 @@ const Orders = () => {
                                                         <div>
                                                             <h4 className="font-semibold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex items-center gap-2">
                                                                 <Truck size={18} strokeWidth={1.5} className="text-emerald-600" />
-                                                                Delivery Details
+                                                                {t.orders.deliveryDetails}
                                                             </h4>
                                                             <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
                                                                 <div className="flex items-start gap-4">
@@ -284,7 +288,7 @@ const Orders = () => {
                                                                         <MapPin size={20} strokeWidth={1.5} />
                                                                     </div>
                                                                     <div>
-                                                                        <p className="text-sm font-medium text-slate-900">Shipping Address</p>
+                                                                        <p className="text-sm font-medium text-slate-900">{t.orders.shippingAddress}</p>
                                                                         <p className="text-sm text-slate-600 mt-1 leading-relaxed">
                                                                             {order.shipping_address}<br />
                                                                             {order.city} {order.zip}
@@ -301,9 +305,9 @@ const Orders = () => {
                                                                         )}
                                                                     </div>
                                                                     <div>
-                                                                        <p className="text-sm font-medium text-slate-900">Payment Method</p>
+                                                                        <p className="text-sm font-medium text-slate-900">{t.orders.paymentMethod}</p>
                                                                         <p className="text-sm text-slate-600 mt-1 capitalize">
-                                                                            {order.payment_method === 'cod' ? 'Cash on Delivery' : order.payment_method}
+                                                                            {order.payment_method === 'cod' ? t.orders.cod : order.payment_method}
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -315,11 +319,11 @@ const Orders = () => {
                                                 {/* Action Footer */}
                                                 <div className="bg-slate-50 px-6 sm:px-8 py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                                                     <span className="text-xs text-slate-400">
-                                                        Order ID: {order.id} • Placed on {new Date(order.created_at).toLocaleDateString()}
+                                                        {t.orders.orderId}{order.id} • {t.orders.placedOn} {new Date(order.created_at).toLocaleDateString()}
                                                     </span>
                                                     <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:underline flex items-center gap-2">
                                                         <AlertCircle size={16} strokeWidth={1.5} />
-                                                        Need help with this order?
+                                                        {t.orders.needHelp}
                                                     </button>
                                                 </div>
                                             </Motion.div>

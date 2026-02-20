@@ -14,18 +14,22 @@ import {
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/useCart';
 import { useSaved } from '../context/SavedContext';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Saved = () => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { savedItems, isSaved, toggleSave, loading } = useSaved();
+    const { language } = useLanguage();
+    const t = translations[language];
 
     const handleAddToCart = (product) => {
         addToCart(product);
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-outfit">
+        <div className={`min-h-screen bg-slate-50 font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}>
             {/* Hero Section */}
             <section className="relative h-[45vh] min-h-[400px] w-full overflow-hidden">
                 <img
@@ -45,8 +49,8 @@ const Saved = () => {
                                 transition={{ duration: 0.6 }}
                                 className="text-4xl sm:text-6xl font-semibold text-white mb-6 tracking-tight"
                             >
-                                <span className="block">Your Curated</span>
-                                <span className="text-emerald-300">Wishlist</span>
+                                <span className="block">{t.saved.yourCurated}</span>
+                                <span className="text-emerald-300">{t.saved.wishlist}</span>
                             </Motion.h1>
                             <Motion.p
                                 initial={{ opacity: 0, y: 20 }}
@@ -54,7 +58,7 @@ const Saved = () => {
                                 transition={{ delay: 0.2, duration: 0.6 }}
                                 className="text-slate-200 text-lg sm:text-xl font-light"
                             >
-                                Keep track of the products you love.
+                                {t.saved.heroDesc}
                             </Motion.p>
                         </div>
                     </div>
@@ -70,7 +74,7 @@ const Saved = () => {
                         className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm hover:bg-white/20 transition-all"
                     >
                         <ShoppingBag size={18} strokeWidth={1.5} className="mr-2" />
-                        Back to Shop
+                        {t.saved.backToShop}
                     </Motion.button>
                 </div>
 
@@ -87,15 +91,15 @@ const Saved = () => {
                         <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-300 mx-auto mb-8">
                             <Heart size={48} strokeWidth={1.5} />
                         </div>
-                        <h2 className="text-3xl font-bold text-slate-800 mb-4">No saved items yet</h2>
+                        <h2 className="text-3xl font-bold text-slate-800 mb-4">{t.saved.noSavedTitle}</h2>
                         <p className="text-slate-500 mb-8 max-w-md mx-auto text-lg leading-relaxed">
-                            Tap the heart icon on any product to save it for later. Your favorites will appear here.
+                            {t.saved.noSavedDesc}
                         </p>
                         <Link
                             to="/"
                             className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-all hover:scale-105"
                         >
-                            Start Exploring
+                            {t.saved.startExploring}
                             <ArrowRight size={20} strokeWidth={1.5} className="ml-2" />
                         </Link>
                     </Motion.div>
@@ -134,7 +138,7 @@ const Saved = () => {
                                         <button
                                             onClick={() => toggleSave(product)}
                                             className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm text-red-500 hover:bg-white hover:text-red-600 transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300"
-                                            title="Remove from saved"
+                                            title={t.saved.removeFromSaved}
                                         >
                                             <Trash2 size={18} strokeWidth={1.5} />
                                         </button>
@@ -155,7 +159,7 @@ const Saved = () => {
 
                                         <div className="flex items-center gap-1 mb-4 text-amber-400">
                                             <Star size={14} fill="currentColor" />
-                                            <span className="text-xs font-medium text-slate-500 ml-1">4.5 (24 reviews)</span>
+                                            <span className="text-xs font-medium text-slate-500 ml-1">4.5 (24 {t.saved.reviews})</span>
                                         </div>
 
                                         <div className="mt-auto flex items-center justify-between gap-4">
@@ -167,7 +171,7 @@ const Saved = () => {
                                                 className="flex-1 inline-flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 px-4 py-2.5 text-sm font-semibold hover:bg-emerald-100 transition-colors gap-2 group/btn"
                                             >
                                                 <ShoppingCart size={16} strokeWidth={1.5} className="group-hover/btn:scale-110 transition-transform" />
-                                                Add to Cart
+                                                {t.saved.addToCart}
                                             </button>
                                         </div>
                                     </div>

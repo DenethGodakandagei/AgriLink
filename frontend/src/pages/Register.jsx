@@ -81,234 +81,241 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col">
-            <Navbar />
-            <div className="flex-1 flex flex-col items-center justify-center p-4 py-12">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2 font-outfit">Join the Agri Market</h1>
-                    <p className="text-gray-500">Start your journey in the digital agricultural ecosystem</p>
-                </div>
+        <div className="min-h-screen relative font-sans">
+            {/* Background Image & Overlay */}
+            <div className="fixed inset-0 z-0">
+                <img
+                    src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                    alt="Background"
+                    className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-emerald-950/60 backdrop-blur-[2px]" />
+            </div>
 
-                {/* Main Card */}
-                <Motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-100"
-                >
-                    <div className="space-y-6">
+            {/* Content Wrapper */}
+            <div className="relative z-10 flex flex-col min-h-screen">
+                <Navbar />
 
-                        {/* Role Toggle */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">I am a...</label>
-                            <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-xl">
-                                <button
-                                    type="button"
-                                    onClick={() => setRole('farmer')}
-                                    className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${role === 'farmer'
-                                        ? 'bg-white text-emerald-600 shadow-sm'
-                                        : 'text-gray-500 hover:text-gray-700'
-                                        }`}
-                                >
-                                    <Tractor size={18} />
-                                    <span>Farmer</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setRole('buyer')}
-                                    className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${role === 'buyer'
-                                        ? 'bg-white text-emerald-600 shadow-sm'
-                                        : 'text-gray-500 hover:text-gray-700'
-                                        }`}
-                                >
-                                    <ShoppingCart size={18} />
-                                    <span>Buyer</span>
-                                </button>
-                            </div>
+                <div className="flex-1 flex flex-col items-center justify-center p-4 py-12">
+                    <Motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-8 sm:p-12 border border-white/20 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-lime-400 to-emerald-600" />
+
+                        <div className="text-center mb-10">
+                            <h1 className="text-3xl font-bold text-emerald-950 mb-3">Join AgriLink</h1>
+                            <p className="text-slate-500 text-lg font-light">Start your Digital Farming Journey</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {/* Full Name */}
+                        <div className="space-y-8">
+                            {/* Role Toggle */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <User size={18} />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        name="fullName"
-                                        value={formData.fullName}
-                                        onChange={handleInputChange}
-                                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors bg-gray-50/50"
-                                        placeholder="John Doe"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Email Address */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <User size={18} />
-                                    </div>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors bg-gray-50/50"
-                                        placeholder="john@example.com"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Phone Number */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Phone Number</label>
-                                <div className="flex gap-3">
-                                    <div className="relative w-24">
-                                        <select
-                                            name="phonePrefix"
-                                            value={formData.phonePrefix}
-                                            onChange={handleInputChange}
-                                            className="block w-full pl-3 pr-8 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 appearance-none bg-gray-50/50 text-gray-700"
-                                        >
-                                            <option value="+94">+94</option>
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none text-gray-400">
-                                            <ChevronDown size={14} />
-                                        </div>
-                                    </div>
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="tel"
-                                            name="phoneNumber"
-                                            value={formData.phoneNumber}
-                                            onChange={handleInputChange}
-                                            className="block w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors bg-gray-50/50"
-                                            placeholder="712 345 678"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Location */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Location</label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <MapPin size={18} />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={formData.location}
-                                        onChange={handleInputChange}
-                                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors bg-gray-50/50"
-                                        placeholder="Enter City or Region"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Password */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <Lock size={18} />
-                                    </div>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                        className="block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors bg-gray-50/50"
-                                        placeholder="Min. 8 characters"
-                                        required
-                                        minLength={8}
-                                    />
+                                <label className="block text-xs font-bold text-emerald-900/60 uppercase tracking-widest mb-3">I am a...</label>
+                                <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl">
                                     <button
                                         type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                                        onClick={() => setRole('farmer')}
+                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${role === 'farmer'
+                                            ? 'bg-white text-emerald-950 shadow-md ring-1 ring-black/5'
+                                            : 'text-slate-500 hover:text-slate-700'
+                                            }`}
                                     >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        <Tractor size={18} className={role === 'farmer' ? 'text-lime-500' : ''} />
+                                        <span>Farmer</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setRole('buyer')}
+                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${role === 'buyer'
+                                            ? 'bg-white text-emerald-950 shadow-md ring-1 ring-black/5'
+                                            : 'text-slate-500 hover:text-slate-700'
+                                            }`}
+                                    >
+                                        <ShoppingCart size={18} className={role === 'buyer' ? 'text-lime-500' : ''} />
+                                        <span>Buyer</span>
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Terms Checkbox */}
-                            <div className="flex items-start">
-                                <div className="flex items-center h-5">
-                                    <input
-                                        id="terms"
-                                        name="agreeToTerms"
-                                        type="checkbox"
-                                        checked={formData.agreeToTerms}
-                                        onChange={handleInputChange}
-                                        className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
-                                        required
-                                    />
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                {/* Full Name */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Full Name</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                            <User size={20} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="fullName"
+                                            value={formData.fullName}
+                                            onChange={handleInputChange}
+                                            className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
+                                            placeholder="e.g. Ruwan Silva"
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <div className="ml-3 text-sm">
-                                    <label htmlFor="terms" className="text-gray-500">
-                                        By creating an account, I agree to the <a href="#" className="font-medium text-emerald-600 hover:text-emerald-500 underline decoration-1 underline-offset-2">Terms of Service</a> and <a href="#" className="font-medium text-emerald-600 hover:text-emerald-500 underline decoration-1 underline-offset-2">Privacy Policy</a>.
-                                    </label>
+
+                                {/* Email Address */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Email Address</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                            <Mail size={20} />
+                                        </div>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
+                                            placeholder="name@example.com"
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {error && (
-                                <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg border border-red-100">
-                                    {error}
+                                {/* Phone Number */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Phone Number</label>
+                                    <div className="flex gap-3">
+                                        <div className="relative w-28">
+                                            <select
+                                                name="phonePrefix"
+                                                value={formData.phonePrefix}
+                                                onChange={handleInputChange}
+                                                className="block w-full pl-4 pr-8 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 appearance-none text-emerald-950 font-medium outline-none"
+                                            >
+                                                <option value="+94">+94</option>
+                                            </select>
+                                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                                                <ChevronDown size={16} />
+                                            </div>
+                                        </div>
+                                        <div className="relative flex-1 group">
+                                            <input
+                                                type="tel"
+                                                name="phoneNumber"
+                                                value={formData.phoneNumber}
+                                                onChange={handleInputChange}
+                                                className="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
+                                                placeholder="71 234 5678"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
 
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200 transform active:scale-[0.98] disabled:opacity-75 disabled:cursor-not-allowed"
-                            >
-                                {isLoading ? 'Creating Account...' : 'Create Account'}
-                                {!isLoading && <ArrowRight size={18} />}
-                            </button>
+                                {/* Location */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Location</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                            <MapPin size={20} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="location"
+                                            value={formData.location}
+                                            onChange={handleInputChange}
+                                            className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
+                                            placeholder="City, District"
+                                            required
+                                        />
+                                    </div>
+                                </div>
 
-                            <div className="text-center mt-4 text-sm text-gray-500">
-                                Already have an account? <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-500">Sign in</Link>
-                            </div>
-                        </form>
-                    </div>
-                </Motion.div>
+                                {/* Password */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Password</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                            <Lock size={20} />
+                                        </div>
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="block w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
+                                            placeholder="Min. 8 characters"
+                                            required
+                                            minLength={8}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-emerald-600 transition-colors"
+                                        >
+                                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                        </button>
+                                    </div>
+                                </div>
 
-                <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-emerald-100 p-2 rounded-full text-emerald-600">
-                            <ShieldCheck size={20} />
+                                {/* Terms Checkbox */}
+                                <div className="flex items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <div className="flex items-center h-5">
+                                        <input
+                                            id="terms"
+                                            name="agreeToTerms"
+                                            type="checkbox"
+                                            checked={formData.agreeToTerms}
+                                            onChange={handleInputChange}
+                                            className="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="ml-3 text-sm">
+                                        <label htmlFor="terms" className="text-slate-600">
+                                            I agree to the <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">Terms of Service</a> and <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">Privacy Policy</a>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {error && (
+                                    <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-xl border border-red-100 font-medium">
+                                        {error}
+                                    </div>
+                                )}
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full flex justify-center items-center gap-2 py-4 px-6 border border-transparent rounded-full shadow-lg shadow-lime-400/20 text-base font-bold text-emerald-950 bg-lime-400 hover:bg-lime-300 focus:outline-none focus:ring-4 focus:ring-lime-400/30 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-75 disabled:cursor-not-allowed"
+                                >
+                                    {isLoading ? 'Creating Account...' : 'Create Account'}
+                                    {!isLoading && <ArrowRight size={20} />}
+                                </button>
+
+                                <div className="text-center mt-6 text-sm text-slate-500 font-medium">
+                                    Already have an account? <Link to="/login" className="font-bold text-emerald-600 hover:text-emerald-500">Sign in</Link>
+                                </div>
+                            </form>
                         </div>
-                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Secure Data</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-emerald-100 p-2 rounded-full text-emerald-600">
-                            <Banknote size={20} />
+                    </Motion.div>
+
+                    <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-12 w-full max-w-4xl text-center text-white/90">
+                        <div className="flex flex-col items-center gap-2 drop-shadow-md">
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">Secure Data</span>
+                            <p className="text-sm font-light">Bank-grade encryption for all your information</p>
                         </div>
-                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Safe Escrow</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-emerald-100 p-2 rounded-full text-emerald-600">
-                            <Headset size={20} />
+                        <div className="flex flex-col items-center gap-2 drop-shadow-md">
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">Verified Users</span>
+                            <p className="text-sm font-light">Join a trusted community of farmers & buyers</p>
                         </div>
-                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">24/7 Help</span>
+                        <div className="flex flex-col items-center gap-2 drop-shadow-md">
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">24/7 Support</span>
+                            <p className="text-sm font-light">We are here to help you grow every step</p>
+                        </div>
                     </div>
                 </div>
+                <Footer />
             </div>
-            <Footer />
         </div>
     );
 };
