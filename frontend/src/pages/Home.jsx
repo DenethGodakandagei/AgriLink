@@ -233,7 +233,7 @@ const Home = () => {
                                 {t.freshHarvest}
                             </h2>
                         </div>
-                        <a href="/products" className="group inline-flex items-center gap-2 font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
+                        <a href="/marketplace" className="group inline-flex items-center gap-2 font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
                             {t.viewAll}
                             <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                         </a>

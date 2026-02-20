@@ -4,7 +4,6 @@ import Home from './pages/Home';
 import Marketplace from './pages/Marketplace';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import BuyerDashboard from './pages/BuyerDashboard';
 import SellerDashboard from './pages/SellerDashboard/SellerDashboard';
 import Overview from './pages/SellerDashboard/components/Overview';
 import Products from './pages/SellerDashboard/components/Products';
@@ -32,7 +31,6 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/saved" element={<Saved />} />
             <Route path="/profile" element={<Profile />} />
@@ -41,7 +39,6 @@ function App() {
               <Route path="products" element={<Products />} />
               <Route path="orders" element={<SellerOrders />} />
             </Route>
-            {/* Redirect unknown routes to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>

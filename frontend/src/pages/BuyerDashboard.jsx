@@ -147,7 +147,7 @@ const BuyerDashboard = () => {
                                         <div className="flex items-center gap-6">
                                             <div className="text-right">
                                                 <p className="text-sm text-gray-500 mb-0.5">Total Amount</p>
-                                                <p className="text-lg font-bold text-emerald-600">${Number(order.total_price).toFixed(2)}</p>
+                                                <p className="text-lg font-bold text-emerald-600">LKR {Number(order.total_price).toFixed(2)}</p>
                                             </div>
                                             <div className={`transform transition-transform duration-200 ${expandedOrder === order.id ? 'rotate-180' : ''}`}>
                                                 <ChevronDown size={20} className="text-gray-400" />
@@ -203,11 +203,11 @@ const BuyerDashboard = () => {
                                                             </div>
                                                             <div className="flex-1">
                                                                 <h5 className="font-medium text-gray-900 md:text-lg">{item.product?.name || 'Unknown Product'}</h5>
-                                                                <p className="text-sm text-gray-500">Unit Price: ${Number(item.price).toFixed(2)}</p>
+                                                                <p className="text-sm text-gray-500">Unit Price: LKR {Number(item.price).toFixed(2)}</p>
                                                             </div>
                                                             <div className="text-right">
                                                                 <p className="text-sm font-medium text-gray-600">Qty: {item.quantity}</p>
-                                                                <p className="text-emerald-600 font-bold">${(Number(item.price) * item.quantity).toFixed(2)}</p>
+                                                                <p className="text-emerald-600 font-bold">LKR {(Number(item.price) * item.quantity).toFixed(2)}</p>
                                                             </div>
                                                         </div>
                                                     ))}

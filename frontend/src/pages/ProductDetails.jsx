@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/useCart';
+import { useSaved } from '../context/SavedContext';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../config/translations';
 
@@ -43,11 +44,29 @@ const ProductDetails = () => {
     const [commentInput, setCommentInput] = useState('');
     const [submittingReview, setSubmittingReview] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [canReview, setCanReview] = useState(false);
+    const [canReviewChecked, setCanReviewChecked] = useState(false);
     const { language } = useLanguage();
     const t = translations[language];
+    const { isSaved, toggleSave } = useSaved();
 
     // Helper to safely access nested translation keys (fallback for safety)
     const tp = t.productDetails || {};
+
+    const maxQuantity = product && typeof product.quantity === 'number' && product.quantity > 0
+        ? product.quantity
+        : 1;
+
+    const handleQuantityChange = (e) => {
+        const value = e.target.value;
+        const parsed = parseInt(value, 10);
+        if (isNaN(parsed)) {
+            setQuantity(1);
+            return;
+        }
+        const clamped = Math.min(Math.max(parsed, 1), maxQuantity);
+        setQuantity(clamped);
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -66,7 +85,8 @@ const ProductDetails = () => {
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
-        setCurrentUser(storedUser ? JSON.parse(storedUser) : null);
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+        setCurrentUser(parsedUser);
 
         const fetchReviews = async () => {
             setReviewsLoading(true);
@@ -77,13 +97,38 @@ const ProductDetails = () => {
                 setAverageRating(response.data.average_rating || 0);
                 setTotalReviews(response.data.total_reviews || 0);
             } catch {
-                // specific error handling if needed
             } finally {
                 setReviewsLoading(false);
             }
         };
 
+        const checkReviewPermission = async () => {
+            setCanReview(false);
+            setCanReviewChecked(false);
+            const token = localStorage.getItem('token');
+            if (!parsedUser || !token) {
+                setCanReviewChecked(true);
+                return;
+            }
+            try {
+                const response = await axios.get(
+                    `http://localhost:8000/api/products/${id}/can-review`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                setCanReview(Boolean(response.data?.can_review));
+            } catch {
+                setCanReview(false);
+            } finally {
+                setCanReviewChecked(true);
+            }
+        };
+
         fetchReviews();
+        checkReviewPermission();
     }, [id]);
 
     const handleSubmitReview = async (e) => {
@@ -215,8 +260,23 @@ const ProductDetails = () => {
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             <div className="absolute top-4 right-4 flex flex-col gap-3">
-                                <button className="p-3 bg-white/90 backdrop-blur rounded-full text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-all hover:scale-110">
-                                    <Heart size={20} />
+                                <button
+                                    onClick={() => product && toggleSave(product)}
+                                    className={`p-3 bg-white/90 backdrop-blur rounded-full shadow-sm transition-all hover:scale-110 ${
+                                        product && isSaved(product.id)
+                                            ? 'text-red-500 hover:text-red-600'
+                                            : 'text-gray-500 hover:text-red-500'
+                                    }`}
+                                    title={
+                                        product && isSaved(product.id)
+                                            ? t.productCard?.removeFromSaved
+                                            : t.productCard?.saveForLater
+                                    }
+                                >
+                                    <Heart
+                                        size={20}
+                                        fill={product && isSaved(product.id) ? 'currentColor' : 'none'}
+                                    />
                                 </button>
                                 <button className="p-3 bg-white/90 backdrop-blur rounded-full text-gray-500 hover:text-emerald-600 hover:bg-white shadow-sm transition-all hover:scale-110">
                                     <Share2 size={20} />
@@ -274,7 +334,7 @@ const ProductDetails = () => {
                         <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
                             <div className="flex items-end gap-2 mb-2">
                                 <span className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                                    ${Number(product.price).toFixed(2)}
+                                    LKR {Number(product.price).toFixed(2)}
                                 </span>
                                 {product.unit && (
                                     <span className="text-gray-500 font-medium mb-1.5 text-lg">
@@ -325,9 +385,16 @@ const ProductDetails = () => {
                                     >
                                         <Minus size={18} />
                                     </button>
-                                    <span className="font-semibold text-lg">{quantity}</span>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={maxQuantity}
+                                        value={quantity}
+                                        onChange={handleQuantityChange}
+                                        className="w-12 text-center font-semibold text-lg border-none focus:outline-none focus:ring-0 bg-transparent"
+                                    />
                                     <button
-                                        onClick={() => setQuantity(Math.min(product.quantity || 99, quantity + 1))}
+                                        onClick={() => setQuantity(Math.min(maxQuantity, quantity + 1))}
                                         className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors"
                                     >
                                         <Plus size={18} />
@@ -363,13 +430,30 @@ const ProductDetails = () => {
                                     </div>
                                     <div className="flex justify-center gap-1 mb-2 text-amber-400">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} size={18} fill={i < Math.round(averageRating) ? "currentColor" : "none"} className={i >= Math.round(averageRating) ? "text-gray-300" : ""} />
+                                            <Star
+                                                key={i}
+                                                size={18}
+                                                fill={i < Math.round(averageRating) ? "currentColor" : "none"}
+                                                className={i >= Math.round(averageRating) ? "text-gray-300" : ""}
+                                            />
                                         ))}
                                     </div>
-                                    <p className="text-sm text-gray-500">{tp.basedOn} {totalReviews} {tp.reviews}</p>
+                                    <p className="text-sm text-gray-500">
+                                        {tp.basedOn} {totalReviews} {tp.reviews}
+                                    </p>
                                 </div>
 
-                                {currentUser ? (
+                                {!currentUser ? (
+                                    <div className="bg-gray-50 rounded-2xl p-6 text-center border border-dashed border-gray-200">
+                                        <p className="text-gray-500 mb-4 text-sm">{tp.logInToReview}</p>
+                                        <button
+                                            onClick={() => navigate('/login')}
+                                            className="px-6 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors"
+                                        >
+                                            {tp.logIn}
+                                        </button>
+                                    </div>
+                                ) : canReviewChecked && canReview ? (
                                     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
                                         <h3 className="font-bold text-gray-900 mb-4">{tp.writeReview}</h3>
                                         <form onSubmit={handleSubmitReview} className="space-y-4">
@@ -381,7 +465,11 @@ const ProductDetails = () => {
                                                         onClick={() => setRatingInput(star)}
                                                         className="text-amber-400 focus:outline-none transform hover:scale-110 transition-transform"
                                                     >
-                                                        <Star size={24} fill={star <= ratingInput ? "currentColor" : "none"} className={star > ratingInput ? "text-gray-200" : ""} />
+                                                        <Star
+                                                            size={24}
+                                                            fill={star <= ratingInput ? "currentColor" : "none"}
+                                                            className={star > ratingInput ? "text-gray-200" : ""}
+                                                        />
                                                     </button>
                                                 ))}
                                             </div>
@@ -402,17 +490,13 @@ const ProductDetails = () => {
                                             </button>
                                         </form>
                                     </div>
-                                ) : (
+                                ) : canReviewChecked && !canReview ? (
                                     <div className="bg-gray-50 rounded-2xl p-6 text-center border border-dashed border-gray-200">
-                                        <p className="text-gray-500 mb-4 text-sm">{tp.logInToReview}</p>
-                                        <button
-                                            onClick={() => navigate('/login')}
-                                            className="px-6 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors"
-                                        >
-                                            {tp.logIn}
-                                        </button>
+                                        <p className="text-gray-500 text-sm">
+                                            You can only review products you have purchased.
+                                        </p>
                                     </div>
-                                )}
+                                ) : null}
                             </div>
 
                             {/* Review List */}

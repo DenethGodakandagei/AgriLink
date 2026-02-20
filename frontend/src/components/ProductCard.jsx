@@ -86,8 +86,8 @@ const ProductCard = ({ product }) => {
                         {product.category || t.productCard.generalCategory}
                     </p>
                 </div>
-                <span className="text-lg font-medium text-gray-400">
-                    ${(Number(product.price) || 0).toFixed(0)}
+                <span className="text-lg font-medium text-gray-700">
+                    LKR {(Number(product.price) || 0).toFixed(0)}
                 </span>
             </div>
         </Motion.div>

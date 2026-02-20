@@ -41,7 +41,7 @@ class FeedbackController extends Controller
         ]);
 
         $hasPurchased = Order::where('user_id', $user->id)
-            ->whereIn('status', ['confirmed', 'delivered'])
+            ->whereIn('status', ['pending', 'confirmed', 'processing', 'shipped', 'delivered'])
             ->whereHas('items', function ($query) use ($product) {
                 $query->where('product_id', $product->id);
             })
@@ -72,5 +72,25 @@ class FeedbackController extends Controller
             'average_rating' => $allFeedback->avg('rating') ?: 0,
             'total_reviews' => $allFeedback->count(),
         ], 201);
+    }
+
+    public function canReview(Request $request, $productId)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['can_review' => false]);
+        }
+
+        $product = Product::findOrFail($productId);
+
+        $hasPurchased = Order::where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'confirmed', 'processing', 'shipped', 'delivered'])
+            ->whereHas('items', function ($query) use ($product) {
+                $query->where('product_id', $product->id);
+            })
+            ->exists();
+
+        return response()->json(['can_review' => $hasPurchased]);
     }
 }

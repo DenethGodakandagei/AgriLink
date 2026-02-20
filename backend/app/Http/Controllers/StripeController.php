@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Stripe\Stripe;
@@ -25,6 +26,54 @@ class StripeController extends Controller
     public function publicKey()
     {
         return response()->json(['key' => config('services.stripe.key')]);
+    }
+
+    public function confirmOrderPaid(Request $request)
+    {
+        $fields = $request->validate([
+            'order_id' => 'required|integer|exists:orders,id',
+            'payment_intent_id' => 'required|string',
+        ]);
+
+        $order = Order::where('id', $fields['order_id'])
+            ->where('user_id', auth()->id())
+            ->where('payment_method', 'card')
+            ->firstOrFail();
+
+        if ($order->stripe_payment_intent_id !== $fields['payment_intent_id']) {
+            return response()->json(['message' => 'PaymentIntent mismatch for this order'], 422);
+        }
+
+        if ($order->payment_status === 'paid') {
+            return response()->json($order);
+        }
+
+        DB::transaction(function () use ($order, $fields) {
+            $order->payment_status = 'paid';
+            $order->status = 'confirmed';
+            $order->save();
+
+            $existing = Transaction::where('order_id', $order->id)->first();
+            if (!$existing) {
+                Transaction::create([
+                    'order_id' => $order->id,
+                    'amount' => $order->total_price,
+                    'payment_method' => 'card',
+                    'status' => 'completed',
+                    'reference_number' => $fields['payment_intent_id'],
+                ]);
+            }
+
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+                if ($product) {
+                    $product->quantity = max(0, $product->quantity - $item->quantity);
+                    $product->save();
+                }
+            }
+        });
+
+        return response()->json($order->fresh(['items']));
     }
 
     /**
@@ -153,6 +202,17 @@ class StripeController extends Controller
                     $order->payment_status = 'paid';
                     $order->status = 'confirmed';
                     $order->save();
+
+                    $existing = Transaction::where('order_id', $order->id)->first();
+                    if (!$existing) {
+                        Transaction::create([
+                            'order_id' => $order->id,
+                            'amount' => $order->total_price,
+                            'payment_method' => 'card',
+                            'status' => 'completed',
+                            'reference_number' => $pi->id,
+                        ]);
+                    }
 
                     // Deduct stock now that payment is confirmed
                     foreach ($order->items as $item) {

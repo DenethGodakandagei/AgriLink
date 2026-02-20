@@ -183,7 +183,7 @@ const Products = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-sm font-bold text-gray-900">
-                                            ${Number(product.price).toFixed(2)}
+                                            LKR {Number(product.price).toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600 font-medium">
                                             {product.quantity} {t.sellerDashboard.productsPage.units}

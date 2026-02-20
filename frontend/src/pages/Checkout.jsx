@@ -53,6 +53,7 @@ const CheckoutForm = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
     const [payStatus, setPayStatus] = useState(''); // 'success' | 'failed'
     const [step, setStep] = useState(1); // 1: Checkout, 2: Success/Fail
 
@@ -64,14 +65,42 @@ const CheckoutForm = () => {
         address: '',
         city: '',
         zip: '',
-        paymentMethod: 'card', // default to card for modern feel
+        paymentMethod: 'card',
     });
 
-    const handleInputChange = (e) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (!token || !storedUser) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    const isValidSriLankaPhone = (phone) => {
+        const normalized = phone.replace(/\s+/g, '');
+        return /^(0\d{9}|\+94\d{9})$/.test(normalized);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (fieldErrors[name]) {
+            setFieldErrors(prev => ({ ...prev, [name]: null }));
+        }
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handlePaymentMethodChange = (method) =>
         setFormData({ ...formData, paymentMethod: method });
+
+    const validateForm = () => {
+        const nextErrors = {};
+        if (!isValidSriLankaPhone(formData.phone)) {
+            nextErrors.phone = 'Enter a valid Sri Lanka phone number (0XXXXXXXXX or +94XXXXXXXXX)';
+        }
+        setFieldErrors(nextErrors);
+        return Object.keys(nextErrors).length === 0;
+    };
 
     // ── COD Order ────────────────────────────────────────────────────────────
     const placeCodOrder = async () => {
@@ -122,7 +151,7 @@ const CheckoutForm = () => {
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const { client_secret } = data;
+        const { client_secret, order_id } = data;
 
         // 2. Confirm Payment
         const cardElement = elements.getElement(CardElement);
@@ -139,6 +168,14 @@ const CheckoutForm = () => {
         if (stripeError) throw new Error(stripeError.message);
 
         if (paymentIntent.status === 'succeeded') {
+            await axios.post(
+                'http://localhost:8000/api/stripe/confirm-order-paid',
+                {
+                    order_id,
+                    payment_intent_id: paymentIntent.id,
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             setPayStatus('success');
         } else {
             setPayStatus('failed');
@@ -152,6 +189,11 @@ const CheckoutForm = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        if (!validateForm()) {
+            setLoading(false);
+            return;
+        }
 
         try {
             if (formData.paymentMethod === 'card') {
@@ -308,6 +350,11 @@ const CheckoutForm = () => {
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-medium text-gray-700 mb-2">{tc.phone || "Phone"}</label>
                                             <input type="tel" name="phone" required className="input-field" value={formData.phone} onChange={handleInputChange} />
+                                            {fieldErrors.phone && (
+                                                <p className="mt-1 text-xs text-red-500 font-medium">
+                                                    {fieldErrors.phone}
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-medium text-gray-700 mb-2">{tc.streetAddress || "Street Address"}</label>
@@ -421,7 +468,7 @@ const CheckoutForm = () => {
                                             <div className="flex-1 min-w-0">
                                                 <h4 className="font-bold text-gray-900 truncate">{item.name}</h4>
                                                 <p className="text-sm text-gray-500 mb-1">Quantity: {item.quantity}</p>
-                                                <p className="text-emerald-600 font-semibold">${Number(item.price).toFixed(2)}</p>
+                                                <p className="text-emerald-600 font-semibold">LKR {Number(item.price).toFixed(2)}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -430,7 +477,7 @@ const CheckoutForm = () => {
                                 <div className="space-y-3 pt-6 border-t border-gray-100 text-sm">
                                     <div className="flex justify-between text-gray-500">
                                         <span>{tc.subtotal || "Subtotal"}</span>
-                                        <span>${cartTotal.toFixed(2)}</span>
+                                        <span>LKR {cartTotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-500">
                                         <span>{tc.shipping || "Shipping"}</span>
@@ -438,7 +485,7 @@ const CheckoutForm = () => {
                                     </div>
                                     <div className="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-100 mt-3">
                                         <span>{tc.total || "Total"}</span>
-                                        <span>${cartTotal.toFixed(2)}</span>
+                                        <span>LKR {cartTotal.toFixed(2)}</span>
                                     </div>
                                 </div>
 

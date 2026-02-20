@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // Ensure only admin can access
@@ -21,9 +18,6 @@ class UserController extends Controller
         return User::latest()->get();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         if (auth()->user()->role !== 'admin') {
@@ -51,9 +45,6 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         if (auth()->user()->role !== 'admin') {
@@ -63,9 +54,6 @@ class UserController extends Controller
         return User::findOrFail($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         if (auth()->user()->role !== 'admin') {
@@ -98,9 +86,6 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         if (auth()->user()->role !== 'admin') {
@@ -111,5 +96,31 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted successfully']);
+    }
+
+    public function updateSelf(Request $request)
+    {
+        $user = auth()->user();
+
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string',
+            'address' => 'nullable|string',
+            'password' => 'nullable|string|min:6'
+        ]);
+
+        $user->name = $fields['name'];
+        $user->email = $fields['email'];
+        $user->phone = $fields['phone'];
+        $user->address = $fields['address'];
+
+        if (!empty($fields['password'])) {
+            $user->password = Hash::make($fields['password']);
+        }
+
+        $user->save();
+
+        return response()->json($user);
     }
 }

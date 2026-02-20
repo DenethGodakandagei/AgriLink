@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Loader2, Check, Tag, DollarSign, Package, FileText, ArrowRight, LayoutGrid } from 'lucide-react';
+import { X, Upload, Loader2, Check, Tag, Package, FileText, ArrowRight, LayoutGrid } from 'lucide-react';
 import CloudinaryUpload from '../../../components/CloudinaryUpload';
 import { useLanguage } from '../../../context/LanguageContext';
 import { translations } from '../../../config/translations';
@@ -206,7 +206,6 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                             <div className="group">
                                                 <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">{t.sellerDashboard.productModal.price}</label>
                                                 <div className="relative">
-                                                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
                                                     <input
                                                         type="number"
                                                         name="price"
@@ -214,7 +213,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                         onChange={handleInputChange}
                                                         required
                                                         step="0.01"
-                                                        className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                                                        className="w-full pl-4 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                                                         placeholder="0.00"
                                                     />
                                                 </div>

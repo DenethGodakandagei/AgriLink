@@ -95,8 +95,8 @@ export const translations = {
                     'Dairy': 'Dairy'
                 },
                 pricePresets: {
-                    under20: 'Under $20',
-                    range20to100: '$20 - $100'
+                    under20: 'Under LKR 2,000',
+                    range20to100: 'LKR 2,000 - LKR 10,000'
                 }
             }
         },
@@ -195,7 +195,7 @@ export const translations = {
                 addNewProduct: "Add New Product",
                 inStock: "In Stock",
                 outOfStock: "Out of Stock",
-                units: "units"
+                units: "kg"
             },
             productModal: {
                 editProduct: "Edit Product",
@@ -478,8 +478,8 @@ export const translations = {
                     'Dairy': 'කිරි නිෂ්පාදන'
                 },
                 pricePresets: {
-                    under20: '$20 ට අඩු',
-                    range20to100: '$20 - $100'
+                    under20: 'LKR 2,000 ට අඩු',
+                    range20to100: 'LKR 2,000 - LKR 10,000'
                 }
             }
         },
@@ -578,7 +578,7 @@ export const translations = {
                 addNewProduct: "නව නිෂ්පාදනයක් එක් කරන්න",
                 inStock: "තොග ඇත",
                 outOfStock: "තොග අවසන්",
-                units: "ඒකක"
+                units: "කිලෝ"
             },
             productModal: {
                 editProduct: "නිෂ්පාදනය සංස්කරණය",

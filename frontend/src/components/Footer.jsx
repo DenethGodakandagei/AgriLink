@@ -56,7 +56,7 @@ const Footer = () => {
             <h3 className="font-semibold text-lg text-emerald-950">{t.footer.platform}</h3>
             <ul className="space-y-3 text-sm md:text-base text-gray-500">
               <li><Link to="/products" className="hover:text-emerald-600 transition-colors">{t.footer.marketplace}</Link></li>
-              <li><Link to="/buyer-dashboard" className="hover:text-emerald-600 transition-colors">{t.footer.buyers}</Link></li>
+              <li><Link to="/products" className="hover:text-emerald-600 transition-colors">{t.footer.buyers}</Link></li>
               <li><Link to="/seller-dashboard" className="hover:text-emerald-600 transition-colors">{t.footer.sellers}</Link></li>
               <li><Link to="/pricing" className="hover:text-emerald-600 transition-colors">{t.footer.pricing}</Link></li>
             </ul>
@@ -78,11 +78,11 @@ const Footer = () => {
             <ul className="space-y-4 text-sm md:text-base text-gray-500">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
-                <span>123 Farming Lane, Agricultural District,<br />Green Valley, CA 90210</span>
+                <span>No. 123, Galle Road,<br />Colombo 03, Sri Lanka</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-emerald-500 shrink-0" />
-                <span>+1 (555) 123-4567</span>
+                <span>+94 77 123 4567</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-emerald-500 shrink-0" />

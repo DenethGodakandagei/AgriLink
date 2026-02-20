@@ -208,7 +208,7 @@ const Orders = () => {
                                                 <div className="text-left lg:text-right">
                                                     <p className="text-sm font-medium text-slate-500 mb-1">{t.orders.totalAmount}</p>
                                                     <p className="text-2xl font-bold text-emerald-600">
-                                                        ${Number(order.total_price).toFixed(2)}
+                                                        LKR {Number(order.total_price).toFixed(2)}
                                                     </p>
                                                 </div>
                                                 <div className={`w-12 h-12 rounded-full border border-slate-100 bg-white flex items-center justify-center text-slate-400 transform transition-all duration-300 group-hover:border-emerald-200 group-hover:text-emerald-600 ${expandedOrder === order.id ? 'rotate-180 bg-emerald-50 text-emerald-600 border-emerald-200' : ''}`}>
@@ -264,11 +264,11 @@ const Orders = () => {
                                                                             {item.product?.name || 'Product Item'}
                                                                         </h5>
                                                                         <p className="text-sm text-slate-500">
-                                                                            {t.orders.unit}: ${Number(item.price).toFixed(2)} × {item.quantity}
+                                                                            {t.orders.unit}: LKR {Number(item.price).toFixed(2)} × {item.quantity}
                                                                         </p>
                                                                     </div>
                                                                     <div className="text-right font-bold text-emerald-600 text-lg">
-                                                                        ${(Number(item.price) * item.quantity).toFixed(2)}
+                                                                        LKR {(Number(item.price) * item.quantity).toFixed(2)}
                                                                     </div>
                                                                 </div>
                                                             ))}

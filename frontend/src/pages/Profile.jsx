@@ -6,13 +6,14 @@ import { User, Mail, MapPin, Phone, ShieldCheck, Calendar, Edit3, Camera } from 
 import { motion as Motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../config/translations';
+import api from '../api/axios';
 
 const Profile = () => {
     const navigate = useNavigate();
     const { language } = useLanguage();
     const t = translations[language].profile;
 
-    const [user] = useState(() => {
+    const [user, setUser] = useState(() => {
         const stored = localStorage.getItem('user');
         if (!stored) {
             return null;
@@ -23,12 +24,72 @@ const Profile = () => {
             return null;
         }
     });
+    const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [formData, setFormData] = useState(() => ({
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        address: user?.address || '',
+    }));
 
     useEffect(() => {
         if (!user) {
             navigate('/login');
+        } else {
+            setFormData({
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                address: user.address || '',
+            });
         }
     }, [user, navigate]);
+
+    const isValidSriLankaPhone = (phone) => {
+        if (!phone) return true;
+        const normalized = phone.replace(/\s+/g, '');
+        return /^(0\d{9}|\+94\d{9})$/.test(normalized);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSave = async (e) => {
+        e.preventDefault();
+        if (!user) return;
+        if (!isValidSriLankaPhone(formData.phone)) {
+            setError('Enter a valid Sri Lanka phone number (0XXXXXXXXX or +94XXXXXXXXX)');
+            return;
+        }
+
+        setSaving(true);
+        setError('');
+
+        try {
+            const payload = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone || null,
+                address: formData.address || null,
+            };
+
+            const response = await api.put('/me', payload);
+            const updated = response.data;
+
+            setUser(updated);
+            localStorage.setItem('user', JSON.stringify(updated));
+            window.dispatchEvent(new Event('auth-change'));
+            setEditing(false);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to update profile.');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     if (!user) {
         return null;
@@ -102,7 +163,10 @@ const Profile = () => {
                                     <h2 className="text-2xl font-bold text-emerald-950">{user.name || t.unnamedUser}</h2>
                                     <p className="text-slate-500 font-medium">{user.email}</p>
                                     <div className="pt-4 flex justify-center gap-3">
-                                        <button className="flex items-center justify-center gap-2 px-6 py-2.5 bg-lime-400 text-emerald-950 rounded-full text-sm font-semibold hover:bg-lime-300 transition-colors shadow-lg shadow-lime-400/40">
+                                        <button
+                                            onClick={() => setEditing(true)}
+                                            className="flex items-center justify-center gap-2 px-6 py-2.5 bg-lime-400 text-emerald-950 rounded-full text-sm font-semibold hover:bg-lime-300 transition-colors shadow-lg shadow-lime-400/40"
+                                        >
                                             <Edit3 size={16} />
                                             {t.editProfile}
                                         </button>
@@ -140,30 +204,141 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
-                                <InfoItem
-                                    icon={<Mail className="text-emerald-500" size={20} />}
-                                    label={t.email}
-                                    value={user.email}
-                                />
-                                <InfoItem
-                                    icon={<Phone className="text-emerald-500" size={20} />}
-                                    label={t.phone}
-                                    value={user.phone || t.notProvided}
-                                    isEmpty={!user.phone}
-                                />
-                                <InfoItem
-                                    icon={<MapPin className="text-emerald-500" size={20} />}
-                                    label={t.location}
-                                    value={user.address || user.location || t.notProvided}
-                                    isEmpty={!user.address && !user.location}
-                                />
-                                <InfoItem
-                                    icon={<Calendar className="text-emerald-500" size={20} />}
-                                    label={t.memberSince}
-                                    value={user.created_at ? new Date(user.created_at).toLocaleDateString() : t.recentMember}
-                                />
-                            </div>
+                            {error && (
+                                <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                    {error}
+                                </div>
+                            )}
+
+                            {editing ? (
+                                <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                            {t.fullName || 'Full Name'}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                            />
+                                            <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                            {t.email}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                            />
+                                            <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                            {t.phone}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                            />
+                                            <Phone className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                            {t.location}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                name="address"
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                                            />
+                                            <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                            {t.memberSince}
+                                        </label>
+                                        <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+                                            {user.created_at ? new Date(user.created_at).toLocaleDateString() : t.recentMember}
+                                        </div>
+                                    </div>
+
+                                    <div className="md:col-span-2 flex gap-3 pt-2">
+                                        <button
+                                            type="submit"
+                                            disabled={saving}
+                                            className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-500/30 hover:bg-emerald-700 disabled:opacity-70 disabled:cursor-not-allowed"
+                                        >
+                                            {saving ? (t.saving || 'Saving...') : (t.saveChanges || 'Save Changes')}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setEditing(false);
+                                                setFormData({
+                                                    name: user.name || '',
+                                                    email: user.email || '',
+                                                    phone: user.phone || '',
+                                                    address: user.address || '',
+                                                });
+                                                setError('');
+                                            }}
+                                            className="inline-flex items-center justify-center rounded-full border border-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                                        >
+                                            {t.cancel || 'Cancel'}
+                                        </button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+                                    <InfoItem
+                                        icon={<Mail className="text-emerald-500" size={20} />}
+                                        label={t.email}
+                                        value={user.email}
+                                    />
+                                    <InfoItem
+                                        icon={<Phone className="text-emerald-500" size={20} />}
+                                        label={t.phone}
+                                        value={user.phone || t.notProvided}
+                                        isEmpty={!user.phone}
+                                    />
+                                    <InfoItem
+                                        icon={<MapPin className="text-emerald-500" size={20} />}
+                                        label={t.location}
+                                        value={user.address || user.location || t.notProvided}
+                                        isEmpty={!user.address && !user.location}
+                                    />
+                                    <InfoItem
+                                        icon={<Calendar className="text-emerald-500" size={20} />}
+                                        label={t.memberSince}
+                                        value={user.created_at ? new Date(user.created_at).toLocaleDateString() : t.recentMember}
+                                    />
+                                </div>
+                            )}
 
                             {/* Additional Info / Bio Placeholder */}
                             <div className="mt-10 pt-10 border-t border-slate-100">

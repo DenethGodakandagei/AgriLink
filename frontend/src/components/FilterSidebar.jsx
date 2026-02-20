@@ -101,26 +101,26 @@ const FilterSidebar = ({ filters, setFilters }) => {
                 </h3>
                 <div className="bg-gray-50 p-1 rounded-xl flex items-center gap-2 border border-gray-100 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all">
                     <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-medium">LKR</span>
                         <input
                             type="number"
                             name="minPrice"
                             value={filters.minPrice}
                             onChange={handlePriceChange}
                             placeholder={t.marketplace.sidebar.min}
-                            className="w-full bg-transparent border-none py-2.5 pl-7 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
+                            className="w-full bg-transparent border-none py-2.5 pl-11 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
                         />
                     </div>
                     <div className="w-px h-6 bg-gray-200" />
                     <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-medium">LKR</span>
                         <input
                             type="number"
                             name="maxPrice"
                             value={filters.maxPrice}
                             onChange={handlePriceChange}
                             placeholder={t.marketplace.sidebar.max}
-                            className="w-full bg-transparent border-none py-2.5 pl-7 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
+                            className="w-full bg-transparent border-none py-2.5 pl-11 pr-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-0"
                         />
                     </div>
                 </div>

@@ -72,7 +72,6 @@ const Navbar = () => {
     const getDashboardLink = () => {
         if (!user) return null;
         if (user.role === 'farmer') return { to: '/seller-dashboard', label: t.navbar.dashboard };
-        if (user.role === 'buyer') return { to: '/buyer-dashboard', label: t.navbar.dashboard };
         return null;
     };
 

@@ -30,6 +30,7 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [fieldErrors, setFieldErrors] = useState({});
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -44,16 +45,39 @@ const Register = () => {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
+        if (fieldErrors[name]) {
+            setFieldErrors(prev => ({ ...prev, [name]: null }));
+        }
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
     };
 
+    const isValidSriLankaPhone = (phone) => {
+        const normalized = phone.replace(/\s+/g, '');
+        return /^(0\d{9}|\+94\d{9})$/.test(normalized);
+    };
+
+    const validateForm = () => {
+        const nextErrors = {};
+        const fullPhone = `${formData.phonePrefix}${formData.phoneNumber}`;
+        if (!isValidSriLankaPhone(fullPhone)) {
+            nextErrors.phoneNumber = 'Enter a valid Sri Lanka phone number (0XXXXXXXXX or +94XXXXXXXXX)';
+        }
+        setFieldErrors(nextErrors);
+        return Object.keys(nextErrors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
+
+        if (!validateForm()) {
+            setIsLoading(false);
+            return;
+        }
 
         // Prepare payload
         const payload = {
@@ -211,6 +235,11 @@ const Register = () => {
                                                 placeholder={t.phonePlaceholder}
                                                 required
                                             />
+                                            {fieldErrors.phoneNumber && (
+                                                <p className="mt-1 text-xs text-red-500 font-medium">
+                                                    {fieldErrors.phoneNumber}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

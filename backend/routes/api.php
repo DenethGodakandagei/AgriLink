@@ -28,11 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', fn(Request $request) => $request->user());
     Route::get('/my-products', [ProductController::class, 'myProducts']);
 
-    // Products (create / update / delete — authenticated farmers/admins)
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::post('/products/{id}/feedback', [FeedbackController::class, 'store']);
+    Route::get('/products/{id}/can-review', [FeedbackController::class, 'canReview']);
 
     // Orders
     Route::get('/seller-orders', [OrderController::class, 'sellerOrders']);
@@ -54,16 +54,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/saved-items', [SavedItemController::class, 'store']);
     Route::delete('/saved-items/{productId}', [SavedItemController::class, 'destroy']);
 
-    // Users
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users', [UserController::class, 'store']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::put('/me', [UserController::class, 'updateSelf']);
 
     // ─── Stripe ────────────────────────────────────────────────────────────────
     Route::get('/stripe/key', [\App\Http\Controllers\StripeController::class, 'publicKey']);
     Route::post('/stripe/payment-intent', [\App\Http\Controllers\StripeController::class, 'createPaymentIntent']);
+    Route::post('/stripe/confirm-order-paid', [\App\Http\Controllers\StripeController::class, 'confirmOrderPaid']);
 });
 
 // Stripe Webhook — must be outside auth middleware (Stripe calls this directly)

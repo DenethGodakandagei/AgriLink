@@ -164,7 +164,7 @@ const Saved = () => {
 
                                         <div className="mt-auto flex items-center justify-between gap-4">
                                             <span className="text-2xl font-bold text-emerald-600">
-                                                ${Number(product.price).toFixed(0)}
+                                                LKR {Number(product.price).toFixed(0)}
                                             </span>
                                             <button
                                                 onClick={() => handleAddToCart(product)}
