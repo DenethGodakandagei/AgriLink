@@ -85,7 +85,8 @@ class ProductController extends Controller
             'user' => auth()->user()
         ]);
 
-        if ($product->user_id != auth()->id()) {
+        // Check ownership - Ensure types match for comparison
+        if ((string) $product->user_id !== (string) auth()->id()) {
             return response()->json([
                 'message' => 'Product user_id mismatch',
                 'debug' => [
@@ -110,7 +111,8 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        if ($product->user_id != auth()->id()) {
+        // Check ownership
+        if ((string) $product->user_id !== (string) auth()->id()) {
             return response()->json([
                 'message' => 'Unauthorized',
                 'debug' => [
