@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -13,14 +12,20 @@ import {
     ShieldCheck,
     Banknote,
     Headset,
-    ArrowRight
+    ArrowRight,
+    Mail
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import api from '../api/axios';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Register = () => {
+    const { language } = useLanguage();
+    const t = translations[language].auth;
+
     const [role, setRole] = useState('farmer'); // 'farmer' or 'buyer'
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -74,14 +79,14 @@ const Register = () => {
             navigate('/');
         } catch (err) {
             console.error('Registration failed:', err);
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            setError(err.response?.data?.message || t.regFailed);
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen relative font-sans">
+        <div className={`min-h-screen relative font-sans ${language === 'si' ? 'font-sinhala' : ''}`}>
             {/* Background Image & Overlay */}
             <div className="fixed inset-0 z-0">
                 <img
@@ -106,14 +111,14 @@ const Register = () => {
                         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-lime-400 to-emerald-600" />
 
                         <div className="text-center mb-10">
-                            <h1 className="text-3xl font-bold text-emerald-950 mb-3">Join AgriLink</h1>
-                            <p className="text-slate-500 text-lg font-light">Start your Digital Farming Journey</p>
+                            <h1 className="text-3xl font-bold text-emerald-950 mb-3">{t.joinAgriLink}</h1>
+                            <p className="text-slate-500 text-lg font-light">{t.startJourney}</p>
                         </div>
 
                         <div className="space-y-8">
                             {/* Role Toggle */}
                             <div>
-                                <label className="block text-xs font-bold text-emerald-900/60 uppercase tracking-widest mb-3">I am a...</label>
+                                <label className="block text-xs font-bold text-emerald-900/60 uppercase tracking-widest mb-3">{t.iAmA}</label>
                                 <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl">
                                     <button
                                         type="button"
@@ -124,7 +129,7 @@ const Register = () => {
                                             }`}
                                     >
                                         <Tractor size={18} className={role === 'farmer' ? 'text-lime-500' : ''} />
-                                        <span>Farmer</span>
+                                        <span>{t.farmer}</span>
                                     </button>
                                     <button
                                         type="button"
@@ -135,7 +140,7 @@ const Register = () => {
                                             }`}
                                     >
                                         <ShoppingCart size={18} className={role === 'buyer' ? 'text-lime-500' : ''} />
-                                        <span>Buyer</span>
+                                        <span>{t.buyer}</span>
                                     </button>
                                 </div>
                             </div>
@@ -143,7 +148,7 @@ const Register = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Full Name */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Full Name</label>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">{t.fullName}</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
                                             <User size={20} />
@@ -154,7 +159,7 @@ const Register = () => {
                                             value={formData.fullName}
                                             onChange={handleInputChange}
                                             className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
-                                            placeholder="e.g. Ruwan Silva"
+                                            placeholder={t.namePlaceholder}
                                             required
                                         />
                                     </div>
@@ -162,7 +167,7 @@ const Register = () => {
 
                                 {/* Email Address */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Email Address</label>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">{t.emailAddress}</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
                                             <Mail size={20} />
@@ -173,7 +178,7 @@ const Register = () => {
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
-                                            placeholder="name@example.com"
+                                            placeholder={t.emailPlaceholder}
                                             required
                                         />
                                     </div>
@@ -181,7 +186,7 @@ const Register = () => {
 
                                 {/* Phone Number */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Phone Number</label>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">{t.phoneNumber}</label>
                                     <div className="flex gap-3">
                                         <div className="relative w-28">
                                             <select
@@ -203,7 +208,7 @@ const Register = () => {
                                                 value={formData.phoneNumber}
                                                 onChange={handleInputChange}
                                                 className="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
-                                                placeholder="71 234 5678"
+                                                placeholder={t.phonePlaceholder}
                                                 required
                                             />
                                         </div>
@@ -212,7 +217,7 @@ const Register = () => {
 
                                 {/* Location */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Location</label>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">{t.location}</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
                                             <MapPin size={20} />
@@ -223,7 +228,7 @@ const Register = () => {
                                             value={formData.location}
                                             onChange={handleInputChange}
                                             className="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
-                                            placeholder="City, District"
+                                            placeholder={t.locationPlaceholder}
                                             required
                                         />
                                     </div>
@@ -231,7 +236,7 @@ const Register = () => {
 
                                 {/* Password */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">Password</label>
+                                    <label className="block text-sm font-semibold text-emerald-950 mb-2">{t.password}</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
                                             <Lock size={20} />
@@ -242,7 +247,7 @@ const Register = () => {
                                             value={formData.password}
                                             onChange={handleInputChange}
                                             className="block w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none text-emerald-950 placeholder:text-slate-400 font-medium"
-                                            placeholder="Min. 8 characters"
+                                            placeholder={t.minChars}
                                             required
                                             minLength={8}
                                         />
@@ -271,7 +276,7 @@ const Register = () => {
                                     </div>
                                     <div className="ml-3 text-sm">
                                         <label htmlFor="terms" className="text-slate-600">
-                                            I agree to the <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">Terms of Service</a> and <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">Privacy Policy</a>
+                                            {t.agreeTo} <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">{t.terms}</a> {t.and} <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-700">{t.privacy}</a>
                                         </label>
                                     </div>
                                 </div>
@@ -288,12 +293,12 @@ const Register = () => {
                                     disabled={isLoading}
                                     className="w-full flex justify-center items-center gap-2 py-4 px-6 border border-transparent rounded-full shadow-lg shadow-lime-400/20 text-base font-bold text-emerald-950 bg-lime-400 hover:bg-lime-300 focus:outline-none focus:ring-4 focus:ring-lime-400/30 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-75 disabled:cursor-not-allowed"
                                 >
-                                    {isLoading ? 'Creating Account...' : 'Create Account'}
+                                    {isLoading ? t.creatingAccount : t.createAccount}
                                     {!isLoading && <ArrowRight size={20} />}
                                 </button>
 
                                 <div className="text-center mt-6 text-sm text-slate-500 font-medium">
-                                    Already have an account? <Link to="/login" className="font-bold text-emerald-600 hover:text-emerald-500">Sign in</Link>
+                                    {t.alreadyHaveAccount} <Link to="/login" className="font-bold text-emerald-600 hover:text-emerald-500">{t.signIn}</Link>
                                 </div>
                             </form>
                         </div>
@@ -301,16 +306,16 @@ const Register = () => {
 
                     <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-12 w-full max-w-4xl text-center text-white/90">
                         <div className="flex flex-col items-center gap-2 drop-shadow-md">
-                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">Secure Data</span>
-                            <p className="text-sm font-light">Bank-grade encryption for all your information</p>
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">{t.secureData}</span>
+                            <p className="text-sm font-light">{t.secureDesc}</p>
                         </div>
                         <div className="flex flex-col items-center gap-2 drop-shadow-md">
-                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">Verified Users</span>
-                            <p className="text-sm font-light">Join a trusted community of farmers & buyers</p>
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">{t.verifiedUsers}</span>
+                            <p className="text-sm font-light">{t.verifiedDesc}</p>
                         </div>
                         <div className="flex flex-col items-center gap-2 drop-shadow-md">
-                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">24/7 Support</span>
-                            <p className="text-sm font-light">We are here to help you grow every step</p>
+                            <span className="text-xs font-bold uppercase tracking-widest opacity-80">{t.support}</span>
+                            <p className="text-sm font-light">{t.supportDesc}</p>
                         </div>
                     </div>
                 </div>
