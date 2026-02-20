@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/useCart';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -41,6 +43,11 @@ const ProductDetails = () => {
     const [commentInput, setCommentInput] = useState('');
     const [submittingReview, setSubmittingReview] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const { language } = useLanguage();
+    const t = translations[language];
+
+    // Helper to safely access nested translation keys (fallback for safety)
+    const tp = t.productDetails || {};
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -48,7 +55,7 @@ const ProductDetails = () => {
                 const response = await axios.get(`http://localhost:8000/api/products/${id}`);
                 setProduct(response.data);
             } catch {
-                setError('Failed to load product details.');
+                setError('Failed to load product details.'); // Fallback, though we should use tp.failedLoad
             } finally {
                 setLoading(false);
             }
@@ -145,22 +152,22 @@ const ProductDetails = () => {
 
     if (error || !product) {
         return (
-            <div className="min-h-screen bg-white flex flex-col font-outfit">
+            <div className={`min-h-screen bg-white flex flex-col font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}>
                 <Navbar />
                 <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
                     <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
                         <Package size={32} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{tp.productNotFound || "Product Not Found"}</h2>
                     <p className="text-gray-500 mb-8 max-w-md">
-                        {error || "The product you're looking for might have been removed or is temporarily unavailable."}
+                        {error && error !== 'Failed to load product details.' ? error : (tp.productError || "The product you're looking for might have been removed or is temporarily unavailable.")}
                     </p>
                     <button
                         onClick={() => navigate('/marketplace')}
                         className="px-8 py-3 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-all font-medium flex items-center gap-2"
                     >
                         <ArrowLeft size={18} />
-                        Back to Marketplace
+                        {tp.backToMarketplace || "Back to Marketplace"}
                     </button>
                 </div>
                 <Footer />
@@ -177,16 +184,16 @@ const ProductDetails = () => {
     if (!images || images.length === 0) images = ['https://placehold.co/600x400?text=No+Image'];
 
     return (
-        <div className="min-h-screen bg-white font-outfit text-gray-900">
+        <div className={`min-h-screen bg-white font-outfit text-gray-900 ${language === 'si' ? 'font-sinhala' : ''}`}>
             <Navbar />
 
             {/* Breadcrumb / Back Navigation */}
             <div className="border-b border-gray-100 bg-gray-50/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <button onClick={() => navigate('/')} className="hover:text-emerald-600 transition-colors">Home</button>
+                        <button onClick={() => navigate('/')} className="hover:text-emerald-600 transition-colors">{tp.home}</button>
                         <ChevronRight size={14} />
-                        <button onClick={() => navigate('/marketplace')} className="hover:text-emerald-600 transition-colors">Marketplace</button>
+                        <button onClick={() => navigate('/marketplace')} className="hover:text-emerald-600 transition-colors">{tp.marketplace}</button>
                         <ChevronRight size={14} />
                         <span className="text-gray-900 font-medium truncate max-w-[200px]">{product.name}</span>
                     </div>
@@ -224,8 +231,8 @@ const ProductDetails = () => {
                                         key={index}
                                         onClick={() => setActiveImage(index)}
                                         className={`relative w-24 h-24 lg:w-28 lg:h-28 flex-shrink-0 rounded-2xl overflow-hidden border-2 transition-all ${activeImage === index
-                                                ? 'border-emerald-600 ring-2 ring-emerald-100 ring-offset-2'
-                                                : 'border-transparent hover:border-gray-200 opacity-70 hover:opacity-100'
+                                            ? 'border-emerald-600 ring-2 ring-emerald-100 ring-offset-2'
+                                            : 'border-transparent hover:border-gray-200 opacity-70 hover:opacity-100'
                                             }`}
                                     >
                                         <img src={img} alt="" className="w-full h-full object-cover" />
@@ -253,7 +260,7 @@ const ProductDetails = () => {
                                     <Star size={16} className="text-amber-400 fill-amber-400" />
                                     <span className="font-bold text-gray-900">{averageRating ? averageRating.toFixed(1) : 'New'}</span>
                                     <span className="text-gray-500 border-l border-amber-200 pl-1.5 ml-0.5">
-                                        {totalReviews} reviews
+                                        {totalReviews} {tp.reviews}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-gray-500">
@@ -277,15 +284,15 @@ const ProductDetails = () => {
                             </div>
                             <p className="text-sm text-gray-500 flex items-center gap-2">
                                 <Truck size={14} />
-                                Free delivery available for local orders
+                                {tp.freeDelivery}
                             </p>
                         </div>
 
                         {/* Description */}
                         <div className="mb-8">
-                            <h3 className="font-bold text-gray-900 mb-3">About this product</h3>
+                            <h3 className="font-bold text-gray-900 mb-3">{tp.aboutProduct}</h3>
                             <p className="text-gray-600 leading-relaxed text-base">
-                                {product.description || 'No description provided for this product.'}
+                                {product.description || tp.noDescription}
                             </p>
                         </div>
 
@@ -296,15 +303,15 @@ const ProductDetails = () => {
                                     {product.user?.name?.charAt(0) || <User size={20} />}
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500 mb-0.5">Sold by</p>
+                                    <p className="text-sm text-gray-500 mb-0.5">{tp.soldBy}</p>
                                     <div className="flex items-center gap-1.5">
-                                        <p className="font-bold text-gray-900">{product.user?.name || 'Unknown Seller'}</p>
+                                        <p className="font-bold text-gray-900">{product.user?.name || tp.unknownSeller}</p>
                                         <ShieldCheck size={14} className="text-emerald-500" />
                                     </div>
                                 </div>
                             </div>
                             <button className="text-emerald-600 font-medium text-sm hover:underline">
-                                View Profile
+                                {tp.viewProfile}
                             </button>
                         </div>
 
@@ -332,11 +339,11 @@ const ProductDetails = () => {
                                     className="flex-1 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-semibold text-lg flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <ShoppingCart size={20} strokeWidth={2} />
-                                    {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                                    {product.quantity > 0 ? tp.addToCart : tp.outOfStock}
                                 </button>
                             </div>
                             <p className="text-center text-xs text-gray-400">
-                                Secure transaction • {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                                {tp.secureTransaction} • {product.quantity > 0 ? tp.inStock : tp.outOfStock}
                             </p>
                         </div>
                     </div>
@@ -345,7 +352,7 @@ const ProductDetails = () => {
                 {/* Reviews Section */}
                 <div className="mt-24 pt-12 border-t border-gray-100">
                     <div className="max-w-4xl mx-auto">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Customer Reviews</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">{tp.customerReviews}</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                             {/* Summary & Form */}
@@ -359,12 +366,12 @@ const ProductDetails = () => {
                                             <Star key={i} size={18} fill={i < Math.round(averageRating) ? "currentColor" : "none"} className={i >= Math.round(averageRating) ? "text-gray-300" : ""} />
                                         ))}
                                     </div>
-                                    <p className="text-sm text-gray-500">Based on {totalReviews} reviews</p>
+                                    <p className="text-sm text-gray-500">{tp.basedOn} {totalReviews} {tp.reviews}</p>
                                 </div>
 
                                 {currentUser ? (
                                     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-                                        <h3 className="font-bold text-gray-900 mb-4">Write a review</h3>
+                                        <h3 className="font-bold text-gray-900 mb-4">{tp.writeReview}</h3>
                                         <form onSubmit={handleSubmitReview} className="space-y-4">
                                             <div className="flex gap-2 justify-center mb-4">
                                                 {[1, 2, 3, 4, 5].map((star) => (
@@ -383,7 +390,7 @@ const ProductDetails = () => {
                                                 onChange={(e) => setCommentInput(e.target.value)}
                                                 rows={3}
                                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-                                                placeholder="Tell us about your experience..."
+                                                placeholder={tp.tellUs}
                                                 required
                                             />
                                             <button
@@ -391,18 +398,18 @@ const ProductDetails = () => {
                                                 disabled={submittingReview}
                                                 className="w-full py-3 bg-gray-900 text-white rounded-xl font-medium text-sm hover:bg-black transition-colors disabled:opacity-50"
                                             >
-                                                {submittingReview ? 'Submitting...' : 'Post Review'}
+                                                {submittingReview ? tp.submitting : tp.postReview}
                                             </button>
                                         </form>
                                     </div>
                                 ) : (
                                     <div className="bg-gray-50 rounded-2xl p-6 text-center border border-dashed border-gray-200">
-                                        <p className="text-gray-500 mb-4 text-sm">Log in to share your thoughts with other customers.</p>
+                                        <p className="text-gray-500 mb-4 text-sm">{tp.logInToReview}</p>
                                         <button
                                             onClick={() => navigate('/login')}
                                             className="px-6 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors"
                                         >
-                                            Log In
+                                            {tp.logIn}
                                         </button>
                                     </div>
                                 )}
@@ -416,7 +423,7 @@ const ProductDetails = () => {
                                     </div>
                                 ) : reviews.length === 0 ? (
                                     <div className="text-center py-12 text-gray-400">
-                                        <p>No reviews yet. Be the first!</p>
+                                        <p>{tp.noReviews}</p>
                                     </div>
                                 ) : (
                                     reviews.map((review) => (

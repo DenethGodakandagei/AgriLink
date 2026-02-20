@@ -21,6 +21,8 @@ import { motion as Motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 // ─── Load Stripe ─────────────────────────────────────────────────────────────
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -44,6 +46,10 @@ const CheckoutForm = () => {
     const navigate = useNavigate();
     const stripe = useStripe();
     const elements = useElements();
+    const { language } = useLanguage();
+    const t = translations[language];
+    // Safety check for checkout translations
+    const tc = t.checkout || {};
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -171,19 +177,19 @@ const CheckoutForm = () => {
 
     if (cartItems.length === 0 && step !== 2) {
         return (
-            <div className="min-h-screen bg-gray-50 font-outfit flex flex-col">
+            <div className={`min-h-screen bg-gray-50 font-outfit flex flex-col ${language === 'si' ? 'font-sinhala' : ''}`}>
                 <Navbar />
                 <div className="flex-1 flex flex-col items-center justify-center p-4">
                     <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-6">
                         <ShoppingBag size={32} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{tc.emptyCart || "Your cart is empty"}</h2>
                     <div className="flex gap-4 mt-6">
                         <button
                             onClick={() => navigate('/marketplace')}
                             className="px-8 py-3 bg-emerald-600 text-white rounded-full font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
                         >
-                            Browse Marketplace
+                            {tc.browseMarketplace || "Browse Marketplace"}
                         </button>
                     </div>
                 </div>
@@ -192,22 +198,22 @@ const CheckoutForm = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-outfit pb-20">
+        <div className={`min-h-screen bg-gray-50 font-outfit pb-20 ${language === 'si' ? 'font-sinhala' : ''}`}>
             <Navbar />
 
             {/* Header / Breadcrumb */}
             <div className="bg-white border-b border-gray-100 sticky top-0 z-30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                        <span className="text-emerald-600">Cart</span>
+                        <span className="text-emerald-600">{tc.cart || "Cart"}</span>
                         <ChevronRight size={14} />
-                        <span className={step === 1 ? "text-gray-900" : "text-emerald-600"}>Checkout</span>
+                        <span className={step === 1 ? "text-gray-900" : "text-emerald-600"}>{tc.title || "Checkout"}</span>
                         <ChevronRight size={14} />
-                        <span className={step === 2 ? "text-gray-900" : "text-gray-400"}>Confirmation</span>
+                        <span className={step === 2 ? "text-gray-900" : "text-gray-400"}>{tc.confirmation || "Confirmation"}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full font-medium">
                         <Lock size={12} />
-                        Secure Checkout
+                        {tc.secureCheckout || "Secure Checkout"}
                     </div>
                 </div>
             </div>
@@ -224,23 +230,23 @@ const CheckoutForm = () => {
                                 <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto mb-6 animate-bounce-slow">
                                     <CheckCircle size={48} strokeWidth={2} />
                                 </div>
-                                <h2 className="text-3xl font-bold text-gray-900 mb-4">Order Successful!</h2>
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">{tc.orderSuccess || "Order Successful!"}</h2>
                                 <p className="text-gray-500 mb-8 text-lg leading-relaxed">
-                                    Thank you for your purchase via {formData.paymentMethod === 'card' ? 'Card' : 'Cash on Delivery'}.
-                                    <br />You will receive an email confirmation shortly.
+                                    {tc.thankYou || "Thank you for your purchase via"} {formData.paymentMethod === 'card' ? (tc.card || 'Card') : (tc.cod || 'Cash on Delivery')}.
+                                    <br />{tc.emailConfirm || "You will receive an email confirmation shortly."}
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                     <button
                                         onClick={() => navigate('/orders')}
                                         className="px-8 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
                                     >
-                                        Track Order
+                                        {tc.trackOrder || "Track Order"}
                                     </button>
                                     <button
                                         onClick={() => navigate('/')}
                                         className="px-8 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
                                     >
-                                        Back to Home
+                                        {tc.backToHome || "Back to Home"}
                                     </button>
                                 </div>
                             </>
@@ -249,15 +255,15 @@ const CheckoutForm = () => {
                                 <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6">
                                     <XCircle size={48} strokeWidth={2} />
                                 </div>
-                                <h2 className="text-3xl font-bold text-gray-900 mb-4">Payment Failed</h2>
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">{tc.paymentFailed || "Payment Failed"}</h2>
                                 <p className="text-gray-500 mb-8 text-lg">
-                                    Something went wrong with the transaction. Please try again.
+                                    {tc.paymentError || "Something went wrong with the transaction. Please try again."}
                                 </p>
                                 <button
                                     onClick={() => setStep(1)}
                                     className="px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-black transition-colors"
                                 >
-                                    Try Again
+                                    {tc.tryAgain || "Try Again"}
                                 </button>
                             </>
                         )}
@@ -283,36 +289,36 @@ const CheckoutForm = () => {
                                 <section>
                                     <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                                         <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">1</span>
-                                        Shipping Information
+                                        {tc.shippingInfo || "Shipping Information"}
                                     </h3>
 
                                     <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="md:col-span-1">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.firstName || "First Name"}</label>
                                             <input type="text" name="firstName" required className="input-field" value={formData.firstName} onChange={handleInputChange} />
                                         </div>
                                         <div className="md:col-span-1">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.lastName || "Last Name"}</label>
                                             <input type="text" name="lastName" required className="input-field" value={formData.lastName} onChange={handleInputChange} />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.email || "Email Address"}</label>
                                             <input type="email" name="email" required className="input-field" value={formData.email} onChange={handleInputChange} />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.phone || "Phone"}</label>
                                             <input type="tel" name="phone" required className="input-field" value={formData.phone} onChange={handleInputChange} />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.streetAddress || "Street Address"}</label>
                                             <input type="text" name="address" required className="input-field" value={formData.address} onChange={handleInputChange} />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.city || "City"}</label>
                                             <input type="text" name="city" required className="input-field" value={formData.city} onChange={handleInputChange} />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{tc.zip || "ZIP Code"}</label>
                                             <input type="text" name="zip" required className="input-field" value={formData.zip} onChange={handleInputChange} />
                                         </div>
                                     </div>
@@ -322,7 +328,7 @@ const CheckoutForm = () => {
                                 <section>
                                     <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                                         <span className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">2</span>
-                                        Payment Method
+                                        {tc.paymentMethod || "Payment Method"}
                                     </h3>
 
                                     <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 space-y-4">
@@ -339,8 +345,8 @@ const CheckoutForm = () => {
                                                         {formData.paymentMethod === 'card' && <div className="w-2.5 h-2.5 rounded-full bg-emerald-600" />}
                                                     </div>
                                                     <div>
-                                                        <p className="font-bold text-gray-900">Pay with Card</p>
-                                                        <p className="text-xs text-gray-500">Secure transaction via Stripe</p>
+                                                        <p className="font-bold text-gray-900">{tc.payWithCard || "Pay with Card"}</p>
+                                                        <p className="text-xs text-gray-500">{tc.secureStripe || "Secure transaction via Stripe"}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-2">
@@ -376,8 +382,8 @@ const CheckoutForm = () => {
                                                     {formData.paymentMethod === 'cod' && <div className="w-2.5 h-2.5 rounded-full bg-emerald-600" />}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-gray-900">Cash on Delivery</p>
-                                                    <p className="text-xs text-gray-500">Pay when you receive your order</p>
+                                                    <p className="font-bold text-gray-900">{tc.cod || "Cash on Delivery"}</p>
+                                                    <p className="text-xs text-gray-500">{tc.payOnDelivery || "Pay when you receive your order"}</p>
                                                 </div>
                                                 <Banknote size={24} className="ml-auto text-gray-400" />
                                             </div>
@@ -390,7 +396,7 @@ const CheckoutForm = () => {
                         {/* Order Summary */}
                         <div className="lg:col-span-5">
                             <div className="bg-white rounded-3xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6 lg:p-8 sticky top-28">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-6">{tc.orderSummary || "Order Summary"}</h3>
 
                                 <div className="space-y-4 mb-6 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                     {cartItems.map((item) => (
@@ -423,15 +429,15 @@ const CheckoutForm = () => {
 
                                 <div className="space-y-3 pt-6 border-t border-gray-100 text-sm">
                                     <div className="flex justify-between text-gray-500">
-                                        <span>Subtotal</span>
+                                        <span>{tc.subtotal || "Subtotal"}</span>
                                         <span>${cartTotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between text-gray-500">
-                                        <span>Shipping</span>
-                                        <span className="text-emerald-600 font-medium">Free</span>
+                                        <span>{tc.shipping || "Shipping"}</span>
+                                        <span className="text-emerald-600 font-medium">{tc.free || "Free"}</span>
                                     </div>
                                     <div className="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-100 mt-3">
-                                        <span>Total</span>
+                                        <span>{tc.total || "Total"}</span>
                                         <span>${cartTotal.toFixed(2)}</span>
                                     </div>
                                 </div>
@@ -445,11 +451,11 @@ const CheckoutForm = () => {
                                     {loading ? (
                                         <>
                                             <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                                            <span>Processing...</span>
+                                            <span>{tc.processing || "Processing..."}</span>
                                         </>
                                     ) : (
                                         <>
-                                            {formData.paymentMethod === 'card' ? 'Pay Now' : 'Place Order'}
+                                            {formData.paymentMethod === 'card' ? (tc.payNow || 'Pay Now') : (tc.placeOrder || 'Place Order')}
                                             <ArrowLeft size={20} className="rotate-180" />
                                         </>
                                     )}
@@ -457,7 +463,7 @@ const CheckoutForm = () => {
 
                                 <p className="text-xs text-center text-gray-400 mt-4 flex items-center justify-center gap-1">
                                     <Lock size={12} />
-                                    <span>Encrypted and Secure Payment</span>
+                                    <span>{tc.encrypted || "Encrypted and Secure Payment"}</span>
                                 </p>
                             </div>
                         </div>

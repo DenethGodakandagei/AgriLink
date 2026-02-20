@@ -4,6 +4,8 @@ import { useCart } from '../context/useCart';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const CartDrawer = () => {
     const {
@@ -15,6 +17,8 @@ const CartDrawer = () => {
         cartTotal
     } = useCart();
     const navigate = useNavigate();
+    const { language } = useLanguage();
+    const t = translations[language];
 
     // Prevent body scroll when cart is open
     React.useEffect(() => {
@@ -52,7 +56,7 @@ const CartDrawer = () => {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[70] flex flex-col font-outfit"
+                        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[70] flex flex-col font-outfit ${language === 'si' ? 'font-sinhala' : ''}`}
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-100">
@@ -60,9 +64,9 @@ const CartDrawer = () => {
                                 <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
                                     <ShoppingBag size={20} />
                                 </div>
-                                <h2 className="text-xl font-bold text-gray-900">Your Cart</h2>
+                                <h2 className="text-xl font-bold text-gray-900">{t.cart.title}</h2>
                                 <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                                    {cartItems.length} items
+                                    {cartItems.length} {t.cart.items}
                                 </span>
                             </div>
                             <button
@@ -80,15 +84,15 @@ const CartDrawer = () => {
                                     <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-2">
                                         <ShoppingBag size={40} />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-900">Your cart is empty</h3>
+                                    <h3 className="text-lg font-semibold text-gray-900">{t.cart.emptyTitle}</h3>
                                     <p className="text-gray-500 max-w-[200px]">
-                                        Looks like you haven't added anything to your cart yet.
+                                        {t.cart.emptyDesc}
                                     </p>
                                     <button
                                         onClick={() => setIsCartOpen(false)}
                                         className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors"
                                     >
-                                        Start Shopping
+                                        {t.cart.startShopping}
                                     </button>
                                 </div>
                             ) : (
@@ -163,15 +167,15 @@ const CartDrawer = () => {
                                 {/* Summary */}
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm text-gray-600">
-                                        <span>Subtotal</span>
+                                        <span>{t.cart.subtotal}</span>
                                         <span>${cartTotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between text-sm text-gray-600">
-                                        <span>Shipping</span>
-                                        <span>Free</span>
+                                        <span>{t.cart.shipping}</span>
+                                        <span>{t.cart.free}</span>
                                     </div>
                                     <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-200">
-                                        <span>Total</span>
+                                        <span>{t.cart.total}</span>
                                         <span>${cartTotal.toFixed(2)}</span>
                                     </div>
                                 </div>
@@ -181,7 +185,7 @@ const CartDrawer = () => {
                                     onClick={handleCheckout}
                                     className="w-full py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 group"
                                 >
-                                    Proceed to Checkout
+                                    {t.cart.checkout}
                                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </div>
