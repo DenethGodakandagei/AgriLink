@@ -8,12 +8,16 @@ import { Leaf, Users, Star, ArrowRight, Plus, Minus } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [nextPageUrl, setNextPageUrl] = useState(null);
     const [activeFeature, setActiveFeature] = useState(1);
+    const { language, switchLanguage } = useLanguage();
+    const t = translations[language];
 
     const fetchProducts = async (url = 'http://localhost:8000/api/products') => {
         try {
@@ -41,7 +45,8 @@ const Home = () => {
 
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className={`min-h-screen bg-slate-50 ${language === 'si' ? 'font-sinhala' : ''}`}>
+
             <section className="relative min-h-screen w-full overflow-hidden">
                 <img
                     src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -59,23 +64,23 @@ const Home = () => {
 
 
                                 <h1 className="text-3xl sm:text-5xl lg:text-5xl font-semibold leading-tight text-white">
-                                    Smart Farming for Future
+                                    {t.heroTitle}
                                     <span className="block italic text-lime-100">
-                                        Generations
+                                        {t.heroSubtitle}
                                     </span>
                                 </h1>
 
                                 <p className="text-sm sm:text-base text-slate-100/90 max-w-md">
-                                    Send, receive, and track your finances in one secure platform built for speed, clarity, and everyday financial control.
+                                    {t.heroDescription}
                                 </p>
 
                                 <div className="flex flex-wrap gap-4 pt-1">
                                     <button className="inline-flex items-center justify-center rounded-full bg-lime-400 px-6 sm:px-7 py-2.5 text-sm font-semibold text-emerald-950 shadow-lg shadow-lime-400/40 hover:bg-lime-300 transition-colors">
-                                        Start Investing
+                                        {t.startInvesting}
                                         <ArrowRight size={16} className="ml-2" />
                                     </button>
                                     <button className="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/5 px-6 sm:px-7 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
-                                        Meet the Farmers
+                                        {t.meetFarmers}
                                     </button>
                                 </div>
                             </div>
@@ -83,7 +88,7 @@ const Home = () => {
                             <div className="mt-10 border-t border-white/20 pt-4 flex items-center gap-4 text-xs sm:text-sm text-slate-100/85">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[11px] sm:text-xs tracking-[0.25em] uppercase">
-                                        Scroll
+                                        {t.scroll}
                                     </span>
                                 </div>
                                 <div className="ml-auto flex items-center gap-6">
@@ -97,7 +102,7 @@ const Home = () => {
                                             <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
                                             <span className="h-7 w-7 rounded-full bg-white/35 border border-white/50" />
                                         </div>
-                                        <span>10k+ Farmers</span>
+                                        <span>{t.farmersCount}</span>
                                     </div>
                                 </div>
                             </div>
@@ -113,8 +118,8 @@ const Home = () => {
 
 
                         <h2 className="text-3xl sm:text-5xl lg:text-5xl font leading-[1.1] tracking-tight text-emerald-950">
-                            Our platform is built to support farmers and buyers
-                            <span className="text-gray-400"> by delivering </span>
+                            {t.platformDesc}
+                            <span className="text-gray-400"> {t.byDelivering} </span>
                             <span className="inline-block align-middle mx-1">
                                 <img
                                     src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=300"
@@ -122,7 +127,7 @@ const Home = () => {
                                     className="h-10 w-20 sm:h-12 sm:w-24 object-cover rounded-full border border-emerald-100"
                                 />
                             </span>
-                            <span className="text-gray-400"> practical tools that connect both sides and improve productivity.</span>
+                            <span className="text-gray-400"> {t.practicalTools}</span>
                         </h2>
                     </div>
                 </section>
@@ -130,12 +135,11 @@ const Home = () => {
                 <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-start max-w-8xl mx-auto px-4 sm:px-6 mb-24">
                     <div className="space-y-8">
                         <div>
-
                             <h3 className="text-3xl sm:text-4xl text-emerald-950 mb-2">
-                                Smart Farming Solutions
+                                {t.smartSolutionsTitle}
                             </h3>
                             <p className="text-2xl sm:text-3xl font-light text-emerald-800">
-                                That Deliver Real Results
+                                {t.smartSolutionsSubtitle}
                             </p>
                         </div>
 
@@ -143,21 +147,21 @@ const Home = () => {
                             {[
                                 {
                                     id: 0,
-                                    title: 'Proven Farm Productivity',
+                                    title: t.features[0].title,
                                     icon: <Leaf className="w-5 h-5 text-emerald-600" />,
-                                    desc: 'Reach more buyers, cut middlemen, and keep harvests moving with our direct-to-market tools.'
+                                    desc: t.features[0].desc
                                 },
                                 {
                                     id: 1,
-                                    title: 'Intelligent Crop Optimization',
+                                    title: t.features[1].title,
                                     icon: <Users className="w-5 h-5 text-emerald-600" />,
-                                    desc: 'Our AI-powered system analyzes market trends and weather patterns to recommend the most effective actions automatically.'
+                                    desc: t.features[1].desc
                                 },
                                 {
                                     id: 2,
-                                    title: 'Seamless System Integration',
+                                    title: t.features[2].title,
                                     icon: <Star className="w-5 h-5 text-emerald-600" />,
-                                    desc: 'Connect your existing farm management software directly to our marketplace for real-time inventory updates.'
+                                    desc: t.features[2].desc
                                 }
                             ].map((feature) => (
                                 <div
@@ -210,7 +214,7 @@ const Home = () => {
 
                         <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 text-white">
                             <p className="text-sm sm:text-lg font-medium max-w-sm backdrop-blur-md bg-white/10 p-4 rounded-2xl border border-white/20">
-                                "Our intelligent agriculture solutions help farmers grow more with less by optimizing resources."
+                                {t.quote}
                             </p>
                         </div>
                     </div>
@@ -223,14 +227,14 @@ const Home = () => {
                         <div>
                             <div className="flex items-center gap-2 mb-3">
                                 <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                                <span className="text-xs font-semibold tracking-widest uppercase text-emerald-900">Featured Produce</span>
+                                <span className="text-xs font-semibold tracking-widest uppercase text-emerald-900">{t.featuredProduce}</span>
                             </div>
                             <h2 className="text-3xl sm:text-4xl font-semibold text-emerald-950">
-                                Fresh from the Harvest
+                                {t.freshHarvest}
                             </h2>
                         </div>
                         <a href="/products" className="group inline-flex items-center gap-2 font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
-                            View all products
+                            {t.viewAll}
                             <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                         </a>
                     </div>
@@ -245,7 +249,7 @@ const Home = () => {
                             </div>
                         ) : products.length === 0 ? (
                             <p className="col-span-full text-center text-gray-500 py-10">
-                                No featured products available at the moment.
+                                {t.noProducts}
                             </p>
                         ) : (
                             products.slice(0, 3).map((product) => (

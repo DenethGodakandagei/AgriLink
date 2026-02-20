@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/useCart';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../config/translations';
 
 const Navbar = () => {
     const location = useLocation();
@@ -24,6 +26,8 @@ const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { toggleCart, cartItems } = useCart();
+    const { language, switchLanguage } = useLanguage();
+    const t = translations[language];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -126,7 +130,17 @@ const Navbar = () => {
                     </div>
 
                     {/* Right Section */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        {/* Language Toggle */}
+                        <button
+                            onClick={() => switchLanguage(language === 'en' ? 'si' : 'en')}
+                            className={`hidden sm:flex items-center justify-center p-2 h-9 min-w-[36px] rounded-lg font-semibold text-xs tracking-wide transition-all border shadow-sm ${isTransparent
+                                ? 'bg-white/10 border-white/30 text-white hover:bg-white/20'
+                                : 'bg-white border-gray-200 text-gray-700 hover:border-emerald-500 hover:text-emerald-700'
+                                }`}
+                        >
+                            {t.languageBtn}
+                        </button>
                         {/* Cart Button */}
                         <button
                             onClick={toggleCart}
@@ -270,6 +284,16 @@ const Navbar = () => {
                         className="md:hidden border-t border-gray-100 bg-white overflow-hidden shadow-xl"
                     >
                         <div className="px-4 py-4 space-y-1">
+                            {/* Mobile Language Toggle */}
+                            <div className="flex items-center justify-between px-3 py-2 mb-2">
+                                <span className="text-sm font-medium text-gray-500">Language</span>
+                                <button
+                                    onClick={() => switchLanguage(language === 'en' ? 'si' : 'en')}
+                                    className="flex items-center justify-center px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-semibold text-emerald-700 bg-emerald-50"
+                                >
+                                    {language === 'en' ? 'English' : 'සිංහල'}
+                                </button>
+                            </div>
                             {navLinks.map(({ to, label }) => (
                                 <Link
                                     key={to}
