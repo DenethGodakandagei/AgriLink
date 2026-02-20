@@ -1,171 +1,103 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Mail, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Mail, Facebook, Instagram, Linkedin, Twitter, ArrowRight, MapPin, Phone } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="mt-16 bg-transparent">
-      <section className="relative overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600"
-            alt="Green farm landscape at sunset"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/80 via-emerald-900/40 to-emerald-900/10" />
-        </div>
-
-        <div className="relative max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-          {/* Top Text */}
-          <div className="max-w-xl mx-auto text-center mb-12 sm:mb-16">
-            <p className="text-xs font-semibold tracking-[0.25em] uppercase text-emerald-100/80 mb-3">
-              AgriLink Support
-            </p>
-
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-              Make farming smarter, stronger, and simpler
+    <footer className="bg-gray-50 text-gray-900 mt-auto border-t border-gray-100">
+      <div className="max-w-8xl mx-auto px-6 pt-20 pb-10">
+        {/* CTA Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-16 mb-16 gap-8">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl md:text-4xl font-medium mb-4 tracking-tight text-emerald-950">
+              Ready to transform your farming journey?
             </h2>
-
-            <p className="text-sm sm:text-base text-emerald-50/90">
-              Straightforward tools and support to help you make confident
-              decisions for your farm every season.
+            <p className="text-gray-500 text-lg">
+              Join thousands of farmers and buyers connecting directly on AgriLink.
             </p>
-
-            <button className="mt-6 inline-flex items-center justify-center px-6 sm:px-8 py-2.5 rounded-full text-sm font-semibold bg-emerald-400 text-emerald-950 shadow-lg shadow-emerald-500/40 hover:bg-emerald-300 transition-colors">
-              Contact Us
-            </button>
           </div>
-
-          {/* Main Footer Box */}
-          <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl shadow-emerald-900/20 border border-white/60">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-10 px-8 py-10 sm:px-10 sm:py-12">
-              {/* Logo & About */}
-              <div className="space-y-4 md:col-span-1">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-xl bg-emerald-500 flex items-center justify-center text-white text-lg font-bold">
-                    A
-                  </div>
-                  <span className="text-lg font-bold text-emerald-900 font-outfit">
-                    AgriLink
-                  </span>
-                </div>
-
-                <p className="text-sm text-gray-700">
-                  AgriLink connects farmers, buyers, and agribusinesses with
-                  smarter tools for better yields and fairer markets.
-                </p>
-
-                <div className="flex items-center gap-2 text-sm text-gray-700">
-                  <Mail size={16} className="text-emerald-600" />
-                  <a
-                    href="mailto:hello@agrilink.com"
-                    className="hover:text-emerald-700"
-                  >
-                    hello@agrilink.com
-                  </a>
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div className="space-y-3 text-sm">
-                <h3 className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                  Quick Links
-                </h3>
-                <div className="space-y-2">
-                  <Link to="/" className="block text-gray-600 hover:text-emerald-700">
-                    Home
-                  </Link>
-                  <Link
-                    to="/buyer-dashboard"
-                    className="block text-gray-600 hover:text-emerald-700"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/orders"
-                    className="block text-gray-600 hover:text-emerald-700"
-                  >
-                    Orders
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="block text-gray-600 hover:text-emerald-700"
-                  >
-                    Profile
-                  </Link>
-                </div>
-              </div>
-
-              {/* Services */}
-              <div className="space-y-3 text-sm">
-                <h3 className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                  Services
-                </h3>
-                <div className="space-y-2">
-                  <span className="block text-gray-600">
-                    Smart crop monitoring
-                  </span>
-                  <span className="block text-gray-600">
-                    Direct farmer marketplace
-                  </span>
-                  <span className="block text-gray-600">
-                    Price transparency tools
-                  </span>
-                  <span className="block text-gray-600">
-                    Logistics coordination
-                  </span>
-                </div>
-              </div>
-
-              {/* Company */}
-              <div className="space-y-3 text-sm">
-                <h3 className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                  Company
-                </h3>
-                <div className="space-y-2">
-                  <span className="block text-gray-600">About</span>
-                  <span className="block text-gray-600">Help & FAQ</span>
-                  <span className="block text-gray-600">Emergency support</span>
-                </div>
-
-                <div className="pt-3">
-                  <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase mb-2">
-                    Social
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button className="h-8 w-8 rounded-full border border-emerald-100 flex items-center justify-center text-emerald-700 hover:bg-emerald-50 transition-colors">
-                      <Linkedin size={16} />
-                    </button>
-                    <button className="h-8 w-8 rounded-full border border-emerald-100 flex items-center justify-center text-emerald-700 hover:bg-emerald-50 transition-colors">
-                      <Facebook size={16} />
-                    </button>
-                    <button className="h-8 w-8 rounded-full border border-emerald-100 flex items-center justify-center text-emerald-700 hover:bg-emerald-50 transition-colors">
-                      <Instagram size={16} />
-                    </button>
-                    <button className="h-8 w-8 rounded-full border border-emerald-100 flex items-center justify-center text-emerald-700 hover:bg-emerald-50 transition-colors">
-                      <Twitter size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Bar */}
-            <div className="border-t border-emerald-50 px-6 sm:px-10 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
-              <p>© {new Date().getFullYear()} AgriLink. All rights reserved.</p>
-              <div className="flex items-center gap-4">
-                <button className="hover:text-emerald-600">
-                  Terms of Service
-                </button>
-                <button className="hover:text-emerald-600">
-                  Privacy Policy
-                </button>
-              </div>
-            </div>
+          <div className="flex gap-4">
+            <Link to="/register" className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-emerald-200">
+              Get Started
+            </Link>
+            <Link to="/contact" className="border border-gray-200 hover:border-emerald-500 hover:text-emerald-600 px-8 py-4 rounded-full font-semibold transition-all duration-300">
+              Contact Sales
+            </Link>
           </div>
         </div>
-      </section>
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+          {/* Brand Column */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="flex items-center gap-3 mb-6">
+
+              <span className="text-2xl font-bold tracking-tight text-emerald-950">AGRILINK.</span>
+            </div>
+            <p className="text-gray-500 leading-relaxed max-w-sm">
+              Empowering agriculture through technology. connects farmers, buyers, and agribusinesses with smarter tools for better yields and fairer markets.
+            </p>
+            <div className="flex gap-4 pt-4">
+              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
+                <a key={idx} href="#" className="h-10 w-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all duration-300">
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Links Columns */}
+          <div className="lg:col-span-2 space-y-6">
+            <h3 className="font-semibold text-lg text-emerald-950">Platform</h3>
+            <ul className="space-y-4 text-gray-500">
+              <li><Link to="/products" className="hover:text-emerald-600 transition-colors">Marketplace</Link></li>
+              <li><Link to="/buyer-dashboard" className="hover:text-emerald-600 transition-colors">Buyers</Link></li>
+              <li><Link to="/seller-dashboard" className="hover:text-emerald-600 transition-colors">Sellers</Link></li>
+              <li><Link to="/pricing" className="hover:text-emerald-600 transition-colors">Pricing</Link></li>
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2 space-y-6">
+            <h3 className="font-semibold text-lg text-emerald-950">Company</h3>
+            <ul className="space-y-4 text-gray-500">
+              <li><Link to="/about" className="hover:text-emerald-600 transition-colors">About Us</Link></li>
+              <li><Link to="/careers" className="hover:text-emerald-600 transition-colors">Careers</Link></li>
+              <li><Link to="/blog" className="hover:text-emerald-600 transition-colors">Blog</Link></li>
+              <li><Link to="/contact" className="hover:text-emerald-600 transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Contact Column */}
+          <div className="lg:col-span-4 space-y-6">
+            <h3 className="font-semibold text-lg text-emerald-950">Contact Us</h3>
+            <ul className="space-y-4 text-gray-500">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-emerald-500 mt-0.5" />
+                <span>123 Farming Lane, Agricultural District,<br />Green Valley, CA 90210</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-emerald-500" />
+                <span>+1 (555) 123-4567</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-emerald-500" />
+                <span>support@agrilink.com</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+          <p>© {new Date().getFullYear()} AgriLink Inc. All rights reserved.</p>
+          <div className="flex gap-8">
+            <Link to="/privacy" className="hover:text-emerald-600 transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-emerald-600 transition-colors">Terms of Service</Link>
+            <Link to="/cookies" className="hover:text-emerald-600 transition-colors">Cookie Settings</Link>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };

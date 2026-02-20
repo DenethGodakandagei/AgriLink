@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\SavedItemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/transactions/{id}', [TransactionController::class, 'show']);
     Route::put('/transactions/{id}', [TransactionController::class, 'update']);
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
+
+    // Saved Items
+    Route::get('/saved-items', [SavedItemController::class, 'index']);
+    Route::post('/saved-items', [SavedItemController::class, 'store']);
+    Route::delete('/saved-items/{productId}', [SavedItemController::class, 'destroy']);
 
     // ─── Stripe ────────────────────────────────────────────────────────────────
     Route::get('/stripe/key', [\App\Http\Controllers\StripeController::class, 'publicKey']);

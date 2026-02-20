@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FilterSidebar from '../components/FilterSidebar';
 import ProductCard from '../components/ProductCard';
-import { Leaf, Users, Star, ArrowRight } from 'lucide-react';
+import { Leaf, Users, Star, ArrowRight, Plus, Minus } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -13,6 +13,7 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [nextPageUrl, setNextPageUrl] = useState(null);
+    const [activeFeature, setActiveFeature] = useState(1);
 
     const fetchProducts = async (url = 'http://localhost:8000/api/products') => {
         try {
@@ -37,17 +38,17 @@ const Home = () => {
         fetchProducts();
     }, []);
 
-    const trustLogos = ['Chase', 'John Deere', 'Leader', 'Kubota', 'Gleaner'];
+
 
     return (
         <div className="min-h-screen bg-slate-50">
             <section className="relative min-h-screen w-full overflow-hidden">
                 <img
-                    src="https://images.pexels.com/photos/21393/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1600"
+                    src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
                     alt="Bright green crop fields under sky"
-                    className="absolute inset-0 h-full w-full object-cover blur-sm"
+                    className="absolute inset-0 h-full w-full object-cover b"
                 />
-                <div className="absolute inset-0 bg-black/25" />
+                <div className="absolute inset-0 bg-black/5" />
 
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <Navbar />
@@ -55,7 +56,7 @@ const Home = () => {
                     <div className="flex-1 flex">
                         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-12 flex flex-col justify-end w-full pb-12">
                             <div className="max-w-xl space-y-6">
-                               
+
 
                                 <h1 className="text-3xl sm:text-5xl lg:text-5xl font-semibold leading-tight text-white">
                                     Smart Farming for Future
@@ -107,153 +108,151 @@ const Home = () => {
 
 
             <main className="max-w-8xl mx-auto px-4 sm:px-6 ">
-                <section className="rounded-3xl bg-emerald-50  px-6 sm:px-10 py-10 sm:py-12">
-                    <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-emerald-700 mb-5">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                        Our platform
-                    </p>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug text-emerald-950 max-w-4xl">
-                        Our platform is built to support farmers and buyers by delivering
-                        practical tools that connect both sides and improve productivity.
-                    </h2>
-                    <p className="mt-4 text-sm sm:text-base text-gray-600 max-w-3xl">
-                        AgriLink brings producers, markets, and logistics together in one place so fresh
-                        products move faster, waste is reduced, and everyone has clearer visibility into each season.
-                    </p>
-                </section>
+                <section className="py-16 sm:py-20 px-6 sm:px-10">
+                    <div className="max-w-8xl mx-auto">
 
-                <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-10 items-start">
-                    <div className="space-y-6">
-                        <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-emerald-700">
-                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                            About AgriLink
-                        </p>
-                        <h3 className="text-2xl sm:text-3xl font-semibold text-emerald-950">
-                            Smart Farming Solutions
-                            <span className="block italic font-normal text-emerald-700">
-                                Real Results for Farms and Markets
+
+                        <h2 className="text-3xl sm:text-5xl lg:text-5xl font leading-[1.1] tracking-tight text-emerald-950">
+                            Our platform is built to support farmers and buyers
+                            <span className="text-gray-400"> by delivering </span>
+                            <span className="inline-block align-middle mx-1">
+                                <img
+                                    src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=300"
+                                    alt="Technology"
+                                    className="h-10 w-20 sm:h-12 sm:w-24 object-cover rounded-full border border-emerald-100"
+                                />
                             </span>
-                        </h3>
-                        <p className="text-sm sm:text-base text-gray-600 max-w-xl">
-                            Our marketplace links farmers and buyers in one trusted space for fair prices and steady demand.
-                        </p>
-
-                        <div className="space-y-3">
-                            <div className="flex items-start justify-between rounded-2xl bg-gray-50 px-4 py-3 border border-gray-100">
-                                <div>
-                                    <p className="text-sm font-semibold text-gray-900">
-                                        Proven farm productivity
-                                    </p>
-                                    <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-                                        Reach more buyers, cut middlemen, and keep harvests moving.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-start justify-between rounded-2xl bg-white px-4 py-3 border border-emerald-100 shadow-sm">
-                                <div className="flex items-start gap-3">
-                                    <span className="mt-1 h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">
-                                        AI
-                                    </span>
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-900">
-                                            Intelligent crop optimization
-                                        </p>
-                                        <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-                                            Use market and weather data to choose crops and timing for better prices.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-start justify-between rounded-2xl bg-gray-50 px-4 py-3 border border-gray-100">
-                                <div>
-                                    <p className="text-sm font-semibold text-gray-900">
-                                        Seamless buyer integration
-                                    </p>
-                                    <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-                                        Buyers source directly from farms, track orders, and build strong partnerships.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full">
-                        <div className="overflow-hidden rounded-3xl border border-emerald-100 shadow-md bg-emerald-900/5">
-                            <img
-                                src="https://images.pexels.com/photos/1268101/pexels-photo-1268101.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                                alt="Farmers discussing crops in a field"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
+                            <span className="text-gray-400"> practical tools that connect both sides and improve productivity.</span>
+                        </h2>
                     </div>
                 </section>
 
-                <section>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-4">
-                        Trusted by thousands of growers and agribusinesses
-                    </p>
-                    <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-sm text-gray-400">
-                        {trustLogos.map((logo) => (
-                            <span key={logo} className="font-medium tracking-wide">
-                                {logo}
-                            </span>
-                        ))}
-                    </div>
-                </section>
+                <section className="grid ml-4 grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-start max-w-8xl mx-auto px-4 sm:px-6 mb-24">
+                    <div className="space-y-8">
+                        <div>
 
-                <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-8 items-start">
-                    <div className="hidden lg:block">
-                        <div className="sticky top-28">
-                            <FilterSidebar />
-                        </div>
-                    </div>
-
-                    <div className="flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-                            <div>
-                                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                                    Live marketplace listings
-                                </h2>
-                                <p className="text-sm text-gray-500">
-                                    Discover fresh produce, feed, and supplies available right now from verified farmers.
-                                </p>
-                            </div>
-                            <p className="text-xs sm:text-sm text-gray-400">
-                                {products.length > 0 ? `${products.length} active listings` : 'No active listings yet'}
+                            <h3 className="text-4xl sm:text-4xl  text-emerald-950 mb-2">
+                                Smart Farming Solutions
+                            </h3>
+                            <p className="text-3xl sm:text-3xl font-light  text-emerald-800">
+                                That Deliver Real Results
                             </p>
                         </div>
 
-                        <Motion.div
-                            layout
-                            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-                        >
-                            {loading && products.length === 0 ? (
-                                <p className="col-span-full text-center text-gray-500 py-10">
-                                    Loading products...
-                                </p>
-                            ) : products.length === 0 ? (
-                                <p className="col-span-full text-center text-gray-500 py-10">
-                                    No products found.
-                                </p>
-                            ) : (
-                                products.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))
-                            )}
-                        </Motion.div>
-
-                        {nextPageUrl && (
-                            <div className="mt-8 text-center">
-                                <button
-                                    onClick={() => fetchProducts(nextPageUrl)}
-                                    disabled={loading}
-                                    className="px-6 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 text-sm"
+                        <div className="space-y-4">
+                            {[
+                                {
+                                    id: 0,
+                                    title: 'Proven Farm Productivity',
+                                    icon: <Leaf className="w-5 h-5 text-emerald-600" />,
+                                    desc: 'Reach more buyers, cut middlemen, and keep harvests moving with our direct-to-market tools.'
+                                },
+                                {
+                                    id: 1,
+                                    title: 'Intelligent Crop Optimization',
+                                    icon: <Users className="w-5 h-5 text-emerald-600" />,
+                                    desc: 'Our AI-powered system analyzes market trends and weather patterns to recommend the most effective actions automatically.'
+                                },
+                                {
+                                    id: 2,
+                                    title: 'Seamless System Integration',
+                                    icon: <Star className="w-5 h-5 text-emerald-600" />,
+                                    desc: 'Connect your existing farm management software directly to our marketplace for real-time inventory updates.'
+                                }
+                            ].map((feature) => (
+                                <div
+                                    key={feature.id}
+                                    onClick={() => setActiveFeature(feature.id)}
+                                    className={`cursor-pointer rounded-2xl transition-all duration-300 overflow-hidden ${activeFeature === feature.id
+                                        ? 'bg-white shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100'
+                                        : 'bg-gray-50 hover:bg-gray-100'
+                                        }`}
                                 >
-                                    {loading ? 'Loading...' : 'Load more products'}
-                                </button>
-                            </div>
-                        )}
+                                    <div className="p-5 flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            {activeFeature === feature.id && (
+                                                <div className="bg-emerald-100 p-2 rounded-full">
+                                                    {feature.icon}
+                                                </div>
+                                            )}
+                                            <span className={`font-semibold ${activeFeature === feature.id ? 'text-emerald-950' : 'text-gray-600'}`}>
+                                                {feature.title}
+                                            </span>
+                                        </div>
+                                        <button className="text-emerald-600">
+                                            {activeFeature === feature.id ? <Minus size={20} /> : <Plus size={20} />}
+                                        </button>
+                                    </div>
+
+                                    <Motion.div
+                                        initial={false}
+                                        animate={{ height: activeFeature === feature.id ? 'auto' : 0, opacity: activeFeature === feature.id ? 1 : 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="px-5 pb-5 pl-[4.5rem]">
+                                            <p className="text-gray-500 text-sm leading-relaxed">
+                                                {feature.desc}
+                                            </p>
+                                        </div>
+                                    </Motion.div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
+
+                    <div className="relative h-full min-h-[500px] w-full rounded-[2.5rem] overflow-hidden group">
+                        <img
+                            src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                            alt="Smart Farming"
+                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+                        <div className="absolute bottom-8 left-8 right-8 text-white">
+                            <p className="text-lg font-medium max-w-sm backdrop-blur-md bg-white/10 p-4 rounded-2xl border border-white/20">
+                                "Our intelligent agriculture solutions help farmers grow more with less by optimizing resources."
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+
+
+                <section className="py-20 border-t border-gray-100">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                        <div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                <span className="text-xs font-semibold tracking-widest uppercase text-emerald-900">Featured Produce</span>
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl font-semibold text-emerald-950">
+                                Fresh from the Harvest
+                            </h2>
+                        </div>
+                        <a href="/products" className="group inline-flex items-center gap-2 font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
+                            View all products
+                            <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                        </a>
+                    </div>
+
+                    <Motion.div
+                        layout
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                    >
+                        {loading && products.length === 0 ? (
+                            <div className="col-span-full flex justify-center py-20">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+                            </div>
+                        ) : products.length === 0 ? (
+                            <p className="col-span-full text-center text-gray-500 py-10">
+                                No featured products available at the moment.
+                            </p>
+                        ) : (
+                            products.slice(0, 3).map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))
+                        )}
+                    </Motion.div>
                 </section>
             </main>
 

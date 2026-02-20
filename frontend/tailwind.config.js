@@ -9,6 +9,8 @@ export default {
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
         outfit: ['Outfit', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        sans: ['Montserrat', 'sans-serif'],
       },
       colors: {
         accent: '#10b981', // emerald-500

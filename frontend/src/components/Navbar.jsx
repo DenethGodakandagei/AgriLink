@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react';
@@ -9,8 +8,11 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isActive = (path) => location.pathname === path;
-    const isHome = location.pathname === '/';
 
+    // Pages that have a dark hero section where navbar should be transparent initially
+    const isHeroPage = ['/', '/orders', '/marketplace', '/saved'].includes(location.pathname);
+
+    const [isScrolled, setIsScrolled] = useState(false);
     const [user, setUser] = useState(() => {
         try {
             const stored = localStorage.getItem('user');
@@ -22,6 +24,14 @@ const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { toggleCart, cartItems } = useCart();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     useEffect(() => {
         const handleAuthChange = () => {
@@ -66,31 +76,30 @@ const Navbar = () => {
 
     const navLinks = [
         { to: '/', label: 'Home' },
-        ...(dashboardLink ? [dashboardLink] : []),
+        { to: '/marketplace', label: 'Marketplace' },
         ...(user ? [
             { to: '/orders', label: 'Orders' },
             { to: '/saved', label: 'Saved' },
         ] : []),
     ];
 
+    const isTransparent = isHeroPage && !isScrolled;
+
     return (
         <nav className="sticky top-0 z-50 bg-transparent">
             <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
-                    className={`mt-4 mb-4 flex justify-between h-16 sm:h-20 items-center rounded-xl px-4 sm:px-6 ${
-                        isHome
-                            ? ' backdrop-blur-md  text-white'
-                            : 'bg-white border border-gray-200'
-                    }`}
+                    className={`mt-4 mb-4 flex justify-between h-16 sm:h-20 items-center rounded-xl px-4 sm:px-6 transition-all duration-300 ${isTransparent
+                        ? 'backdrop-blur-md text-white border border-white/10 bg-white/5'
+                        : 'bg-white border border-gray-200 shadow-sm'
+                        }`}
                 >
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
-                        
                         <span
-                            className={`text-xl font-bold font-outfit tracking-tight ${
-                                isHome ? 'text-white' : 'text-gray-900'
-                            }`}
+                            className={`text-xl font-bold font-outfit tracking-tight ${isTransparent ? 'text-white' : 'text-gray-900'
+                                }`}
                         >
                             AGRILINK.
                         </span>
@@ -102,15 +111,14 @@ const Navbar = () => {
                             <Link
                                 key={to}
                                 to={to}
-                                className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
-                                    isHome
-                                        ? isActive(to)
-                                            ? 'bg-white text-emerald-700 shadow-sm'
-                                            : 'text-white/80 hover:text-white hover:bg-white/10'
-                                        : isActive(to)
-                                            ? 'text-emerald-700 bg-emerald-50'
-                                            : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
-                                }`}
+                                className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${isTransparent
+                                    ? isActive(to)
+                                        ? 'bg-white text-emerald-950 shadow-sm font-semibold'
+                                        : 'text-white/90 hover:text-white hover:bg-white/10'
+                                    : isActive(to)
+                                        ? 'text-emerald-700 bg-emerald-50 font-semibold'
+                                        : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                                    }`}
                             >
                                 {label}
                             </Link>
@@ -122,9 +130,8 @@ const Navbar = () => {
                         {/* Cart Button */}
                         <button
                             onClick={toggleCart}
-                            className={`relative p-2 rounded-full transition-colors ${
-                                isHome ? 'text-white hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
-                            }`}
+                            className={`relative p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-500 hover:bg-gray-100'
+                                }`}
                         >
                             <ShoppingCart size={22} />
                             {cartItems.length > 0 && (
@@ -139,40 +146,35 @@ const Navbar = () => {
                             <div className="relative">
                                 <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className={`flex items-center gap-2 pl-4 border-l focus:outline-none ${
-                                        isHome ? 'border-white/30' : 'border-gray-100'
-                                    }`}
+                                    className={`flex items-center gap-2 pl-4 border-l focus:outline-none ${isTransparent ? 'border-white/30' : 'border-gray-100'
+                                        }`}
                                 >
                                     <div
-                                        className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${
-                                            isHome
-                                                ? 'bg-white/10 text-white border-white/40'
-                                                : 'bg-emerald-100 text-emerald-700 border-emerald-200'
-                                        }`}
+                                        className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${isTransparent
+                                            ? 'bg-white/10 text-white border-white/40'
+                                            : 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                                            }`}
                                     >
                                         {user.name?.charAt(0).toUpperCase() || <User size={16} />}
                                     </div>
                                     <div className="hidden sm:flex flex-col items-start leading-tight">
                                         <span
-                                            className={`text-sm font-semibold ${
-                                                isHome ? 'text-white' : 'text-gray-900'
-                                            }`}
+                                            className={`text-sm font-semibold ${isTransparent ? 'text-white' : 'text-gray-900'
+                                                }`}
                                         >
                                             {user.name}
                                         </span>
                                         <span
-                                            className={`text-xs capitalize ${
-                                                isHome ? 'text-white/70' : 'text-gray-400'
-                                            }`}
+                                            className={`text-xs capitalize ${isTransparent ? 'text-white/70' : 'text-gray-400'
+                                                }`}
                                         >
                                             {user.role || 'User'}
                                         </span>
                                     </div>
                                     <ChevronDown
                                         size={16}
-                                        className={`transition-transform duration-200 ${
-                                            isHome ? 'text-white/80' : 'text-gray-400'
-                                        } ${dropdownOpen ? 'rotate-180' : ''}`}
+                                        className={`transition-transform duration-200 ${isTransparent ? 'text-white/80' : 'text-gray-400'
+                                            } ${dropdownOpen ? 'rotate-180' : ''}`}
                                     />
                                 </button>
 
@@ -189,6 +191,16 @@ const Navbar = () => {
                                                 <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
                                                 <p className="text-xs text-gray-400 truncate">{user.email}</p>
                                             </div>
+                                            {dashboardLink && (
+                                                <Link
+                                                    to={dashboardLink.to}
+                                                    onClick={() => setDropdownOpen(false)}
+                                                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <Tractor size={15} />
+                                                    {dashboardLink.label}
+                                                </Link>
+                                            )}
                                             <Link
                                                 to="/profile"
                                                 onClick={() => setDropdownOpen(false)}
@@ -204,7 +216,7 @@ const Navbar = () => {
                                                 <LogOut size={15} />
                                                 Sign Out
                                             </button>
-                                            </Motion.div>
+                                        </Motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>
@@ -213,23 +225,21 @@ const Navbar = () => {
                             <div className="hidden md:flex items-center gap-3">
                                 <Link
                                     to="/login"
-                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
-                                        isHome
-                                            ? 'text-white/90 hover:text-white hover:bg-white/10'
-                                            : isActive('/login')
-                                                ? 'text-emerald-700 bg-emerald-50'
-                                                : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
-                                    }`}
+                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${isTransparent
+                                        ? 'text-white/90 hover:text-white hover:bg-white/10'
+                                        : isActive('/login')
+                                            ? 'text-emerald-700 bg-emerald-50'
+                                            : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                                        }`}
                                 >
                                     Sign In
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${
-                                        isHome
-                                            ? 'bg-white text-emerald-700 hover:bg-emerald-50'
-                                            : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-200'
-                                    }`}
+                                    className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${isTransparent
+                                        ? 'bg-white text-emerald-950 hover:bg-emerald-50'
+                                        : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-200'
+                                        }`}
                                 >
                                     Get Started
                                 </Link>
@@ -239,9 +249,8 @@ const Navbar = () => {
                         {/* Mobile menu toggle */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className={`md:hidden p-1 transition-colors ${
-                                isHome ? 'text-white hover:text-emerald-200' : 'text-gray-500 hover:text-emerald-600'
-                            }`}
+                            className={`md:hidden p-1 transition-colors ${isTransparent ? 'text-white hover:text-emerald-200' : 'text-gray-500 hover:text-emerald-600'
+                                }`}
                             aria-label="Toggle menu"
                         >
                             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -258,7 +267,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="md:hidden border-t border-gray-100 bg-white overflow-hidden"
+                        className="md:hidden border-t border-gray-100 bg-white overflow-hidden shadow-xl"
                     >
                         <div className="px-4 py-4 space-y-1">
                             {navLinks.map(({ to, label }) => (
@@ -266,80 +275,84 @@ const Navbar = () => {
                                     key={to}
                                     to={to}
                                     onClick={() => setMobileOpen(false)}
-                                    className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                                        isHome
-                                            ? isActive(to)
-                                                ? 'bg-white text-emerald-700'
-                                                : 'text-white/85 hover:bg-white/10'
-                                            : isActive(to)
-                                                ? 'bg-emerald-50 text-emerald-600'
-                                                : 'text-gray-600 hover:bg-gray-50'
-                                    }`}
+                                    className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(to)
+                                        ? 'bg-emerald-50 text-emerald-600'
+                                        : 'text-gray-600 hover:bg-gray-50'
+                                        }`}
                                 >
                                     {label}
                                 </Link>
                             ))}
 
+                            {/* NOTE: Mobile menu background is always white, so we don't use isTransparent here for the content logic, 
+                                except maybe for uniformity, but better to keep it clean. 
+                                The previous code had conditional styling `isHome ?` for mobile menu items but the container was `bg-white`?
+                                Wait, original code line 261: `bg-white`. 
+                                But line 270 used `isHome`.
+                                `isHome` was used to determine if the text was white?
+                                BUT the container is `bg-white` (line 261).
+                                So white text on white bg?
+                                Let's check original code.
+                                Line 261: `bg-white`.
+                                Line 270: `isHome ? ... 'bg-white text-emerald-700' : 'text-white/85...'`
+                                Wait, if `isHome` is true, 
+                                    if active: `bg-white text-emerald-700`.
+                                    if not active: `text-white/85`.
+                                    But container is `bg-white`. 
+                                    So `text-white/85` on `bg-white` is invisible.
+                                    The original code might have had a bug or `isHome` meant something else for mobile.
+                                    
+                                Actually, checking original code:
+                                `className="md:hidden border-t border-gray-100 bg-white overflow-hidden"`
+                                So mobile menu IS white.
+                                Then why did it checks `isHome` for link colors?
+                                `isHome ? ... 'text-white/85'`
+                                This looks like a BUG in the original code or I am misreading.
+                                
+                                Ah, wait. `isHome` logic was:
+                                ` isHome ? isActive ? ... : 'text-white/85' `
+                                This suggests the mobile menu intended to be transparent/dark too? 
+                                But the container says `bg-white`.
+                                
+                                I will fix this to be always readable (Dark text on White bg) for Mobile Menu, as it slides down.
+                            */}
+
                             {user ? (
-                                <>
-                                    <div className={`border-t pt-3 mt-3 ${isHome ? 'border-white/15' : 'border-gray-100'}`}>
-                                        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                                            <div
-                                                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm ${
-                                                    isHome ? 'bg-white/10 text-white' : 'bg-emerald-100 text-emerald-700'
-                                                }`}
-                                            >
-                                                {user.name?.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <p
-                                                    className={`text-sm font-semibold ${
-                                                        isHome ? 'text-white' : 'text-gray-900'
-                                                    }`}
-                                                >
-                                                    {user.name}
-                                                </p>
-                                                <p
-                                                    className={`text-xs ${
-                                                        isHome ? 'text-white/70' : 'text-gray-400'
-                                                    }`}
-                                                >
-                                                    {user.email}
-                                                </p>
-                                            </div>
+                                <div className="border-t border-gray-100 pt-3 mt-3">
+                                    <div className="flex items-center gap-3 px-3 py-2 mb-2">
+                                        <div className="h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm bg-emerald-100 text-emerald-700">
+                                            {user.name?.charAt(0).toUpperCase()}
                                         </div>
-                                        <button
-                                            onClick={handleLogout}
-                                            className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                                                isHome ? 'text-red-200 hover:bg-white/10' : 'text-red-600 hover:bg-red-50'
-                                            }`}
-                                        >
-                                            <LogOut size={16} />
-                                            Sign Out
-                                        </button>
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-900">
+                                                {user.name}
+                                            </p>
+                                            <p className="text-xs text-gray-400">
+                                                {user.email}
+                                            </p>
+                                        </div>
                                     </div>
-                                </>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-red-600 hover:bg-red-50"
+                                    >
+                                        <LogOut size={16} />
+                                        Sign Out
+                                    </button>
+                                </div>
                             ) : (
-                                <div className={`border-t pt-3 mt-3 space-y-2 ${isHome ? 'border-white/15' : 'border-gray-100'}`}>
+                                <div className="border-t border-gray-100 pt-3 mt-3 space-y-2">
                                     <Link
                                         to="/login"
                                         onClick={() => setMobileOpen(false)}
-                                        className={`block text-center px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
-                                            isHome
-                                                ? 'text-white border-white/40 hover:bg-white/10'
-                                                : 'text-gray-700 border-gray-200 hover:bg-gray-50'
-                                        }`}
+                                        className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors text-gray-700 border-gray-200 hover:bg-gray-50"
                                     >
                                         Sign In
                                     </Link>
                                     <Link
                                         to="/register"
                                         onClick={() => setMobileOpen(false)}
-                                        className={`block text-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                                            isHome
-                                                ? 'text-emerald-700 bg-white hover:bg-emerald-50'
-                                                : 'text-white bg-emerald-600 hover:bg-emerald-700'
-                                        }`}
+                                        className="block text-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-white bg-emerald-600 hover:bg-emerald-700"
                                     >
                                         Get Started
                                     </Link>

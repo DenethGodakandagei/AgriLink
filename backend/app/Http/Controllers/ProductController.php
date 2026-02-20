@@ -102,10 +102,22 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        if ($product->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        if ($product->user_id != auth()->id()) {
+            return response()->json([
+                'message' => 'Unauthorized',
+                'debug' => [
+                    'product_owner' => $product->user_id,
+                    'current_user' => auth()->id()
+                ]
+            ], 403);
         }
 
         return $product->delete();

@@ -64,8 +64,8 @@ const Products = () => {
                 // Refresh list
                 fetchProducts();
             } catch (error) {
-                console.error("Failed to delete product", error);
-                alert("Failed to delete product. Please try again.");
+                console.error("Failed to delete product", error.response?.data || error.message);
+                alert(`Failed to delete product: ${error.response?.data?.message || "Please try again."}`);
             }
         }
     };

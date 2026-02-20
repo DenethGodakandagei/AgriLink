@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,8 +13,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
     "Inter", "Segoe UI", system-ui, sans-serif;
+  font-weight: 300;
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -25,6 +26,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont,
+  font-family: 'Montserrat', "SF Pro Display", -apple-system, BlinkMacSystemFont,
     "Inter", "Outfit", system-ui, sans-serif;
+  font-weight: 400;
 }
