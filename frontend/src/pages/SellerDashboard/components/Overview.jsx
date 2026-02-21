@@ -101,7 +101,7 @@ const Overview = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     title="Total Revenue"
-                    value={`$${stats.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    value={`LKR ${stats.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     icon={DollarSign}
                     color="bg-emerald-500"
                     trend="up"
@@ -158,7 +158,7 @@ const Overview = () => {
                                     className="w-full bg-emerald-100 rounded-t-xl relative group-hover:bg-emerald-500 transition-colors duration-300"
                                 >
                                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-xl z-20 whitespace-nowrap">
-                                        ${(h * 150).toLocaleString()}
+                                        LKR {(h * 150).toLocaleString()}
                                         <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
                                     </div>
                                 </Motion.div>
@@ -199,9 +199,9 @@ const Overview = () => {
                                         </p>
                                     </div>
                                     <div className="text-right">
-                                        <span className="text-sm font-bold text-gray-900 block">${Number(order.total).toFixed(2)}</span>
+                                        <span className="text-sm font-bold text-gray-900 block">LKR {Number(order.total).toFixed(2)}</span>
                                         <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${order.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
-                                                order.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
+                                            order.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
                                             }`}>
                                             {order.status || 'Pending'}
                                         </span>

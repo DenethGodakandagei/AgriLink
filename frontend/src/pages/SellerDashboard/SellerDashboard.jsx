@@ -8,7 +8,8 @@ import {
     LogOut,
     Menu,
     X,
-    Bell
+    Bell,
+    BarChart3
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../config/translations';
@@ -65,6 +66,7 @@ const SellerDashboard = () => {
         { id: 'overview', label: t.sellerDashboard.overview, icon: LayoutDashboard, path: '/seller-dashboard' },
         { id: 'products', label: t.sellerDashboard.products, icon: Package, path: '/seller-dashboard/products' },
         { id: 'orders', label: t.sellerDashboard.orders, icon: ShoppingCart, path: '/seller-dashboard/orders' },
+        { id: 'reports', label: t.sellerDashboard.reports, icon: BarChart3, path: '/seller-dashboard/reports' },
         // { id: 'settings', label: t.sellerDashboard.settings, icon: Settings, path: '/seller-dashboard/settings' }, // Uncomment when settings page is ready
     ];
 
@@ -155,7 +157,8 @@ const SellerDashboard = () => {
                             {activeTab === 'overview' ? t.sellerDashboard.dashboardOverview :
                                 activeTab === 'products' ? t.sellerDashboard.products :
                                     activeTab === 'orders' ? t.sellerDashboard.orders :
-                                        activeTab}
+                                        activeTab === 'reports' ? t.sellerDashboard.reports :
+                                            activeTab}
                         </h2>
                     </div>
 

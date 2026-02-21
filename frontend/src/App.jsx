@@ -8,6 +8,7 @@ import SellerDashboard from './pages/SellerDashboard/SellerDashboard';
 import Overview from './pages/SellerDashboard/components/Overview';
 import Products from './pages/SellerDashboard/components/Products';
 import SellerOrders from './pages/SellerDashboard/components/Orders';
+import Reports from './pages/SellerDashboard/components/Reports';
 import Orders from './pages/Orders';
 import Saved from './pages/Saved';
 import Profile from './pages/Profile';
@@ -38,6 +39,7 @@ function App() {
               <Route index element={<Overview />} />
               <Route path="products" element={<Products />} />
               <Route path="orders" element={<SellerOrders />} />
+              <Route path="reports" element={<Reports />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
