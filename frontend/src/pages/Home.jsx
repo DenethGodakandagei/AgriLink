@@ -49,7 +49,10 @@ const Home = () => {
         <div className={`min-h-screen bg-slate-50 ${language === 'si' ? 'font-sinhala' : ''}`}>
 
             <section className="relative min-h-screen w-full overflow-hidden">
-                <img
+                <Motion.img
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 2, ease: "easeOut" }}
                     src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
                     alt="Bright green crop fields under sky"
                     className="absolute inset-0 h-full w-full object-cover b"
@@ -64,18 +67,33 @@ const Home = () => {
                             <div className="max-w-xl space-y-6">
 
 
-                                <h1 className="text-3xl sm:text-5xl lg:text-5xl font-semibold leading-tight text-white">
+                                <Motion.h1
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="text-3xl sm:text-5xl lg:text-5xl font-semibold leading-tight text-white"
+                                >
                                     {t.heroTitle}
                                     <span className="block italic text-lime-100">
                                         {t.heroSubtitle}
                                     </span>
-                                </h1>
+                                </Motion.h1>
 
-                                <p className="text-sm sm:text-base text-slate-100/90 max-w-md">
+                                <Motion.p
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    className="text-sm sm:text-base text-slate-100/90 max-w-md"
+                                >
                                     {t.heroDescription}
-                                </p>
+                                </Motion.p>
 
-                                <div className="flex flex-wrap gap-4 pt-1">
+                                <Motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.4 }}
+                                    className="flex flex-wrap gap-4 pt-1"
+                                >
                                     <Link to="/marketplace" className="inline-flex items-center justify-center rounded-full bg-lime-400 px-6 sm:px-7 py-2.5 text-sm font-semibold text-emerald-950 shadow-lg shadow-lime-400/40 hover:bg-lime-300 transition-colors">
                                         {t.startInvesting}
                                         <ArrowRight size={16} className="ml-2" />
@@ -83,10 +101,15 @@ const Home = () => {
                                     <Link to="/login" className="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/5 px-6 sm:px-7 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
                                         {t.meetFarmers}
                                     </Link>
-                                </div>
+                                </Motion.div>
                             </div>
 
-                            <div className="mt-10 border-t border-white/20 pt-4 flex items-center gap-4 text-xs sm:text-sm text-slate-100/85">
+                            <Motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, delay: 0.6 }}
+                                className="mt-10 border-t border-white/20 pt-4 flex items-center gap-4 text-xs sm:text-sm text-slate-100/85"
+                            >
                                 <div className="flex items-center gap-2">
                                     <span className="text-[11px] sm:text-xs tracking-[0.25em] uppercase">
                                         {t.scroll}
@@ -106,7 +129,7 @@ const Home = () => {
                                         <span>{t.farmersCount}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </Motion.div>
                         </div>
                     </div>
                 </div>
@@ -118,7 +141,13 @@ const Home = () => {
                     <div className="max-w-8xl mx-auto">
 
 
-                        <h2 className="text-3xl sm:text-5xl lg:text-5xl font leading-[1.1] tracking-tight text-emerald-950">
+                        <Motion.h2
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="text-3xl sm:text-5xl lg:text-5xl font leading-[1.1] tracking-tight text-emerald-950"
+                        >
                             {t.platformDesc}
                             <span className="text-gray-400"> {t.byDelivering} </span>
                             <span className="inline-block align-middle mx-1">
@@ -129,20 +158,25 @@ const Home = () => {
                                 />
                             </span>
                             <span className="text-gray-400"> {t.practicalTools}</span>
-                        </h2>
+                        </Motion.h2>
                     </div>
                 </section>
 
                 <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-start max-w-8xl mx-auto px-4 sm:px-6 mb-24">
                     <div className="space-y-8">
-                        <div>
+                        <Motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
                             <h3 className="text-3xl sm:text-4xl text-emerald-950 mb-2">
                                 {t.smartSolutionsTitle}
                             </h3>
                             <p className="text-2xl sm:text-3xl font-light text-emerald-800">
                                 {t.smartSolutionsSubtitle}
                             </p>
-                        </div>
+                        </Motion.div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4">
                             {[
@@ -164,9 +198,13 @@ const Home = () => {
                                     icon: <Star className="w-5 h-5 text-emerald-600" />,
                                     desc: t.features[2].desc
                                 }
-                            ].map((feature) => (
-                                <div
+                            ].map((feature, index) => (
+                                <Motion.div
                                     key={feature.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
                                     onClick={() => setActiveFeature(feature.id)}
                                     className={`cursor-pointer rounded-2xl transition-all duration-300 overflow-hidden ${activeFeature === feature.id
                                         ? 'bg-white shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-100'
@@ -200,12 +238,18 @@ const Home = () => {
                                             </p>
                                         </div>
                                     </Motion.div>
-                                </div>
+                                </Motion.div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="relative h-64 sm:h-[500px] w-full rounded-[2.5rem] overflow-hidden group mt-8 lg:mt-0">
+                    <Motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="relative h-64 sm:h-[500px] w-full rounded-[2.5rem] overflow-hidden group mt-8 lg:mt-0"
+                    >
                         <img
                             src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
                             alt="Smart Farming"
@@ -218,13 +262,19 @@ const Home = () => {
                                 {t.quote}
                             </p>
                         </div>
-                    </div>
+                    </Motion.div>
                 </section>
 
 
 
                 <section className="py-20 border-t border-gray-100">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                    <Motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                    >
                         <div>
                             <div className="flex items-center gap-2 mb-3">
                                 <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
@@ -238,7 +288,7 @@ const Home = () => {
                             {t.viewAll}
                             <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
                         </a>
-                    </div>
+                    </Motion.div>
 
                     <Motion.div
                         layout
@@ -253,8 +303,16 @@ const Home = () => {
                                 {t.noProducts}
                             </p>
                         ) : (
-                            products.slice(0, 3).map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                            products.slice(0, 3).map((product, index) => (
+                                <Motion.div
+                                    key={product.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                >
+                                    <ProductCard product={product} />
+                                </Motion.div>
                             ))
                         )}
                     </Motion.div>
