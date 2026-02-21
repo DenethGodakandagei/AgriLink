@@ -41,5 +41,9 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'textlk' => [
+        'token' => env('TEXTLK_TOKEN'),
+        'sender_id' => env('TEXTLK_SENDER_ID', 'TextLKDemo'),
+    ],
 
 ];

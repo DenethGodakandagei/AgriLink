@@ -2,9 +2,9 @@ export const translations = {
     en: {
         heroTitle: "Smart Farming for Future",
         heroSubtitle: "Generations",
-        heroDescription: "Send, receive, and track your finances in one secure platform built for speed, clarity, and everyday financial control.",
-        startInvesting: "Start Investing",
-        meetFarmers: "Meet the Farmers",
+        heroDescription: "Connect directly with farmers and buyers on one easy-to-use platform. Enjoy fresh produce with zero brokers, ensuring fair prices and better profits for everyone.",
+        startInvesting: "Explore Marketplace",
+        meetFarmers: "Login or Register",
         scroll: "Scroll",
         farmersCount: "10k+ Farmers",
         platformDesc: "Our platform is built to support farmers and buyers",
@@ -14,19 +14,19 @@ export const translations = {
         smartSolutionsSubtitle: "That Deliver Real Results",
         features: [
             {
-                title: "Proven Farm Productivity",
-                desc: "Reach more buyers, cut middlemen, and keep harvests moving with our direct-to-market tools."
+                title: "Direct Marketplace",
+                desc: "We combine buyers and farmers into one platform. It's easy to use and completely eliminates the need for brokers."
             },
             {
-                title: "Intelligent Crop Optimization",
-                desc: "Our AI-powered system analyzes market trends and weather patterns to recommend the most effective actions automatically."
+                title: "Fair Prices For All",
+                desc: "Farmers receive the full value of their hard work, and buyers get the freshest produce at the best possible prices."
             },
             {
-                title: "Seamless System Integration",
-                desc: "Connect your existing farm management software directly to our marketplace for real-time inventory updates."
+                title: "Easy & Secure Transactions",
+                desc: "Experience seamless purchasing with secure payments and reliable delivery, making agricultural trade simpler than ever."
             }
         ],
-        quote: "\"Our intelligent agriculture solutions help farmers grow more with less by optimizing resources.\"",
+        quote: "\"Our platform eliminates the middlemen, helping farmers earn more and buyers save more through direct connection.\"",
         featuredProduce: "Featured Produce",
         freshHarvest: "Fresh from the Harvest",
         viewAll: "View all products",
@@ -393,9 +393,9 @@ export const translations = {
     si: {
         heroTitle: "අනාගත පරපුර උදෙසා",
         heroSubtitle: "ස්මාර්ට් ගොවිතැන",
-        heroDescription: "වේගවත් බව, පැහැදිලි බව සහ එදිනෙදා මූල්‍ය පාලනය සඳහා ගොඩනගා ඇති එක් ආරක්ෂිත වේදිකාවක් තුළ ඔබේ මූල්‍ය යැවීම, ලැබීම සහ හඹා යාම සිදු කරන්න.",
-        startInvesting: "ආයෝජනය ඇරඹුම",
-        meetFarmers: "ගොවීන් හමුවන්න",
+        heroDescription: "ගොවීන් සහ ගැනුම්කරුවන් අතර සෘජු සම්බන්ධතාවයක් ගොඩනගන පහසු වේදිකාවක්. කිසිදු අතරමැදියෙකු නොමැතිව, සැමට සාධාරණ මිලක් සහ නැවුම් නිෂ්පාදන අත්විඳින්න.",
+        startInvesting: "වෙළඳපොළ ගවේෂණය කරන්න",
+        meetFarmers: "පිවිසෙන්න හෝ ලියාපදිංචි වන්න",
         scroll: "පහළට යන්න",
         farmersCount: "10,000+ ගොවීන්",
         platformDesc: "අපගේ වේදිකාව ගොවීන් සහ ගැනුම්කරුවන්",
@@ -405,19 +405,19 @@ export const translations = {
         smartSolutionsSubtitle: "සැබෑ ප්‍රතිඵල ලබා දෙන",
         features: [
             {
-                title: "තහවුරු කරන ලද ගොවි ඵලදායිතාව",
-                desc: "අපගේ සෘජු වෙළඳපල මෙවලම් සමඟ වැඩි ගැනුම්කරුවන් වෙත ළඟා වන්න, අතරමැදියන් ඉවත් කරන්න, සහ අස්වැන්න අලෙවි කරන්න."
+                title: "සෘජු වෙළඳපොළ",
+                desc: "අපි ගැනුම්කරුවන් සහ ගොවීන් එකම වේදිකාවකට සම්බන්ධ කරමු. එය භාවිතයට පහසු වන අතර අතරමැදියන්ගේ අවශ්‍යතාවය මුළුමනින්ම ඉවත් කරයි."
             },
             {
-                title: "බුද්ධිමත් බෝග ප්‍රශස්තකරණය",
-                desc: "වඩාත් ඵලදායී ක්‍රියාමාර්ග ස්වයංක්‍රීයව නිර්දේශ කිරීම සඳහා අපගේ AI පද්ධතිය වෙළඳපල ප්‍රවණතා සහ කාලගුණ රටා විශ්ලේෂණය කරයි."
+                title: "සැමට සාධාරණ මිලක්",
+                desc: "ගොවීන්ට ඔවුන්ගේ මහන්සියේ නියම වටිනාකම ලැබෙන අතර, ගැනුම්කරුවන්ට හොඳම මිලට නැවුම් නිෂ්පාදන ලබා ගත හැක."
             },
             {
-                title: "පහසු පද්ධති ඒකාබද්ධතාවය",
-                desc: "තත්‍ය කාලීන ඉන්වෙන්ටරි යාවත්කාලීන කිරීම් සඳහා ඔබේ පවතින ගොවි කළමනාකරණ මෘදුකාංගය අපගේ වෙළඳපොළට සම්බන්ධ කරන්න."
+                title: "පහසු සහ ආරක්ෂිත ගනුදෙනු",
+                desc: "ආරක්ෂිත ගෙවීම් සහ විශ්වාසදායක බෙදා හැරීම් සමඟ කරදරයකින් තොරව කෘෂිකාර්මික වෙළඳාම පෙරට වඩා සරලව අත්විඳින්න."
             }
         ],
-        quote: "\"අපගේ බුද්ධිමත් කෘෂිකාර්මික විසඳුම් ගොවීන්ට සම්පත් ප්‍රශස්ත කිරීම මගින් අඩු වියදමකින් වැඩි වර්ධනයක් ලබා ගැනීමට උපකාරී වේ.\"",
+        quote: "\"අපගේ වේදිකාව අතරමැදියන් ඉවත් කර, සෘජු සම්බන්ධතාවය හරහා ගොවීන්ට වැඩි ආදායමක් සහ ගැනුම්කරුවන්ට වැඩි ඉතිරියක් ලබා දෙයි.\"",
         featuredProduce: "විශේෂිත නිෂ්පාදන",
         freshHarvest: "නැවුම් අස්වැන්න",
         viewAll: "සියලුම නිෂ්පාදන බලන්න",

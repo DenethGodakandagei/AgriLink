@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../config/translations';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -75,13 +76,13 @@ const Home = () => {
                                 </p>
 
                                 <div className="flex flex-wrap gap-4 pt-1">
-                                    <button className="inline-flex items-center justify-center rounded-full bg-lime-400 px-6 sm:px-7 py-2.5 text-sm font-semibold text-emerald-950 shadow-lg shadow-lime-400/40 hover:bg-lime-300 transition-colors">
+                                    <Link to="/marketplace" className="inline-flex items-center justify-center rounded-full bg-lime-400 px-6 sm:px-7 py-2.5 text-sm font-semibold text-emerald-950 shadow-lg shadow-lime-400/40 hover:bg-lime-300 transition-colors">
                                         {t.startInvesting}
                                         <ArrowRight size={16} className="ml-2" />
-                                    </button>
-                                    <button className="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/5 px-6 sm:px-7 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
+                                    </Link>
+                                    <Link to="/login" className="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/5 px-6 sm:px-7 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
                                         {t.meetFarmers}
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
 

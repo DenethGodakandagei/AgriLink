@@ -145,6 +145,12 @@ class OrderController extends Controller
                     $data['product_model']->save();
                 }
 
+                if ($order->payment_method === 'cod') {
+                    $sms = new \App\Services\SmsService();
+                    $message = "Hi {$order->first_name}, your AGRILINK order #{$order->id} for LKR {$order->total_price} has been placed successfully (COD). Thank you!";
+                    $sms->sendSms($order->phone, $message);
+                }
+
                 return response()->json($order->load(['user', 'items.product']), 201);
             });
 
@@ -195,6 +201,13 @@ class OrderController extends Controller
 
         $order->status = $fields['status'];
         $order->save();
+
+        if (!empty($order->phone)) {
+            $sms = new \App\Services\SmsService();
+            $statusText = strtoupper($order->status);
+            $message = "Hi {$order->first_name}, your AGRILINK order #{$order->id} status has been updated to: {$statusText}.";
+            $sms->sendSms($order->phone, $message);
+        }
 
         return response()->json($order, 200);
     }

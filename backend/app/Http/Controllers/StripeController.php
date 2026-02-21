@@ -53,6 +53,12 @@ class StripeController extends Controller
             $order->status = 'confirmed';
             $order->save();
 
+            if (!empty($order->phone)) {
+                $sms = new \App\Services\SmsService();
+                $message = "Hi {$order->first_name}, your payment for order #{$order->id} (LKR {$order->total_price}) was successful. Status: CONFIRMED.";
+                $sms->sendSms($order->phone, $message);
+            }
+
             $existing = Transaction::where('order_id', $order->id)->first();
             if (!$existing) {
                 Transaction::create([
@@ -198,10 +204,16 @@ class StripeController extends Controller
             case 'payment_intent.succeeded':
                 $pi = $event->data->object;
                 $order = Order::where('stripe_payment_intent_id', $pi->id)->first();
-                if ($order) {
+                if ($order && $order->payment_status !== 'paid') {
                     $order->payment_status = 'paid';
                     $order->status = 'confirmed';
                     $order->save();
+
+                    if (!empty($order->phone)) {
+                        $sms = new \App\Services\SmsService();
+                        $message = "Hi {$order->first_name}, your payment for order #{$order->id} (LKR {$order->total_price}) was successful. Status: CONFIRMED.";
+                        $sms->sendSms($order->phone, $message);
+                    }
 
                     $existing = Transaction::where('order_id', $order->id)->first();
                     if (!$existing) {
