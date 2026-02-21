@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Users, ClipboardList, LogOut, Hexagon } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, ClipboardList, LogOut, Hexagon, Menu, X } from 'lucide-react';
 
 export default function Layout() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -20,11 +22,33 @@ export default function Layout() {
 
     return (
         <div className="flex min-h-screen bg-gray-50">
+            {/* Mobile Header */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b flex items-center justify-between px-4 z-20 shadow-sm">
+                <div className="flex items-center gap-2">
+
+                    <span className="text-lg font-bold tracking-tight text-gray-900">AGRILINK. Admin</span>
+                </div>
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                >
+                    {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+            </div>
+
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r shadow-sm fixed h-full z-10">
+            <aside className={`fixed inset-y-0 left-0 bg-white border-r shadow-sm w-64 z-30 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center gap-2 p-6 border-b">
-                    <Hexagon className="w-8 h-8 text-accent fill-current" />
-                    <span className="text-xl font-bold tracking-tight text-gray-900">AgriLink Admin</span>
+
+                    <span className="text-xl font-bold tracking-tight text-gray-900">AGRILINK. Admin</span>
                 </div>
 
                 <nav className="p-4 space-y-1">
@@ -38,6 +62,7 @@ export default function Layout() {
                                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                 }`
                             }
+                            onClick={() => setIsSidebarOpen(false)}
                         >
                             <item.icon className="w-5 h-5" />
                             {item.label}
@@ -66,7 +91,7 @@ export default function Layout() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-8">
+            <main className="flex-1 w-full lg:ml-64 pt-20 lg:pt-8 p-4 lg:p-8">
                 <div className="max-w-7xl mx-auto">
                     <Outlet />
                 </div>

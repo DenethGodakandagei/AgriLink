@@ -9,6 +9,7 @@ export default function Dashboard() {
         orders: 0,
         revenue: 0
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,6 +30,8 @@ export default function Dashboard() {
                 });
             } catch (err) {
                 console.error("Failed to fetch dashboard stats", err);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -40,6 +43,14 @@ export default function Dashboard() {
         { title: 'Total Orders', value: stats.orders, icon: ClipboardList, color: 'text-violet-600', bg: 'bg-violet-50' },
         { title: 'Total Revenue', value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-50' },
     ];
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            </div>
+        );
+    }
 
     return (
         <div>

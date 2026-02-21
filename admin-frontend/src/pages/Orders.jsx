@@ -40,56 +40,54 @@ export default function Orders() {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            </div>
+        );
+    }
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">Order Management</h1>
 
             <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-gray-50 border-b">
-                        <tr>
-                            <th className="p-4 font-medium text-gray-500">Order ID</th>
-                            <th className="p-4 font-medium text-gray-500">Customer</th>
-                            <th className="p-4 font-medium text-gray-500">Total Price</th>
-                            <th className="p-4 font-medium text-gray-500">Status</th>
-                            <th className="p-4 font-medium text-gray-500">Date</th>
-                            <th className="p-4 font-medium text-gray-500">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                        {orders.map(order => (
-                            <tr key={order.id} className="hover:bg-gray-50">
-                                <td className="p-4 font-medium text-gray-900">#{order.id}</td>
-                                <td className="p-4">
-                                    <div>
-                                        <p className="font-medium text-gray-900">{order.first_name} {order.last_name}</p>
-                                        <p className="text-xs text-gray-500">{order.email}</p>
-                                    </div>
-                                </td>
-                                <td className="p-4 font-medium">LKR {order.total_price}</td>
-                                <td className="p-4">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)} uppercase`}>
-                                        {order.status}
-                                    </span>
-                                </td>
-                                <td className="p-4 text-gray-500">{new Date(order.created_at).toLocaleDateString()}</td>
-                                <td className="p-4 flex gap-2">
-                                    <select
-                                        value={order.status}
-                                        onChange={(e) => updateStatus(order.id, e.target.value)}
-                                        className="text-xs border rounded p-1 bg-white"
-                                    >
-                                        <option value="pending">Pending</option>
-                                        <option value="processing">Processing</option>
-                                        <option value="shipped">Shipped</option>
-                                        <option value="delivered">Delivered</option>
-                                        <option value="cancelled">Cancelled</option>
-                                    </select>
-                                </td>
+                <div className="overflow-x-auto w-full">
+                    <table className="w-full text-left whitespace-nowrap min-w-[600px]">
+                        <thead className="bg-gray-50 border-b">
+                            <tr>
+                                <th className="p-4 font-medium text-gray-500">Order ID</th>
+                                <th className="p-4 font-medium text-gray-500">Customer</th>
+                                <th className="p-4 font-medium text-gray-500">Total Price</th>
+                                <th className="p-4 font-medium text-gray-500">Status</th>
+                                <th className="p-4 font-medium text-gray-500">Date</th>
+
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y">
+                            {orders.map(order => (
+                                <tr key={order.id} className="hover:bg-gray-50">
+                                    <td className="p-4 font-medium text-gray-900">#{order.id}</td>
+                                    <td className="p-4">
+                                        <div>
+                                            <p className="font-medium text-gray-900">{order.first_name} {order.last_name}</p>
+                                            <p className="text-xs text-gray-500">{order.email}</p>
+                                        </div>
+                                    </td>
+                                    <td className="p-4 font-medium">LKR {order.total_price}</td>
+                                    <td className="p-4">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)} uppercase`}>
+                                            {order.status}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-gray-500">{new Date(order.created_at).toLocaleDateString()}</td>
+
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

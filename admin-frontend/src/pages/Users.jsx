@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api';
-import { Trash2, UserPlus, Edit, Check, X } from 'lucide-react';
+import { Trash2, Edit, Check, X } from 'lucide-react';
 
 export default function Users() {
     const [users, setUsers] = useState([]);
@@ -10,7 +10,7 @@ export default function Users() {
 
     // Form State
     const [formData, setFormData] = useState({
-        name: '', email: '', role: 'buyer', password: ''
+        name: '', email: '', role: 'buyer', password: '', phone: '', address: ''
     });
 
     const fetchUsers = async () => {
@@ -42,17 +42,21 @@ export default function Users() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const payload = { ...formData };
+            if (editingUser && !payload.password) {
+                delete payload.password;
+            }
+
             if (editingUser) {
-                await api.put(`/users/${editingUser.id}`, formData);
-            } else {
-                await api.post('/users', formData);
+                await api.put(`/users/${editingUser.id}`, payload);
             }
             setShowModal(false);
             setEditingUser(null);
-            setFormData({ name: '', email: '', role: 'buyer', password: '' });
+            setFormData({ name: '', email: '', role: 'buyer', password: '', phone: '', address: '' });
             fetchUsers();
         } catch (err) {
-            alert('Operation failed');
+            alert(err.response?.data?.message || 'Operation failed');
+            console.error(err);
         }
     };
 
@@ -62,60 +66,64 @@ export default function Users() {
         setShowModal(true);
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            </div>
+        );
+    }
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-                <button
-                    onClick={() => { setEditingUser(null); setFormData({ name: '', email: '', role: 'buyer', password: '' }); setShowModal(true); }}
-                    className="flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent-hover"
-                >
-                    <UserPlus size={18} /> Add User
-                </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-gray-50 border-b">
-                        <tr>
-                            <th className="p-4 font-medium text-gray-500">Name</th>
-                            <th className="p-4 font-medium text-gray-500">Email</th>
-                            <th className="p-4 font-medium text-gray-500">Role</th>
-                            <th className="p-4 font-medium text-gray-500">Joined</th>
-                            <th className="p-4 font-medium text-gray-500">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                        {users.map(user => (
-                            <tr key={user.id} className="hover:bg-gray-50">
-                                <td className="p-4 font-medium">{user.name}</td>
-                                <td className="p-4 text-gray-600">{user.email}</td>
-                                <td className="p-4">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold 
-                    ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' :
-                                            user.role === 'farmer' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                                        {user.role}
-                                    </span>
-                                </td>
-                                <td className="p-4 text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
-                                <td className="p-4 flex gap-2">
-                                    <button onClick={() => openEdit(user)} className="p-2 text-blue-600 hover:bg-blue-50 rounded">
-                                        <Edit size={16} />
-                                    </button>
-                                    <button onClick={() => handleDelete(user.id)} className="p-2 text-red-600 hover:bg-red-50 rounded">
-                                        <Trash2 size={16} />
-                                    </button>
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left whitespace-nowrap">
+                        <thead className="bg-gray-50 border-b">
+                            <tr>
+                                <th className="p-4 font-medium text-gray-500">Name</th>
+                                <th className="p-4 font-medium text-gray-500">Email</th>
+                                <th className="p-4 font-medium text-gray-500">Role</th>
+                                <th className="p-4 font-medium text-gray-500">Joined</th>
+                                <th className="p-4 font-medium text-gray-500">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y">
+                            {users.map(user => (
+                                <tr key={user.id} className="hover:bg-gray-50">
+                                    <td className="p-4 font-medium">{user.name}</td>
+                                    <td className="p-4 text-gray-600">{user.email}</td>
+                                    <td className="p-4">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold 
+                    ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' :
+                                                user.role === 'farmer' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                            {user.role}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
+                                    <td className="p-4 flex gap-2">
+                                        <button onClick={() => openEdit(user)} className="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                                            <Edit size={16} />
+                                        </button>
+                                        <button onClick={() => handleDelete(user.id)} className="p-2 text-red-600 hover:bg-red-50 rounded">
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">{editingUser ? 'Edit User' : 'Add User'}</h2>
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+                        <h2 className="text-xl font-bold mb-4">Edit User</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -132,6 +140,14 @@ export default function Users() {
                                     <option value="farmer">Farmer</option>
                                     <option value="admin">Admin</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Phone</label>
+                                <input type="text" className="w-full border rounded p-2" value={formData.phone || ''} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Address</label>
+                                <textarea className="w-full border rounded p-2" value={formData.address || ''} onChange={e => setFormData({ ...formData, address: e.target.value })} rows="2"></textarea>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Password {editingUser && '(Leave blank to keep)'}</label>
