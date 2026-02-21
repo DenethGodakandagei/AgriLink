@@ -58,6 +58,8 @@ export const translations = {
             home: "Home",
             marketplace: "Marketplace",
             orders: "Orders",
+            myOrders: "My Orders",
+            businessOrders: "Business Orders",
             saved: "Saved",
             dashboard: "Dashboard",
             profile: "My Profile",
@@ -218,7 +220,12 @@ export const translations = {
                 successAdd: "Product added successfully!",
                 successUpdate: "Product updated successfully!",
                 errorImage: "Please upload at least one image.",
-                errorOperation: "Operation failed."
+                errorOperation: "Operation failed.",
+                errorNameLength: "Product name must be at least 3 characters long.",
+                errorCategory: "Please select a category.",
+                errorPrice: "Price must be a valid number greater than 0.",
+                errorQuantity: "Quantity must be a valid number greater than 0.",
+                errorDescription: "Description must be at least 10 characters long."
             },
             ordersPage: {
                 title: "Orders",
@@ -441,6 +448,8 @@ export const translations = {
             home: "මුල් පිටුව",
             marketplace: "වෙළඳපොළ",
             orders: "ඇණවුම්",
+            myOrders: "මගේ ඇණවුම්",
+            businessOrders: "ව්‍යාපාරික ඇණවුම්",
             saved: "සුරකින ලදි",
             dashboard: "පුවරුව",
             profile: "මගේ ගිණුම",
@@ -601,7 +610,12 @@ export const translations = {
                 successAdd: "නිෂ්පාදනය සාර්ථකව එක් කරන ලදී!",
                 successUpdate: "නිෂ්පාදනය සාර්ථකව යාවත්කාලීන කරන ලදී!",
                 errorImage: "කරුණාකර අවම වශයෙන් එක් පින්තූරයක් උඩුගත කරන්න.",
-                errorOperation: "මෙහෙයුම අසාර්ථක විය."
+                errorOperation: "මෙහෙයුම අසාර්ථක විය.",
+                errorNameLength: "නිෂ්පාදන නාමය අවම වශයෙන් අක්ෂර 3ක් දිග විය යුතුය.",
+                errorCategory: "කරුණාකර කාණ්ඩයක් තෝරන්න.",
+                errorPrice: "මිල ශුන්‍යයට වඩා වැඩි වලංගු අගයක් විය යුතුය.",
+                errorQuantity: "ප්‍රමාණය ශුන්‍යයට වඩා වැඩි වලංගු අගයක් විය යුතුය.",
+                errorDescription: "විස්තරය අවම වශයෙන් අක්ෂර 10ක් දිග විය යුතුය."
             },
             ordersPage: {
                 title: "ඇණවුම්",

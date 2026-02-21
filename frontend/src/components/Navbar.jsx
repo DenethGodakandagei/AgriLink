@@ -81,7 +81,8 @@ const Navbar = () => {
         { to: '/', label: t.navbar.home },
         { to: '/marketplace', label: t.navbar.marketplace },
         ...(user ? [
-            { to: '/orders', label: t.navbar.orders },
+            { to: '/orders', label: t.navbar.myOrders || t.navbar.orders },
+            ...(user.role === 'farmer' ? [{ to: '/seller-dashboard/orders', label: t.navbar.businessOrders }] : []),
             { to: '/saved', label: t.navbar.saved },
         ] : []),
     ];

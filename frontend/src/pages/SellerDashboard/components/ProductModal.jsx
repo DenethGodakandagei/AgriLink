@@ -60,13 +60,36 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         setFormData({ ...formData, images: urls });
     };
 
+    const validateForm = () => {
+        if (!formData.name.trim() || formData.name.length < 3) {
+            return t.sellerDashboard.productModal.errorNameLength;
+        }
+        if (!formData.category) {
+            return t.sellerDashboard.productModal.errorCategory;
+        }
+        if (!formData.price || isNaN(formData.price) || Number(formData.price) <= 0) {
+            return t.sellerDashboard.productModal.errorPrice;
+        }
+        if (!formData.quantity || isNaN(formData.quantity) || Number(formData.quantity) <= 0) {
+            return t.sellerDashboard.productModal.errorQuantity;
+        }
+        if (!formData.description.trim() || formData.description.length < 10) {
+            return t.sellerDashboard.productModal.errorDescription;
+        }
+        if (formData.images.length === 0) {
+            return t.sellerDashboard.productModal.errorImage;
+        }
+        return null;
+    };
+
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setSubmitting(true);
         setMessage({ type: '', text: '' });
 
-        if (formData.images.length === 0) {
-            setMessage({ type: 'error', text: t.sellerDashboard.productModal.errorImage });
+        const validationError = validateForm();
+        if (validationError) {
+            setMessage({ type: 'error', text: validationError });
             setSubmitting(false);
             return;
         }
@@ -212,6 +235,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                         value={formData.price}
                                                         onChange={handleInputChange}
                                                         required
+                                                        min="0"
                                                         step="0.01"
                                                         className="w-full pl-4 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                                                         placeholder="0.00"
@@ -231,6 +255,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                                     value={formData.quantity}
                                                     onChange={handleInputChange}
                                                     required
+                                                    min="0"
                                                     className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                                                     placeholder="e.g., 100"
                                                 />

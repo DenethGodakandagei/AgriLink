@@ -232,7 +232,7 @@ const ProductDetails = () => {
         <div className={`min-h-screen bg-white font-outfit text-gray-900 ${language === 'si' ? 'font-sinhala' : ''}`}>
             <Navbar />
 
-            {/* Breadcrumb / Back Navigation */}
+            {/*Back Navigation */}
             <div className="border-b border-gray-100 bg-gray-50/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -252,7 +252,7 @@ const ProductDetails = () => {
                     <div className="lg:col-span-7 space-y-6">
                         <Motion.div
                             layout
-                            className="aspect-[4/3] lg:aspect-square bg-gray-100 rounded-3xl overflow-hidden relative group"
+                            className="aspect-[4/3] lg:aspect-square bg-gray-100 rounded-xl overflow-hidden relative group"
                         >
                             <img
                                 src={images[activeImage]}
@@ -262,11 +262,10 @@ const ProductDetails = () => {
                             <div className="absolute top-4 right-4 flex flex-col gap-3">
                                 <button
                                     onClick={() => product && toggleSave(product)}
-                                    className={`p-3 bg-white/90 backdrop-blur rounded-full shadow-sm transition-all hover:scale-110 ${
-                                        product && isSaved(product.id)
-                                            ? 'text-red-500 hover:text-red-600'
-                                            : 'text-gray-500 hover:text-red-500'
-                                    }`}
+                                    className={`p-3 bg-white/90 backdrop-blur rounded-full shadow-sm transition-all hover:scale-110 ${product && isSaved(product.id)
+                                        ? 'text-red-500 hover:text-red-600'
+                                        : 'text-gray-500 hover:text-red-500'
+                                        }`}
                                     title={
                                         product && isSaved(product.id)
                                             ? t.productCard?.removeFromSaved
@@ -331,21 +330,29 @@ const ProductDetails = () => {
                         </div>
 
                         {/* Price Section */}
-                        <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div className="flex items-end gap-2 mb-2">
-                                <span className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
-                                    LKR {Number(product.price).toFixed(2)}
-                                </span>
-                                {product.unit && (
-                                    <span className="text-gray-500 font-medium mb-1.5 text-lg">
-                                        / {product.unit}
+                        <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <div className="flex items-end gap-2 mb-2">
+                                    <span className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
+                                        LKR {Number(product.price).toFixed(2)}
                                     </span>
-                                )}
+                                    {product.unit && (
+                                        <span className="text-gray-500 font-medium mb-1.5 text-lg">
+                                            / {product.unit}
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-sm text-gray-500 flex items-center gap-2">
+                                    <Truck size={14} />
+                                    {tp.freeDelivery}
+                                </p>
                             </div>
-                            <p className="text-sm text-gray-500 flex items-center gap-2">
-                                <Truck size={14} />
-                                {tp.freeDelivery}
-                            </p>
+                            {(!product.quantity || product.quantity < 1) && (
+                                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-xl flex items-center gap-2 font-semibold shadow-sm">
+                                    <Package size={18} />
+                                    <span>{tp.outOfStock || "Out of Stock"}</span>
+                                </div>
+                            )}
                         </div>
 
                         {/* Description */}
@@ -378,10 +385,11 @@ const ProductDetails = () => {
                         {/* Actions */}
                         <div className="mt-auto space-y-4">
                             <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-gray-200 rounded-full h-14 w-32 justify-between px-2 bg-white">
+                                <div className={`flex items-center border border-gray-200 rounded-full h-14 w-32 justify-between px-2 ${product.quantity < 1 ? 'bg-gray-100 opacity-50 cursor-not-allowed' : 'bg-white'}`}>
                                     <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors"
+                                        disabled={product.quantity < 1}
+                                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors disabled:cursor-not-allowed"
                                     >
                                         <Minus size={18} />
                                     </button>
@@ -391,11 +399,13 @@ const ProductDetails = () => {
                                         max={maxQuantity}
                                         value={quantity}
                                         onChange={handleQuantityChange}
-                                        className="w-12 text-center font-semibold text-lg border-none focus:outline-none focus:ring-0 bg-transparent"
+                                        disabled={product.quantity < 1}
+                                        className="w-12 text-center font-semibold text-lg border-none focus:outline-none focus:ring-0 bg-transparent disabled:cursor-not-allowed"
                                     />
                                     <button
                                         onClick={() => setQuantity(Math.min(maxQuantity, quantity + 1))}
-                                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors"
+                                        disabled={product.quantity < 1}
+                                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors disabled:cursor-not-allowed"
                                     >
                                         <Plus size={18} />
                                     </button>
@@ -409,7 +419,7 @@ const ProductDetails = () => {
                                     {product.quantity > 0 ? tp.addToCart : tp.outOfStock}
                                 </button>
                             </div>
-                            <p className="text-center text-xs text-gray-400">
+                            <p className={`text-center text-xs font-semibold ${product.quantity > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                 {tp.secureTransaction} • {product.quantity > 0 ? tp.inStock : tp.outOfStock}
                             </p>
                         </div>

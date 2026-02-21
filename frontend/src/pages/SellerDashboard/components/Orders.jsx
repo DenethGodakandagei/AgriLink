@@ -194,7 +194,6 @@ const Orders = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-64 gap-3 text-gray-400">
                         <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-500 border-t-transparent"></div>
-                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-500 border-t-transparent"></div>
                         <p className="text-sm font-medium">{t.sellerDashboard.ordersPage.loading}</p>
                     </div>
                 ) : filtered.length === 0 ? (
