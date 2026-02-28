@@ -164,12 +164,16 @@ const Navbar = () => {
                                         }`}
                                 >
                                     <div
-                                        className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${isTransparent
+                                        className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 overflow-hidden ${isTransparent
                                             ? 'bg-white/10 text-white border-white/40'
                                             : 'bg-emerald-100 text-emerald-700 border-emerald-200'
                                             }`}
                                     >
-                                        {user.name?.charAt(0).toUpperCase() || <User size={16} />}
+                                        {user.profile_picture ? (
+                                            <img src={user.profile_picture} alt={user.name} className="h-full w-full object-cover" />
+                                        ) : (
+                                            user.name?.charAt(0).toUpperCase() || <User size={16} />
+                                        )}
                                     </div>
                                     <div className="hidden sm:flex flex-col items-start leading-tight">
                                         <span
@@ -344,8 +348,12 @@ const Navbar = () => {
                             {user ? (
                                 <div className="border-t border-gray-100 pt-3 mt-3">
                                     <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                                        <div className="h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm bg-emerald-100 text-emerald-700">
-                                            {user.name?.charAt(0).toUpperCase()}
+                                        <div className="h-9 w-9 rounded-full flex items-center justify-center font-bold text-sm bg-emerald-100 text-emerald-700 overflow-hidden">
+                                            {user.profile_picture ? (
+                                                <img src={user.profile_picture} alt={user.name} className="h-full w-full object-cover" />
+                                            ) : (
+                                                user.name?.charAt(0).toUpperCase()
+                                            )}
                                         </div>
                                         <div>
                                             <p className="text-sm font-semibold text-gray-900">

@@ -53,7 +53,7 @@ const Home = () => {
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 2, ease: "easeOut" }}
-                    src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                    src="https://images.pexels.com/photos/3560020/pexels-photo-3560020.jpeg"
                     alt="Bright green crop fields under sky"
                     className="absolute inset-0 h-full w-full object-cover b"
                 />

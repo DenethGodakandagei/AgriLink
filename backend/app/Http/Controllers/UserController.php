@@ -107,13 +107,22 @@ class UserController extends Controller
             'email' => 'required|string|unique:users,email,' . $user->id,
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
-            'password' => 'nullable|string|min:6'
+            'password' => 'nullable|string|min:6',
+            'bio' => 'nullable|string',
+            'profile_picture' => 'nullable|string',
         ]);
 
         $user->name = $fields['name'];
         $user->email = $fields['email'];
         $user->phone = $fields['phone'];
         $user->address = $fields['address'];
+
+        if (array_key_exists('bio', $fields)) {
+            $user->bio = $fields['bio'];
+        }
+        if (array_key_exists('profile_picture', $fields)) {
+            $user->profile_picture = $fields['profile_picture'];
+        }
 
         if (!empty($fields['password'])) {
             $user->password = Hash::make($fields['password']);
