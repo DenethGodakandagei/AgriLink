@@ -10,7 +10,7 @@ const Footer = () => {
   const { language } = useLanguage();
   const t = translations[language];
   return (
-    <footer className="bg-gray-50 text-gray-900 mt-auto border-t border-gray-100">
+    <footer className="bg-emerald-100 text-gray-900 mt-auto border-t border-gray-100">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-20 pb-8 md:pb-10">
         {/* CTA Section */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center border-b border-gray-100 pb-12 mb-12 gap-8 text-center lg:text-left">

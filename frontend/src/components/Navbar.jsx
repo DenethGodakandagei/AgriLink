@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react';
+import { Tractor, LogOut, User, Menu, X, ChevronDown, ShoppingCart, Package } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/useCart';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,6 +15,7 @@ const Navbar = () => {
     const isHeroPage = ['/', '/orders', '/marketplace', '/saved'].includes(location.pathname);
 
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const [user, setUser] = useState(() => {
         try {
             const stored = localStorage.getItem('user');
@@ -30,10 +31,28 @@ const Navbar = () => {
     const t = translations[language];
 
     useEffect(() => {
+        let lastScrollY = window.scrollY;
+
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
+            const currentScrollY = window.scrollY;
+
+            // Set scrolled state for transparency logic
+            setIsScrolled(currentScrollY > 20);
+
+            // Set visibility state based on scroll direction
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // Scrolling down past 100px - hide navbar
+                setIsVisible(false);
+                setDropdownOpen(false); // Close dropdown on hide
+            } else if (currentScrollY < lastScrollY) {
+                // Scrolling up - show navbar
+                setIsVisible(true);
+            }
+
+            lastScrollY = currentScrollY;
         };
-        window.addEventListener('scroll', handleScroll);
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -80,17 +99,42 @@ const Navbar = () => {
     const navLinks = [
         { to: '/', label: t.navbar.home },
         { to: '/marketplace', label: t.navbar.marketplace },
+        { to: '/#about', label: t.navbar.aboutUs || "About Us" },
+        { to: '/#contact', label: t.navbar.contactUs || "Contact" },
         ...(user ? [
-            { to: '/orders', label: t.navbar.myOrders || t.navbar.orders },
-            ...(user.role === 'farmer' ? [{ to: '/seller-dashboard/orders', label: t.navbar.businessOrders }] : []),
             { to: '/saved', label: t.navbar.saved },
         ] : []),
     ];
 
+    const handleNavClick = (e, to) => {
+        if (to.includes('#')) {
+            const id = to.split('#')[1];
+            if (location.pathname === '/') {
+                e.preventDefault();
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    window.history.pushState({}, '', to);
+                }
+            } else {
+                // Let React Router handle the page transition, but add a slight delay to ensure smooth scrolling post-navigate if possible
+                setTimeout(() => {
+                    const el = document.getElementById(id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    };
+
     const isTransparent = isHeroPage && !isScrolled;
 
     return (
-        <nav className="sticky top-0 z-50 bg-transparent">
+        <Motion.nav
+            initial={{ y: 0 }}
+            animate={{ y: isVisible ? 0 : '-100%' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="fixed w-full top-0 left-0 z-50 bg-transparent"
+        >
             <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     className={`mt-4 mb-4 flex justify-between h-16 sm:h-20 items-center rounded-xl px-4 sm:px-6 transition-all duration-300 ${isTransparent
@@ -115,6 +159,7 @@ const Navbar = () => {
                             <Link
                                 key={to}
                                 to={to}
+                                onClick={(e) => handleNavClick(e, to)}
                                 className={`text-sm font-medium px-4 py-2 rounded-full transition-colors ${isTransparent
                                     ? isActive(to)
                                         ? 'bg-white text-emerald-950 shadow-sm font-semibold'
@@ -227,6 +272,24 @@ const Navbar = () => {
                                                 <User size={15} />
                                                 {t.navbar.profile}
                                             </Link>
+                                            <Link
+                                                to="/orders"
+                                                onClick={() => setDropdownOpen(false)}
+                                                className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                            >
+                                                <Package size={15} />
+                                                {t.navbar.myOrders || t.navbar.orders}
+                                            </Link>
+                                            {user.role === 'farmer' && (
+                                                <Link
+                                                    to="/seller-dashboard/orders"
+                                                    onClick={() => setDropdownOpen(false)}
+                                                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <Package size={15} />
+                                                    {t.navbar.businessOrders}
+                                                </Link>
+                                            )}
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -302,7 +365,10 @@ const Navbar = () => {
                                 <Link
                                     key={to}
                                     to={to}
-                                    onClick={() => setMobileOpen(false)}
+                                    onClick={(e) => {
+                                        handleNavClick(e, to);
+                                        setMobileOpen(false);
+                                    }}
                                     className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive(to)
                                         ? 'bg-emerald-50 text-emerald-600'
                                         : 'text-gray-600 hover:bg-gray-50'
@@ -364,6 +430,42 @@ const Navbar = () => {
                                             </p>
                                         </div>
                                     </div>
+                                    {dashboardLink && (
+                                        <Link
+                                            to={dashboardLink.to}
+                                            onClick={() => setMobileOpen(false)}
+                                            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-50"
+                                        >
+                                            <Tractor size={16} />
+                                            {dashboardLink.label}
+                                        </Link>
+                                    )}
+                                    <Link
+                                        to="/profile"
+                                        onClick={() => setMobileOpen(false)}
+                                        className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-50"
+                                    >
+                                        <User size={16} />
+                                        {t.navbar.profile}
+                                    </Link>
+                                    <Link
+                                        to="/orders"
+                                        onClick={() => setMobileOpen(false)}
+                                        className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-50"
+                                    >
+                                        <Package size={16} />
+                                        {t.navbar.myOrders || t.navbar.orders}
+                                    </Link>
+                                    {user.role === 'farmer' && (
+                                        <Link
+                                            to="/seller-dashboard/orders"
+                                            onClick={() => setMobileOpen(false)}
+                                            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-50"
+                                        >
+                                            <Package size={16} />
+                                            {t.navbar.businessOrders}
+                                        </Link>
+                                    )}
                                     <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-red-600 hover:bg-red-50"
@@ -394,7 +496,7 @@ const Navbar = () => {
                     </Motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </Motion.nav>
     );
 };
 

@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FilterSidebar from '../components/FilterSidebar';
 import ProductCard from '../components/ProductCard';
-import { Leaf, Users, Star, ArrowRight, Plus, Minus } from 'lucide-react';
+import { Leaf, Users, Star, ArrowRight, Plus, Minus, MapPin, Phone, Mail } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -137,7 +137,7 @@ const Home = () => {
 
 
             <main className="max-w-8xl mx-auto px-4 sm:px-6 ">
-                <section className="py-16 sm:py-20 px-6 sm:px-10">
+                <section id="about" className="py-16 sm:py-20 px-6 sm:px-10">
                     <div className="max-w-8xl mx-auto">
 
 
@@ -316,6 +316,74 @@ const Home = () => {
                             ))
                         )}
                     </Motion.div>
+                </section>
+
+                {/* Contact Section */}
+                <section id="contact" className="py-20 border-t border-gray-100">
+                    <div className="max-w-4xl mx-auto text-center mb-12">
+                        <Motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <div className="flex items-center justify-center gap-2 mb-3">
+                                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                <span className="text-xs font-semibold tracking-widest uppercase text-emerald-900">{t.contact?.getInTouch || "Contact"}</span>
+                                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl font-semibold text-emerald-950 mb-4">
+                                {t.contact?.subtitle || "We'd love to hear from you."}
+                            </h2>
+                        </Motion.div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        {/* Office */}
+                        <Motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg shadow-emerald-900/5 text-center group hover:-translate-y-1 transition-transform duration-300"
+                        >
+                            <div className="h-14 w-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <MapPin size={28} />
+                            </div>
+                            <h3 className="text-xl font-semibold text-emerald-950 mb-3">{t.contact?.officeTitle || "Our Office"}</h3>
+                            <p className="text-gray-600">{t.contact?.officeAddress || "123 AgriLink Way, Colombo, Sri Lanka"}</p>
+                        </Motion.div>
+
+                        {/* Phone */}
+                        <Motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg shadow-emerald-900/5 text-center group hover:-translate-y-1 transition-transform duration-300"
+                        >
+                            <div className="h-14 w-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <Phone size={28} />
+                            </div>
+                            <h3 className="text-xl font-semibold text-emerald-950 mb-3">{t.contact?.phoneTitle || "Phone"}</h3>
+                            <p className="text-gray-600">{t.contact?.phoneValue || "+94 11 234 5678"}</p>
+                        </Motion.div>
+
+                        {/* Email */}
+                        <Motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg shadow-emerald-900/5 text-center group hover:-translate-y-1 transition-transform duration-300"
+                        >
+                            <div className="h-14 w-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <Mail size={28} />
+                            </div>
+                            <h3 className="text-xl font-semibold text-emerald-950 mb-3">{t.contact?.emailTitle || "Email"}</h3>
+                            <p className="text-gray-600">{t.contact?.emailValue || "support@agrilink.lk"}</p>
+                        </Motion.div>
+                    </div>
                 </section>
             </main>
 

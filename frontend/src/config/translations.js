@@ -66,7 +66,9 @@ export const translations = {
             signIn: "Sign In",
             getStarted: "Get Started",
             signOut: "Sign Out",
-            language: "Language"
+            language: "Language",
+            aboutUs: "About Us",
+            contactUs: "Contact",
         },
         marketplace: {
             pageTitle: "AgriLink Marketplace",
@@ -411,6 +413,16 @@ export const translations = {
             tryAgain: "Try Again",
             card: "Card"
         },
+        contact: {
+            getInTouch: "Get in Touch",
+            subtitle: "We'd love to hear from you. Here's how you can reach us...",
+            officeTitle: "Our Office",
+            officeAddress: "123 AgriLink Way, Colombo, Sri Lanka",
+            phoneTitle: "Phone",
+            phoneValue: "+94 11 234 5678",
+            emailTitle: "Email",
+            emailValue: "support@agrilink.lk"
+        }
     },
     si: {
         heroTitle: "අනාගත පරපුර උදෙසා",
@@ -479,7 +491,9 @@ export const translations = {
             signIn: "පිවිසෙන්න",
             getStarted: "ආරම්භ කරන්න",
             signOut: "ඉවත් වන්න",
-            language: "භාෂාව"
+            language: "භාෂාව",
+            aboutUs: "අපි ගැන",
+            contactUs: "සම්බන්ධ වන්න",
         },
         marketplace: {
             pageTitle: "AgriLink වෙළඳපොළ",
@@ -823,6 +837,16 @@ export const translations = {
             paymentError: "ගනුදෙනුවේ ගැටළුවක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.",
             tryAgain: "නැවත උත්සාහ කරන්න",
             card: "කාඩ්පත"
+        },
+        contact: {
+            getInTouch: "අප හා සම්බන්ධ වන්න",
+            subtitle: "අපි ඔබෙන් ඇසීමට කැමතියි. මෙන්න ඔබට අප හා සම්බන්ධ විය හැකි ආකාරය...",
+            officeTitle: "අපගේ කාර්යාලය",
+            officeAddress: "123 AgriLink මාවත, කොළඹ, ශ්‍රී ලංකාව",
+            phoneTitle: "දුරකථනය",
+            phoneValue: "+94 11 234 5678",
+            emailTitle: "විද්‍යුත් තැපෑල",
+            emailValue: "support@agrilink.lk"
         }
     }
 };

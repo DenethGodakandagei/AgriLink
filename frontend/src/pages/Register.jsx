@@ -13,10 +13,10 @@ import {
     Banknote,
     Headset,
     ArrowRight,
+    ArrowLeft,
     Mail
 } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import api from '../api/axios';
 import { useLanguage } from '../context/LanguageContext';
@@ -118,14 +118,24 @@ const Register = () => {
                     alt="Background"
                     className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-emerald-950/60 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-emerald-950/15 backdrop-blur-[2px]" />
             </div>
 
             {/* Content Wrapper */}
             <div className="relative z-10 flex flex-col min-h-screen">
-                <Navbar />
+                <header className="absolute w-full top-0 p-6 flex justify-between items-center z-50">
+                    <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                        <ArrowLeft size={20} />
+                        <span className="text-sm font-medium">{t.home || "Back to Home"}</span>
+                    </Link>
+                    <Link to="/">
+                        <span className="text-xl font-bold font-outfit tracking-tight text-white">
+                            AGRILINK.
+                        </span>
+                    </Link>
+                </header>
 
-                <div className="flex-1 flex flex-col items-center justify-center p-4 py-12">
+                <div className="flex-1 flex flex-col items-center justify-center p-4 pt-24 pb-12">
                     <Motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
