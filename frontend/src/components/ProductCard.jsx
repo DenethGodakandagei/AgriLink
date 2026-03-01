@@ -36,7 +36,7 @@ const ProductCard = ({ product }) => {
             onClick={handleCardClick}
         >
             {/* Image Area */}
-            <div className="relative aspect-square w-full h-[500px] rounded-sm overflow-hidden bg-gray-100 mb-4">
+            <div className="relative aspect-square w-full h-[400px] rounded-sm overflow-hidden bg-gray-100 mb-4">
                 <img
                     src={(() => {
                         let imgList = product.images;
