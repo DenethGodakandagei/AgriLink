@@ -9,7 +9,6 @@ ehthumbs.db
 desktop.ini
 
 # ─── Editors ──────────────────────────────────────────────────────────────────
-.vscode/
 .idea/
 *.suo
 *.ntvs*
@@ -25,3 +24,5 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+config.bat
+node_modules
