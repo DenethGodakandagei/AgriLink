@@ -35,7 +35,7 @@ class OrderController extends Controller
             $query->where('user_id', $user->id);
         }
 
-        return $query->get();
+        return $query->paginate(15);
     }
 
     /**
@@ -50,8 +50,8 @@ class OrderController extends Controller
                 $q->where('user_id', $user->id);
             })
             ->latest()
-            ->get()
-            ->map(function ($order) use ($user) {
+            ->paginate(15)
+            ->through(function ($order) use ($user) {
                 // Only include items belonging to this seller
                 $sellerItems = $order->items->filter(function ($item) use ($user) {
                     return $item->product && $item->product->user_id == $user->id;

@@ -15,7 +15,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::with('user')->latest()->paginate(12);
+        return Product::select(['id', 'name', 'price', 'quantity', 'category', 'user_id', 'images', 'created_at'])
+            ->with('user:id,name')
+            ->latest()
+            ->paginate(12);
     }
 
     /**
@@ -138,9 +141,10 @@ class ProductController extends Controller
      */
     public function search($name)
     {
-        return Product::where('name', 'like', '%' . $name . '%')
+        return Product::select(['id', 'name', 'price', 'quantity', 'category', 'user_id', 'images', 'created_at'])
+            ->where('name', 'like', '%' . $name . '%')
             ->orWhere('category', 'like', '%' . $name . '%')
-            ->with('user')
-            ->simplePaginate(12);
+            ->with('user:id,name')
+            ->paginate(12);
     }
 }

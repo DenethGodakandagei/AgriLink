@@ -315,13 +315,16 @@ const ProductDetails = () => {
 
                             {/* Rating & Location */}
                             <div className="flex flex-wrap items-center gap-6 mb-8 text-sm">
-                                <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
+                                <button 
+                                    onClick={() => document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100 hover:bg-amber-100 transition-all active:scale-95"
+                                >
                                     <Star size={16} className="text-amber-400 fill-amber-400" />
                                     <span className="font-bold text-gray-900">{averageRating ? averageRating.toFixed(1) : 'New'}</span>
                                     <span className="text-gray-500 border-l border-amber-200 pl-1.5 ml-0.5">
                                         {totalReviews} {tp.reviews}
                                     </span>
-                                </div>
+                                </button>
                                 <div className="flex items-center gap-1.5 text-gray-500">
                                     <MapPin size={16} />
                                     <span>{product.location || 'Location varies'}</span>
@@ -418,6 +421,13 @@ const ProductDetails = () => {
                                     <ShoppingCart size={20} strokeWidth={2} />
                                     {product.quantity > 0 ? tp.addToCart : tp.outOfStock}
                                 </button>
+                                <button
+                                    onClick={() => document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="w-full h-14 bg-white border-2 border-emerald-100 text-emerald-700 rounded-full font-semibold text-lg flex items-center justify-center gap-2 hover:bg-emerald-50 transition-all active:scale-[0.98]"
+                                >
+                                    <Star size={20} />
+                                    {tp.writeReview}
+                                </button>
                             </div>
                             <p className={`text-center text-xs font-semibold ${product.quantity > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                 {tp.secureTransaction} • {product.quantity > 0 ? tp.inStock : tp.outOfStock}
@@ -427,7 +437,7 @@ const ProductDetails = () => {
                 </div>
 
                 {/* Reviews Section */}
-                <div className="mt-24 pt-12 border-t border-gray-100">
+                <div id="reviews-section" className="mt-24 pt-12 border-t border-gray-100">
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">{tp.customerReviews}</h2>
 

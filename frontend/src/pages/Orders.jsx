@@ -48,7 +48,9 @@ const Orders = () => {
         try {
             setLoading(true);
             const response = await api.get('/orders');
-            setOrders(response.data || []);
+            // Handle paginated response from backend
+            const orderData = Array.isArray(response.data) ? response.data : (response.data.data || []);
+            setOrders(orderData);
         } catch (error) {
             console.error('Failed to fetch orders', error);
         } finally {

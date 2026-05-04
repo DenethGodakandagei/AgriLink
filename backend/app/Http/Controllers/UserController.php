@@ -15,7 +15,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return User::latest()->get();
+        return User::latest()->paginate(20);
     }
 
     public function store(Request $request)

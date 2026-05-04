@@ -13,22 +13,16 @@ class SavedItemController extends Controller
      */
     public function index()
     {
-        $savedItems = SavedItem::with('product')
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
-
-        // Return just the products to match frontend expectation (list of products)
-        // Or return the saved item wrapper? 
-        // Frontend expects list of products in Saved.jsx: "savedItems.map(product => ...)"
-        // But the product data is inside `product` relation.
-        // Let's transform it.
-
-        $products = $savedItems->map(function ($item) {
-            $product = $item->product;
-            // Add saved_item_id if needed, but we mostly care about product details
-            return $product;
-        });
+        // Use a more efficient query to get products directly via a subquery
+        $products = Product::whereIn('id', function ($query) {
+            $query->select('product_id')
+                ->from('saved_items')
+                ->where('user_id', Auth::id());
+        })
+        ->select(['id', 'name', 'price', 'quantity', 'category', 'user_id', 'images', 'created_at'])
+        ->with('user:id,name')
+        ->latest()
+        ->paginate(12);
 
         return response()->json($products);
     }

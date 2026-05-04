@@ -13,15 +13,25 @@ class FeedbackController extends Controller
     {
         $product = Product::findOrFail($productId);
 
+        $stats = Feedback::where('product_id', $product->id)
+            ->selectRaw('AVG(rating) as average_rating, COUNT(*) as total_reviews')
+            ->first();
+
+        // Paginate feedback for better performance with many reviews
         $feedback = Feedback::with('user')
             ->where('product_id', $product->id)
             ->latest()
-            ->get();
+            ->paginate(10); // Return 10 per page
 
         return response()->json([
-            'average_rating' => $feedback->avg('rating') ?: 0,
-            'total_reviews' => $feedback->count(),
-            'feedback' => $feedback,
+            'average_rating' => (float) ($stats->average_rating ?? 0),
+            'total_reviews' => (int) ($stats->total_reviews ?? 0),
+            'feedback' => $feedback->items(), // Return items for simple frontend compatibility
+            'pagination' => [
+                'current_page' => $feedback->currentPage(),
+                'last_page' => $feedback->lastPage(),
+                'total' => $feedback->total(),
+            ]
         ]);
     }
 
@@ -64,13 +74,15 @@ class FeedbackController extends Controller
             ]
         );
 
-        $allFeedback = Feedback::where('product_id', $product->id)->get();
+        $stats = Feedback::where('product_id', $product->id)
+            ->selectRaw('AVG(rating) as average_rating, COUNT(*) as total_reviews')
+            ->first();
 
         return response()->json([
             'message' => 'Feedback saved successfully',
             'feedback' => $feedback->load('user'),
-            'average_rating' => $allFeedback->avg('rating') ?: 0,
-            'total_reviews' => $allFeedback->count(),
+            'average_rating' => (float) ($stats->average_rating ?? 0),
+            'total_reviews' => (int) ($stats->total_reviews ?? 0),
         ], 201);
     }
 
