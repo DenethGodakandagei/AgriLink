@@ -9,7 +9,6 @@ ehthumbs.db
 desktop.ini
 
 # ─── Editors ──────────────────────────────────────────────────────────────────
-.vscode/
 .idea/
 *.suo
 *.ntvs*
